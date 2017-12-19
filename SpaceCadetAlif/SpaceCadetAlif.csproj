@@ -49,6 +49,10 @@
     <Compile Include="Source\Engine\Managers\PhysicsManager.cs" />
     <Compile Include="Source\Engine\Managers\ResourceManager.cs" />
     <Compile Include="Source\Engine\Managers\WorldManager.cs" />
+    <Compile Include="Source\Engine\Objects\Actor.cs" />
+    <Compile Include="Source\Engine\Objects\Body.cs" />
+    <Compile Include="Source\Engine\Objects\Environment.cs" />
+    <Compile Include="Source\Engine\Objects\Prop.cs" />
     <Compile Include="Source\Engine\Sprite.cs" />
     <Compile Include="Source\Game1.cs" />
     <Compile Include="Program.cs" />
