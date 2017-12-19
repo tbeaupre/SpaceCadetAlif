@@ -41,12 +41,15 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Source\Engine\Graphics\DrawTextureData.cs" />
+    <Compile Include="Source\Engine\Graphics\DrawSpriteData.cs" />
     <Compile Include="Source\Engine\Graphics\SpriteData.cs" />
     <Compile Include="Source\Engine\Managers\DrawManager.cs" />
     <Compile Include="Source\Engine\Managers\InputManager.cs" />
     <Compile Include="Source\Engine\Managers\PhysicsManager.cs" />
     <Compile Include="Source\Engine\Managers\ResourceManager.cs" />
     <Compile Include="Source\Engine\Managers\WorldManager.cs" />
+    <Compile Include="Source\Engine\Sprite.cs" />
     <Compile Include="Source\Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
