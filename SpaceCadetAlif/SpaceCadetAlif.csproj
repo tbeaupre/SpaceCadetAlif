@@ -41,6 +41,10 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Source\Engine\Events\CollisionEvent.cs" />
+    <Compile Include="Source\Engine\Events\Event.cs" />
+    <Compile Include="Source\Engine\Events\InputEvent.cs" />
+    <Compile Include="Source\Engine\Objects\GameObject.cs" />
     <Compile Include="Source\Engine\Graphics\DrawTextureData.cs" />
     <Compile Include="Source\Engine\Graphics\DrawSpriteData.cs" />
     <Compile Include="Source\Engine\Graphics\SpriteData.cs" />

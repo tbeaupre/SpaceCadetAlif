@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace SpaceCadetAlif.Source.Engine.Objects
 {
-    class Prop : Body
+    class Prop : GameObject
     {
-        public Prop(Sprite sprite, Vector2 position) : base(sprite, position)
+        public Prop(Sprite sprite, List<Rectangle> collisionBoxes, Vector2 position) : base(sprite, collisionBoxes, position)
         {
         }
     }
