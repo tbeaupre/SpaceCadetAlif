@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SpaceCadetAlif.Source.Engine.Managers;
 
 namespace SpaceCadetAlif
 {
@@ -10,7 +11,6 @@ namespace SpaceCadetAlif
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
 
         public Game1()
         {
@@ -27,7 +27,8 @@ namespace SpaceCadetAlif
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            ResourceManager.InitResourceManager(Content);
+            DrawManager.InitDrawManager(new SpriteBatch(GraphicsDevice));
             base.Initialize();
         }
 
@@ -38,8 +39,6 @@ namespace SpaceCadetAlif
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
             // TODO: use this.Content to load your game content here
         }
 
