@@ -18,11 +18,13 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         private int mHealth;      // The current health of the object. Defaults to 1.
 
         // EventHandlers
-        public event EventHandler KeyPress;
-        protected virtual void OnKeyPress(InputEventArgs e) { KeyPress?.Invoke(this, e); }
+        public event InputEventHandler KeyPress;
+        public delegate void InputEventHandler(InputEventArgs e);
+        protected virtual void OnKeyPress(InputEventArgs e) { KeyPress?.Invoke(e); }
 
-        public event EventHandler Death;
-        protected virtual void OnDeath(DeathEventArgs e) { Death?.Invoke(this, e); }
+        public event DeathEventHandler Death;
+        public delegate void DeathEventHandler(DeathEventArgs e);
+        protected virtual void OnDeath(DeathEventArgs e) { Death?.Invoke(e); }
 
 
         protected GameObject(Sprite sprite, List<Rectangle> collisionBoxes, Vector2 position, int health = 1)
