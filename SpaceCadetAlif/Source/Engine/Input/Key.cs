@@ -4,9 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpaceCadetAlif.Source.Engine.Events
+namespace SpaceCadetAlif.Source.Engine.Input
 {
-    abstract class Event
+    enum Key
     {
+        Left,
+        Right,
+        Up,
+        Down,
+        Z,
+        X
     }
 }
