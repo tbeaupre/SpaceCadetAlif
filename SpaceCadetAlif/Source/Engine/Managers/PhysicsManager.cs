@@ -7,13 +7,13 @@ using System.Collections.Generic;
 namespace SpaceCadetAlif.Source.Engine.Managers
 {
 
-   
+
     /*
      * This class updates position, velocity, and acceleration of bodies passed to it.
      * Also handles Collision Detection between hitboxes and environment.
      */
 
-    
+
 
     static class PhysicsManager
     {
@@ -24,37 +24,58 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             environment = e;
         }
 
-        //Resets body A's position back, velocity of A and B to 0
-        private static void HandleSimpleCollision(Body A, Body B)
+        public static void Update(List<GameObject> objectList)
         {
-            //Relative velocity is the diff between A and B. Useful if both bodies are moving
-            Vector2 relativeVelocity = A.Velocity - B.Velocity;
+            HandleAllSimpleCollisions(objectList);
+            UpdateAllMotion(objectList);
+        }
+
+        private static void HandleAllSimpleCollisions(List<GameObject> objectList)
+        {
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                for (int j = i + 1; j < objectList.Count; j++)
+                {
+                    HandleSimpleCollision(objectList[i], objectList[j]);
+                }
+            }
+        }
+
+        //Resets body A's position back, velocity of A and B to 0
+        private static void HandleSimpleCollision(GameObject A, GameObject B)
+        {
+            if (A.Body.CollisionType == 2)
+
+                //Relative velocity is the diff between A and B. Useful if both bodies are moving
+                Vector2 relativeVelocity = A.Body.Velocity - B.Body.Velocity;
             //Either X or Y of velocity vector will pass over its entire dimension of the intersectRectangle. 
             //That is max between the two. xPriority means x is max, if false y is max
             bool xPriority = (relativeVelocity.X > relativeVelocity.Y);
-            foreach (Rectangle aRect in A.CollisionBoxes)
+            foreach (Rectangle aRect in A.Body.CollisionBoxes)
             {
-                foreach (Rectangle bRect in B.CollisionBoxes)
+                foreach (Rectangle bRect in B.Body.CollisionBoxes)
                 {
                     Rectangle intersect = Rectangle.Intersect(aRect, bRect);
                     if (!intersect.IsEmpty) //collision occured!
                     {
                         //may update in the future, but for now set A and B Velocity to 0 and move A back to the closest position 
-                        //in the opposite direction of relativeVelocity
-                        A.Velocity = Vector2.Zero;
-                        B.Velocity = Vector2.Zero;
+                        //in the opposite direction of relativeVelocityS
+                        A.Body.Velocity = Vector2.Zero;
+                        B.Body.Velocity = Vector2.Zero;
                         Vector2 error = new Vector2();
                         if (xPriority)
                         {
                             if (relativeVelocity.X > 0)
                             {
                                 error.X = intersect.Width;
-                            } else
+                            }
+                            else
                             {
                                 error.X = -intersect.Width;
                             }
                             error.Y = relativeVelocity.Y * (error.X / relativeVelocity.X);
-                        } else
+                        }
+                        else
                         {
                             if (relativeVelocity.Y > 0)
                             {
@@ -67,21 +88,25 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                             error.X = relativeVelocity.X * (error.Y / relativeVelocity.Y);
                         }
                         //here's where we ignore physics completely and just set A back to the last available pixel
-                        A.Position -= error; 
+                        A.Body.Position -= error;
                     }
                 }
             }
         }
 
-        public static void SimpleCollisionUpdate(List<Body> bodyList)
+        private static void UpdateAllMotion(List<GameObject> objectList)
         {
-            for (int i = 0; i < bodyList.Count; i++)
+            for (int i = 0; i < objectList.Count; i++)
             {
-                for(int j = i + 1; j < bodyList.Count; j++)
-                {
-                    HandleSimpleCollision(bodyList[i], bodyList[j]);
-                }
+                UpdateMotion(objectList[i].Body);
             }
         }
+
+        private static void UpdateMotion(Body body)
+        {
+            body.Position += body.Velocity;
+            body.Velocity += body.Acceleration;
+        }
+
     }
 }
