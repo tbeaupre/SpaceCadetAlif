@@ -41,7 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Source\Engine\Events\CollisionEvent.cs" />
+    <Compile Include="Source\Engine\Events\CollisionEventArgs.cs" />
     <Compile Include="Source\Engine\Events\DeathEventArgs.cs" />
     <Compile Include="Source\Engine\Events\Event.cs" />
     <Compile Include="Source\Engine\Events\InputEventArgs.cs" />
