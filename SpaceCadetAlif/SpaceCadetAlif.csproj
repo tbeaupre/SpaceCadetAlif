@@ -57,7 +57,7 @@
     <Compile Include="Source\Engine\Objects\Body.cs" />
     <Compile Include="Source\Engine\Objects\Environment.cs" />
     <Compile Include="Source\Engine\Objects\Prop.cs" />
-    <Compile Include="Source\Engine\Sprite.cs" />
+    <Compile Include="Source\Engine\Graphics\Sprite.cs" />
     <Compile Include="Source\Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
