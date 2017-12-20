@@ -20,15 +20,15 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         // EventHandlers
         public event InputEventHandler KeyPressListener;
         public delegate void InputEventHandler(InputEventArgs e);
-        protected virtual void OnKeyPress(InputEventArgs e) { KeyPressListener?.Invoke(e); }
+        public virtual void OnKeyPress(InputEventArgs e) { KeyPressListener?.Invoke(e); }
 
         public event DeathEventHandler DeathListener;
         public delegate void DeathEventHandler(DeathEventArgs e);
-        protected virtual void OnDeath(DeathEventArgs e) { DeathListener?.Invoke(e); }
+        public virtual void OnDeath(DeathEventArgs e) { DeathListener?.Invoke(e); }
 
         public event CollisionEventHandler CollisionListener;
         public delegate void CollisionEventHandler(CollisionEventArgs e);
-        protected virtual void OnCollision(CollisionEventArgs e) { CollisionListener?.Invoke(e); }
+        public virtual void OnCollision(CollisionEventArgs e) { CollisionListener?.Invoke(e); }
 
 
         protected GameObject(Sprite sprite, List<Rectangle> collisionBoxes, Vector2 position, int health = 1)
