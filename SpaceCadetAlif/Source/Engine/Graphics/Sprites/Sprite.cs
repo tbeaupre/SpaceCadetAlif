@@ -1,32 +1,26 @@
 ﻿using Microsoft.Xna.Framework;
 using SpaceCadetAlif.Source.Engine.Graphics;
+using SpaceCadetAlif.Source.Engine.Objects;
 
 namespace SpaceCadetAlif.Source.Engine
 {
-    class Sprite
+    abstract class Sprite
     {
+        private GameObject parent;
         public SpriteData Data { get; }
-        private int mCurrentFrame;
-        private int mFrameTimer;
+        protected int mCurrentFrame;
+        protected int mFrameTimer;
 
-        public Sprite(SpriteData data)
+        public Sprite(GameObject parent, SpriteData data, int startFrame)
         {
             Data = data;
-            mCurrentFrame = 0;
+            mCurrentFrame = startFrame;
             mFrameTimer = data.Slowdown;
         }
 
-        public void Update()
+        public virtual void Update()
         {
-            if (mFrameTimer == 0)
-            {
-                mCurrentFrame = (mCurrentFrame + 1) % Data.NumFrames;
-                mFrameTimer = Data.Slowdown;
-            }
-            else
-            {
-                mFrameTimer--;
-            }
+            mFrameTimer--;
         }
 
         public Rectangle GetSourceRect()
