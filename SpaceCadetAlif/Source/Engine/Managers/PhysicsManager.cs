@@ -15,10 +15,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
     static class PhysicsManager
     {
-        private static Objects.Environment environment;
+        private static Room environment;
 
         // Sets the current environment
-        public static void InitEnvironment(Objects.Environment e)
+        public static void InitEnvironment(Objects.Room e)
         {
             environment = e;
         }
