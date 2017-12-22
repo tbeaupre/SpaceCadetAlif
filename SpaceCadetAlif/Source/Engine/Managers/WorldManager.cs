@@ -1,9 +1,6 @@
-﻿using SpaceCadetAlif.Source.Engine.Objects;
-using System;
+﻿using Microsoft.Xna.Framework;
+using SpaceCadetAlif.Source.Engine.Objects;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpaceCadetAlif.Source.Engine.Managers
 {
@@ -11,6 +8,13 @@ namespace SpaceCadetAlif.Source.Engine.Managers
     {
         private static List<GameObject> toUpdate = new List<GameObject>();
         private static List<GameObject> toDelete = new List<GameObject>();
+        private static Room currentRoom;
+        public static GameObject FocusObject { get; set; }
+
+        public static void Init(Room startRoom)
+        {
+            currentRoom = startRoom;
+        }
 
         public static void Update()
         {
@@ -26,6 +30,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 toUpdate.Remove(obj);
             }
             toDelete.Clear();
+
+            DrawManager.Draw(currentRoom, toUpdate, GetFocusOffset());
         }
 
         // Called when an object wants to delete itself from the world.
@@ -38,6 +44,15 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         public static void CreateObject(GameObject obj)
         {
             toUpdate.Add(obj);
+        }
+
+        private static Vector2 GetFocusOffset()
+        {
+            if (FocusObject == null)
+            {
+                return Vector2.Zero;
+            }
+            return FocusObject.Body.Position;
         }
     }
 }
