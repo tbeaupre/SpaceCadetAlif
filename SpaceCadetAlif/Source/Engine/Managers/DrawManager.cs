@@ -25,7 +25,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             DrawRoom(room, focusOffset);
             foreach (GameObject obj in toDraw)
             {
-                DrawSprite(obj.Sprite, obj.Body.Position, obj.DrawLayer);
+                DrawSprite(obj.Sprite, obj.Body.Position + focusOffset + screenOffset, obj.DrawLayer);
             }
             spriteBatch.End();
         }
