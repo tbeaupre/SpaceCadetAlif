@@ -1,68 +1,67 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceCadetAlif.Source.Engine.Graphics;
+using SpaceCadetAlif.Source.Engine.Objects;
 using System.Collections.Generic;
 
 namespace SpaceCadetAlif.Source.Engine.Managers
 {
     static class DrawManager
     {
-        private static SpriteBatch spriteBatch;
-        private static List<DrawTextureData> texturesToDraw = new List<DrawTextureData>();
-        private static List<DrawSpriteData> spritesToDraw = new List<DrawSpriteData>();
+        private static SpriteBatch spriteBatch; // The SpriteBatch object allows textures to be drawn in batches to increase efficiency.
+        private static Vector2 screenOffset;    // Offsets everything to make (0, 0) the center of the screen. Makes focusing on an object easier.
 
         // Initialize the DrawManager with the game's SpriteBatch.
-        public static void InitDrawManager(SpriteBatch newSpriteBatch)
+        public static void InitDrawManager(SpriteBatch newSpriteBatch, Vector2 newScreenOffset)
         {
             spriteBatch = newSpriteBatch;
-        }
-
-        // Add a texture to the list of textures to draw when the draw method is called by the game loop.
-        public static void DrawTexture(string tag, float x, float y, float layer=0)
-        {
-            texturesToDraw.Add(new DrawTextureData(tag, (int)x, (int)y, layer));
-        }
-
-        // Add a sprite to the list of sprites to draw when the draw method is called by the game loop.
-        public static void DrawSprite(Sprite sprite, float x, float y, float layer=0)
-        {
-            spritesToDraw.Add(new DrawSpriteData(sprite, (int)x, (int)y, layer));
+            screenOffset = newScreenOffset;
         }
 
         // Called by the game loop to draw every texture and sprite.
-        public static void Draw()
+        public static void Draw(Room room, List<GameObject> toDraw, Vector2 focusOffset)
         {
             spriteBatch.Begin();
-            foreach(DrawTextureData data in texturesToDraw)
+            DrawRoom(room, focusOffset);
+            foreach (GameObject obj in toDraw)
             {
-                DrawTexture(ref spriteBatch, data);
-            }
-            foreach (DrawSpriteData data in spritesToDraw)
-            {
-                DrawSprite(ref spriteBatch, data);
+                DrawSprite(obj.Sprite, obj.Body.Position, obj.DrawLayer);
             }
             spriteBatch.End();
         }
 
-        // Actually draws the texture.
-        private static void DrawTexture(ref SpriteBatch spriteBatch, DrawTextureData data)
+        // Draws a Room's foreground and background.
+        private static void DrawRoom(Room room, Vector2 focusOffset)
         {
-            spriteBatch.Draw(ResourceManager.GetTexture(data.Tag),
-                new Vector2(data.X, data.Y),
-                Color.White);
+            DrawTexture(room.BackgroundTag, focusOffset + screenOffset, DrawLayer.Background);
+            DrawTexture(room.ForegroundTag, focusOffset + screenOffset, DrawLayer.Foreground);
         }
 
-        // Actually draws the sprite.
-        private static void DrawSprite(ref SpriteBatch spriteBatch, DrawSpriteData data)
+        // Draws the texture.
+        private static void DrawTexture(string tag, Vector2 pos, DrawLayer layer)
         {
-            spriteBatch.Draw(ResourceManager.GetTexture(data.Sprite.Data.TextureTag),
-                data.Sprite.GetSourceRect(),
-                data.Sprite.GetDestRect(data.X, data.Y),
+            Texture2D texture = ResourceManager.GetTexture(tag);
+            spriteBatch.Draw(texture,
+                new Rectangle((int)pos.X, (int)pos.Y, texture.Bounds.Width, texture.Bounds.Height),
+                null, // Textures are not animated, so there is no source rectangle.
+                Color.White,
+                0,
+                Vector2.Zero,
+                SpriteEffects.None,
+                (float)layer / 10f);
+        }
+
+        // Draws the sprite.
+        private static void DrawSprite(Sprite sprite, Vector2 pos, DrawLayer layer)
+        {
+            spriteBatch.Draw(ResourceManager.GetTexture(sprite.Data.TextureTag),
+                sprite.GetSourceRect(),
+                sprite.GetDestRect((int)pos.X, (int)pos.Y),
                 Color.White,
                 0,
                 new Vector2(0, 0),
                 SpriteEffects.None,
-                data.Layer);
+                (float)layer / 10f);
         }
     }
 }

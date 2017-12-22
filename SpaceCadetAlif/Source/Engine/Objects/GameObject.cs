@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using SpaceCadetAlif.Source.Engine.Events;
+using SpaceCadetAlif.Source.Engine.Graphics;
 using System;
 using System.Collections.Generic;
 
@@ -13,7 +14,8 @@ namespace SpaceCadetAlif.Source.Engine.Objects
     abstract class GameObject
     {
         public Body Body { get; } // The GameObject's physics body.
-        private Sprite mSprite;   // The sprite to be drawn.
+        public DrawLayer DrawLayer { get; protected set; }
+        public Sprite Sprite { get; }   // The sprite to be drawn.
         private int mMaxHealth;   // The max health of the object. Defaults to 1.
         private int mHealth;      // The current health of the object. Defaults to 1.
 
@@ -34,7 +36,7 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         protected GameObject(Sprite sprite, List<Rectangle> collisionBoxes, Vector2 position, int health = 1)
         {
             Body = new Body(collisionBoxes, position);
-            mSprite = sprite;
+            Sprite = sprite;
             mMaxHealth = health;
             mHealth = health;
         }
@@ -42,7 +44,7 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         // Called once per game loop.
         public void Update()
         {
-            mSprite.Update();
+            Sprite.Update();
         }
 
         // Handles increasing or decreasing current life.
