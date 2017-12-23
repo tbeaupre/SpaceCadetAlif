@@ -42,7 +42,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Source\Engine\Events\CollisionEventArgs.cs" />
-    <Compile Include="Source\Engine\Events\DeathEventArgs.cs" />
     <Compile Include="Source\Engine\Events\InputEventArgs.cs" />
     <Compile Include="Source\Engine\Graphics\DrawLayer.cs" />
     <Compile Include="Source\Engine\Input\Key.cs" />

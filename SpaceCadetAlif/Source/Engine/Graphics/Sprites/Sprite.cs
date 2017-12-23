@@ -6,7 +6,7 @@ namespace SpaceCadetAlif.Source.Engine
 {
     abstract class Sprite
     {
-        private GameObject parent;
+        protected GameObject parent;
         public SpriteData Data { get; }
         protected int mCurrentFrame;
         protected int mFrameTimer;

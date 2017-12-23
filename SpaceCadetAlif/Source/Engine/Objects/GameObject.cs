@@ -24,13 +24,15 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         public delegate void InputEventHandler(InputEventArgs e);
         public virtual void OnKeyPress(InputEventArgs e) { KeyPressListener?.Invoke(e); }
 
-        public event DeathEventHandler DeathListener;
-        public delegate void DeathEventHandler(DeathEventArgs e);
-        public virtual void OnDeath(DeathEventArgs e) { DeathListener?.Invoke(e); }
+        public event EventHandler DeathListener;
+        public virtual void OnDeath(object sender, EventArgs e) { DeathListener?.Invoke(this, e); }
 
         public event CollisionEventHandler CollisionListener;
         public delegate void CollisionEventHandler(CollisionEventArgs e);
         public virtual void OnCollision(CollisionEventArgs e) { CollisionListener?.Invoke(e); }
+
+        public event EventHandler AnimationCompleteListener;
+        public virtual void OnAnimationComplete(object sender, EventArgs e) { AnimationCompleteListener?.Invoke(this, e); }
 
 
         protected GameObject(Sprite sprite, List<Rectangle> collisionBoxes, Vector2 position, int health = 1)
@@ -58,7 +60,7 @@ namespace SpaceCadetAlif.Source.Engine.Objects
             }
             else if (mHealth <= 0)
             {
-                OnDeath(new DeathEventArgs(source));
+                OnDeath(source, EventArgs.Empty);
             }
         }
     }

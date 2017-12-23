@@ -33,7 +33,7 @@ namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
                     }
                     else
                     {
-                        // Send AnimationComplete event to parent.
+                        parent.OnAnimationComplete(this, EventArgs.Empty);
                     }
                 }
                 mFrameTimer = Data.Slowdown;
