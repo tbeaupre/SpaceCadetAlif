@@ -14,23 +14,27 @@ namespace SpaceCadetAlif.Source.Engine.Objects
     abstract class GameObject
     {
         public Body Body { get; } // The GameObject's physics body.
-        public DrawLayer DrawLayer { get; protected set; }
+        public DrawLayer DrawLayer { get; protected set; } // The layer that the GameObject's sprite is drawn on.
         public Sprite Sprite { get; }   // The sprite to be drawn.
         private int mMaxHealth;   // The max health of the object. Defaults to 1.
         private int mHealth;      // The current health of the object. Defaults to 1.
 
         // EventHandlers
+        // Called when an input is processed.
         public event InputEventHandler KeyPressListener;
         public delegate void InputEventHandler(InputEventArgs e);
         public virtual void OnKeyPress(InputEventArgs e) { KeyPressListener?.Invoke(e); }
 
+        // Called when a change in health causes the GameObject to die.
         public event EventHandler DeathListener;
         public virtual void OnDeath(object sender, EventArgs e) { DeathListener?.Invoke(this, e); }
 
+        // Called by the PhysicsManager when this object is part of a collision.
         public event CollisionEventHandler CollisionListener;
         public delegate void CollisionEventHandler(CollisionEventArgs e);
         public virtual void OnCollision(CollisionEventArgs e) { CollisionListener?.Invoke(e); }
 
+        // Called when an AnimatedSprite finishes its animation.
         public event EventHandler AnimationCompleteListener;
         public virtual void OnAnimationComplete(object sender, EventArgs e) { AnimationCompleteListener?.Invoke(this, e); }
 

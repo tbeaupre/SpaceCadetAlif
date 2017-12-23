@@ -24,7 +24,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 obj.Update();
             }
 
-            // Delete all of the objects which have been marked for deletion.
+            // Delete all the objects that have been marked for deletion.
             foreach (GameObject obj in toDelete)
             {
                 toUpdate.Remove(obj);

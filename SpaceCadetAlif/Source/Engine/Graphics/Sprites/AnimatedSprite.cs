@@ -1,20 +1,18 @@
 ﻿using SpaceCadetAlif.Source.Engine.Objects;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
 {
     class AnimatedSprite : Sprite
     {
-        private int[] mAnimation;
-        private int mAnimationIndex;
-        private bool mLoop;
+        private GameObject mParent;  // Used to alert the parent object when the animation ends.
+        private int[] mAnimation;    // A sequence of frame numbers which defines an animation.
+        private int mAnimationIndex; // The index into the animation array.
+        private bool mLoop;          // Determines if the animation should loop when it is complete.
 
-        public AnimatedSprite(GameObject parent, SpriteData data, int[] animation, bool loop) : base(parent, data, animation[0])
+        public AnimatedSprite(GameObject parent, SpriteData data, int[] animation, bool loop) : base(data, animation[0])
         {
+            mParent = parent;
             mAnimation = animation;
             mAnimationIndex = 0;
             mLoop = loop;
@@ -22,18 +20,20 @@ namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
 
         public override void Update()
         {
+            // Check if the current frame can be changed.
             if (mFrameTimer <= 0)
             {
                 mAnimationIndex++;
+                // Check if the animation is complete.
                 if (mAnimationIndex == mAnimation.Length)
                 {
                     if (mLoop)
                     {
-                        mAnimationIndex = 0;
+                        mAnimationIndex = 0; // Loop back to the start.
                     }
                     else
                     {
-                        parent.OnAnimationComplete(this, EventArgs.Empty);
+                        mParent.OnAnimationComplete(this, EventArgs.Empty); // Alert the parent that the animation is complete.
                     }
                 }
                 mFrameTimer = Data.Slowdown;

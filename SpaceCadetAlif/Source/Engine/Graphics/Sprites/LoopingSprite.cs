@@ -1,20 +1,14 @@
-﻿using SpaceCadetAlif.Source.Engine.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
+﻿namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
 {
     class LoopingSprite : Sprite
     {
-        public LoopingSprite(GameObject parent, SpriteData data, int startFrame) : base(parent, data, startFrame)
+        public LoopingSprite(SpriteData data, int startFrame) : base(data, startFrame)
         {
         }
 
         public override void Update()
         {
+            // Check if the current frame can be changed.
             if (mFrameTimer <= 0)
             {
                 mCurrentFrame = (mCurrentFrame + 1) % Data.NumFrames;
