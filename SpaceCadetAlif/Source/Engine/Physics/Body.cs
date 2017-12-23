@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace SpaceCadetAlif.Source.Engine.Objects
+namespace SpaceCadetAlif.Source.Engine.Physics
 {
     /*
      * Contains information about a GameObject to be used by the PhysicsManager.

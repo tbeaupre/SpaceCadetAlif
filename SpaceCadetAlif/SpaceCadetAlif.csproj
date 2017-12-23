@@ -47,7 +47,7 @@
     <Compile Include="Source\Engine\Graphics\Sprites\ManualSprite.cs" />
     <Compile Include="Source\Engine\Input\Key.cs" />
     <Compile Include="Source\Engine\Input\KeyState.cs" />
-    <Compile Include="Source\Engine\Objects\CollisionType.cs" />
+    <Compile Include="Source\Engine\Physics\CollisionType.cs" />
     <Compile Include="Source\Engine\Graphics\Sprites\AnimatedSprite.cs" />
     <Compile Include="Source\Engine\Graphics\Sprites\LoopingSprite.cs" />
     <Compile Include="Source\Engine\Objects\GameObject.cs" />
@@ -58,7 +58,7 @@
     <Compile Include="Source\Engine\Managers\ResourceManager.cs" />
     <Compile Include="Source\Engine\Managers\WorldManager.cs" />
     <Compile Include="Source\Engine\Objects\Actor.cs" />
-    <Compile Include="Source\Engine\Objects\Body.cs" />
+    <Compile Include="Source\Engine\Physics\Body.cs" />
     <Compile Include="Source\Engine\Objects\Room.cs" />
     <Compile Include="Source\Engine\Objects\Prop.cs" />
     <Compile Include="Source\Engine\Graphics\Sprites\Sprite.cs" />

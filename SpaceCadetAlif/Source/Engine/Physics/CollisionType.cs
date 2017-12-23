@@ -1,5 +1,5 @@
 ﻿
-namespace SpaceCadetAlif.Source.Engine.Objects
+namespace SpaceCadetAlif.Source.Engine.Physics
 {
     enum CollisionType
     {
