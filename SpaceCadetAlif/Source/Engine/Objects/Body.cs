@@ -8,18 +8,19 @@ namespace SpaceCadetAlif.Source.Engine.Objects
      */
     class Body
     {
-        public List<Rectangle> CollisionBoxes { get; }
+        public List<Rectangle> CollisionBoxes { get; }   // The collision boxes associated with this GameObject.
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
         public Vector2 Acceleration { get; set; }
-        public CollisionType CollisionType { get; set; }
+        public CollisionType CollisionType { get; set; } // Determines how collisions with other objects are handled.
 
-        public Body(List<Rectangle> collisionBoxes, Vector2 position, CollisionType c = CollisionType.GHOST) 
+        public Body(List<Rectangle> collisionBoxes, Vector2 position, CollisionType collisionType = CollisionType.SOLID)
         {
             CollisionBoxes = collisionBoxes;
             Position = position;
             Velocity = Vector2.Zero;
             Acceleration = Vector2.Zero;
+            CollisionType = collisionType;
         }
     }
 }

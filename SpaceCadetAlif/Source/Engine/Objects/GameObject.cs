@@ -13,11 +13,11 @@ namespace SpaceCadetAlif.Source.Engine.Objects
 
     abstract class GameObject
     {
-        public Body Body { get; } // The GameObject's physics body.
+        public Body Body { get; }                          // The GameObject's physics body.
         public DrawLayer DrawLayer { get; protected set; } // The layer that the GameObject's sprite is drawn on.
-        public Sprite Sprite { get; }   // The sprite to be drawn.
-        private int mMaxHealth;   // The max health of the object. Defaults to 1.
-        private int mHealth;      // The current health of the object. Defaults to 1.
+        public Sprite Sprite { get; }                      // The sprite to be drawn.
+        private int mMaxHealth;                            // The max health of the object. Defaults to 1.
+        private int mHealth;                               // The current health of the object. Defaults to 1.
 
         // EventHandlers
         // Called when an input is processed.

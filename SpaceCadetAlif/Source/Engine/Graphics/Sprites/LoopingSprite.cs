@@ -1,4 +1,5 @@
-﻿namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
+﻿
+namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
 {
     class LoopingSprite : Sprite
     {

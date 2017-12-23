@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using SpaceCadetAlif.Source.Engine.Graphics;
-using SpaceCadetAlif.Source.Engine.Objects;
 
 namespace SpaceCadetAlif.Source.Engine
 {

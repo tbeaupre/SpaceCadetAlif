@@ -50,8 +50,6 @@
     <Compile Include="Source\Engine\Graphics\Sprites\AnimatedSprite.cs" />
     <Compile Include="Source\Engine\Graphics\Sprites\LoopingSprite.cs" />
     <Compile Include="Source\Engine\Objects\GameObject.cs" />
-    <Compile Include="Source\Engine\Graphics\DrawTextureData.cs" />
-    <Compile Include="Source\Engine\Graphics\DrawSpriteData.cs" />
     <Compile Include="Source\Engine\Graphics\SpriteData.cs" />
     <Compile Include="Source\Engine\Managers\DrawManager.cs" />
     <Compile Include="Source\Engine\Managers\InputManager.cs" />
