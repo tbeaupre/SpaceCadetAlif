@@ -9,15 +9,28 @@ namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
         private int[] mAnimation;    // A sequence of frame numbers which defines an animation.
         private int mAnimationIndex; // The index into the animation array.
         private bool mLoop;          // Determines if the animation should loop when it is complete.
+        private bool mInterruptible;  // Determines if the animation can be interrupted to start a new one.
 
-        public AnimatedSprite(GameObject parent, SpriteData data, int[] animation, bool loop) : base(data, animation[0])
+        public AnimatedSprite(GameObject parent, SpriteData data, int[] animation, bool loop, bool interruptible)
+            : base(data, animation[0])
         {
             mParent = parent;
             mAnimation = animation;
             mAnimationIndex = 0;
             mLoop = loop;
+            mInterruptible = interruptible;
         }
 
+        // Changes the animation if it is interruptible.
+        public void SetAnimation(int[] animation, bool loop)
+        {
+            if (mInterruptible)
+            {
+                mAnimation = animation;
+                mAnimationIndex = 0;
+            }
+        }
+        
         public override void Update()
         {
             // Check if the current frame can be changed.
