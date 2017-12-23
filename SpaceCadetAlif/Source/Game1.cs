@@ -28,7 +28,8 @@ namespace SpaceCadetAlif
         {
             // TODO: Add your initialization logic here
             ResourceManager.InitResourceManager(Content);
-            DrawManager.InitDrawManager(new SpriteBatch(GraphicsDevice));
+            Vector2 screenOffset = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+            DrawManager.InitDrawManager(new SpriteBatch(GraphicsDevice), screenOffset);
             base.Initialize();
         }
 
