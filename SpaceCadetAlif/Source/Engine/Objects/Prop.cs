@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace SpaceCadetAlif.Source.Engine.Objects
 {
-    class Prop : GameObject
+    class Prop : DrawnObject
     {
         public bool Interactable { get; } // Determines if a prop can be interacted with.
         public bool Destructible { get; } // Determines if a prop can be destroyed.

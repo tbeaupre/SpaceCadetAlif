@@ -19,11 +19,11 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         }
 
         // Called by the game loop to draw every texture and sprite.
-        public static void Draw(Room room, List<GameObject> toDraw, Vector2 focusOffset)
+        public static void Draw(Room room, List<DrawnObject> toDraw, Vector2 focusOffset)
         {
             spriteBatch.Begin();
             DrawRoom(room, focusOffset);
-            foreach (GameObject obj in toDraw)
+            foreach (DrawnObject obj in toDraw)
             {
                 DrawSprite(obj.Sprite, obj.Body.Position + focusOffset + screenOffset, obj.DrawLayer);
             }

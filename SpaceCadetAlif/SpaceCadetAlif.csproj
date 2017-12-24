@@ -47,10 +47,12 @@
     <Compile Include="Source\Engine\Graphics\Sprites\ManualSprite.cs" />
     <Compile Include="Source\Engine\Input\Key.cs" />
     <Compile Include="Source\Engine\Input\KeyState.cs" />
+    <Compile Include="Source\Engine\Objects\GameObject.cs" />
+    <Compile Include="Source\Engine\Objects\Portal.cs" />
     <Compile Include="Source\Engine\Physics\CollisionType.cs" />
     <Compile Include="Source\Engine\Graphics\Sprites\AnimatedSprite.cs" />
     <Compile Include="Source\Engine\Graphics\Sprites\LoopingSprite.cs" />
-    <Compile Include="Source\Engine\Objects\GameObject.cs" />
+    <Compile Include="Source\Engine\Objects\DrawnObject.cs" />
     <Compile Include="Source\Engine\Graphics\SpriteData.cs" />
     <Compile Include="Source\Engine\Managers\DrawManager.cs" />
     <Compile Include="Source\Engine\Managers\InputManager.cs" />
