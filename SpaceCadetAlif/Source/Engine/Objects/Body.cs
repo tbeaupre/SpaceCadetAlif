@@ -14,7 +14,6 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         public Vector2 Acceleration { get; set; }
         public CollisionType CollisionType { get; set; }
 
-
         public Body(List<Rectangle> collisionBoxes, Vector2 position, CollisionType c = CollisionType.GHOST) 
         {
             CollisionBoxes = collisionBoxes;
