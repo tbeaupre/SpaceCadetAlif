@@ -18,5 +18,7 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         {
             Body = new Body(collisionBoxes, position);
         }
+
+        public virtual void Update() { }
     }
 }

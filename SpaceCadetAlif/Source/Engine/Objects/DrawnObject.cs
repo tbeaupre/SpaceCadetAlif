@@ -42,7 +42,7 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         }
 
         // Called once per game loop.
-        public void Update()
+        public override void Update()
         {
             Sprite.Update();
         }

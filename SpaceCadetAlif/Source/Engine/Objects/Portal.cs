@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using SpaceCadetAlif.Source.Engine.Events;
+using SpaceCadetAlif.Source.Engine.Managers;
 using System.Collections.Generic;
 
 namespace SpaceCadetAlif.Source.Engine.Objects
@@ -13,6 +15,14 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         {
             mDestRoom = destRoom;
             mDestPos = destPos;
+        }
+
+        private void _OnCollision(CollisionEventArgs e)
+        {
+            if (e.A == WorldManager.FocusObject || e.B == WorldManager.FocusObject)
+            {
+                WorldManager.ChangeRoom(mDestRoom, mDestPos);
+            }
         }
     }
 }

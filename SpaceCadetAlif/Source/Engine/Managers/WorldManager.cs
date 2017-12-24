@@ -7,20 +7,24 @@ namespace SpaceCadetAlif.Source.Engine.Managers
     static class WorldManager
     {
         private static List<GameObject> toUpdate = new List<GameObject>(); // The list of active GameObjects.
+        private static List<DrawnObject> toDraw = new List<DrawnObject>(); // The list of objects to draw.
         private static List<GameObject> toDelete = new List<GameObject>(); // The list of GameObjects to be deleted this game loop.
         public static GameObject FocusObject { get; set; }                 // The GameObject which the camera is focused on.
-        public static Room CurrentRoom                                     // The Room which is currently occupied.
+        private static Room currentRoom;                                   // The Room which is currently occupied.
+
+        public static void ChangeRoom(Room newRoom, Vector2 newPosition)
         {
-            get
+            if (newRoom != currentRoom)
             {
-                return CurrentRoom;
+                toUpdate.Clear();
+                toDraw.Clear();
+
+                currentRoom = newRoom;
+
+                CreateObject(FocusObject);
             }
 
-            set
-            {
-                CurrentRoom = value;
-                PhysicsManager.InitEnvironment(value);
-            }
+            FocusObject.Body.Position = newPosition;
         }
 
         // Called once per game loop. Updates all GameObjects.
@@ -38,6 +42,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 foreach (GameObject obj in toDelete)
                 {
                     toUpdate.Remove(obj);
+                    if (obj is DrawnObject)
+                    {
+                        toDraw.Remove((DrawnObject)obj); // TXB: I'm not sure if this will work...
+                    }
                 }
                 toDelete.Clear();
             }
@@ -45,7 +53,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             // Update objects' positions and calculate collisions.
             PhysicsManager.Update(toUpdate);
 
-            DrawManager.Draw(CurrentRoom, toUpdate, GetFocusOffset());
+            DrawManager.Draw(currentRoom, toDraw, GetFocusOffset());
         }
 
         // Called when an object wants to delete itself from the world.
@@ -58,6 +66,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         public static void CreateObject(GameObject obj)
         {
             toUpdate.Add(obj);
+            if (obj is DrawnObject)
+            {
+                toDraw.Add((DrawnObject)obj);
+            }
         }
 
         // If there is an object being focused, draw everything relative to it.
