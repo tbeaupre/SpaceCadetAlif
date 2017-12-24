@@ -1,12 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceCadetAlif.Source.Engine.Graphics;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpaceCadetAlif.Source.Engine.Managers
 {
@@ -17,7 +13,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         private static Dictionary<string, SpriteData> sprites = new Dictionary<string, SpriteData>();
 
         // Initialize the ResourceManager with the game's ContentManager.
-        public static void InitResourceManager(ContentManager newContent)
+        public static void Init(ContentManager newContent)
         {
             content = newContent;
         }

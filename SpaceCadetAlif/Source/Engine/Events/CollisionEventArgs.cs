@@ -3,7 +3,6 @@ using System;
 
 namespace SpaceCadetAlif.Source.Engine.Events
 {
-    
     class CollisionEventArgs : EventArgs
     {
 

@@ -1,10 +1,9 @@
-﻿
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using SpaceCadetAlif.Source.Engine.Events;
 using SpaceCadetAlif.Source.Engine.Objects;
 using System;
 using System.Collections.Generic;
+using SpaceCadetAlif.Source.Engine.Physics;
 
 namespace SpaceCadetAlif.Source.Engine.Managers
 {
@@ -15,10 +14,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
     static class PhysicsManager
     {
-        private static Objects.Environment environment;
+        private static Room environment;
 
         // Sets the current environment
-        public static void InitEnvironment(Objects.Environment e)
+        public static void InitEnvironment(Room e)
         {
             environment = e;
         }

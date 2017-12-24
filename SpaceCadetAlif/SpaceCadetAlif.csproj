@@ -42,14 +42,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Source\Engine\Events\CollisionEventArgs.cs" />
-    <Compile Include="Source\Engine\Events\DeathEventArgs.cs" />
     <Compile Include="Source\Engine\Events\InputEventArgs.cs" />
+    <Compile Include="Source\Engine\Graphics\DrawLayer.cs" />
+    <Compile Include="Source\Engine\Graphics\Sprites\ManualSprite.cs" />
     <Compile Include="Source\Engine\Input\Key.cs" />
     <Compile Include="Source\Engine\Input\KeyState.cs" />
-    <Compile Include="Source\Engine\Objects\CollisionType.cs" />
     <Compile Include="Source\Engine\Objects\GameObject.cs" />
-    <Compile Include="Source\Engine\Graphics\DrawTextureData.cs" />
-    <Compile Include="Source\Engine\Graphics\DrawSpriteData.cs" />
+    <Compile Include="Source\Engine\Objects\Portal.cs" />
+    <Compile Include="Source\Engine\Physics\CollisionType.cs" />
+    <Compile Include="Source\Engine\Graphics\Sprites\AnimatedSprite.cs" />
+    <Compile Include="Source\Engine\Graphics\Sprites\LoopingSprite.cs" />
+    <Compile Include="Source\Engine\Objects\DrawnObject.cs" />
     <Compile Include="Source\Engine\Graphics\SpriteData.cs" />
     <Compile Include="Source\Engine\Managers\DrawManager.cs" />
     <Compile Include="Source\Engine\Managers\InputManager.cs" />
@@ -57,10 +60,10 @@
     <Compile Include="Source\Engine\Managers\ResourceManager.cs" />
     <Compile Include="Source\Engine\Managers\WorldManager.cs" />
     <Compile Include="Source\Engine\Objects\Actor.cs" />
-    <Compile Include="Source\Engine\Objects\Body.cs" />
-    <Compile Include="Source\Engine\Objects\Environment.cs" />
+    <Compile Include="Source\Engine\Physics\Body.cs" />
+    <Compile Include="Source\Engine\Objects\Room.cs" />
     <Compile Include="Source\Engine\Objects\Prop.cs" />
-    <Compile Include="Source\Engine\Sprite.cs" />
+    <Compile Include="Source\Engine\Graphics\Sprites\Sprite.cs" />
     <Compile Include="Source\Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
