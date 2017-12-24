@@ -22,7 +22,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         public static void Draw(Room room, List<DrawnObject> toDraw, Vector2 focusOffset)
         {
             spriteBatch.Begin();
-            DrawRoom(room, focusOffset);
+            if (room != null)
+            {
+                DrawRoom(room, focusOffset);
+            }
             foreach (DrawnObject obj in toDraw)
             {
                 DrawSprite(obj.Sprite, obj.Body.Position + focusOffset + screenOffset, obj.DrawLayer);
