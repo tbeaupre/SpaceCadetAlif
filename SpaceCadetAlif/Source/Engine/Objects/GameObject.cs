@@ -23,11 +23,13 @@ namespace SpaceCadetAlif.Source.Engine.Objects
 
         public virtual void Update() { }
 
+        // Adds the GameObject to all relevant update lists. Called in the constructor.
         public virtual void OnCreate()
         {
             WorldManager.ToUpdate.Add(this);
         }
 
+        // Removes the GameObject from all relevant update lists. Called by the WorldManager.
         public virtual void OnDelete()
         {
             WorldManager.ToUpdate.Remove(this);

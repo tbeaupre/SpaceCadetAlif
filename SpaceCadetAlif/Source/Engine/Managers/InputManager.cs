@@ -33,6 +33,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             keyboardBinds.Add(Input.Jump, Keys.Z);
         }
 
+        // Called once per game loop. Checks for input and sends events to registered Actors.
         public static void Update()
         {
             if (KeyInput)
@@ -50,24 +51,25 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                     {
                         if (keyState.Contains(keyboardBinds[input]))
                         {
-                            SendInputEvent(input, 1);
+                            SendInputEvent(input, 1); // Key is being held down.
                         }
                         else
                         {
-                            SendInputEvent(input, 0);
+                            SendInputEvent(input, 0); // Key was released.
                         }
                     }
                     else
                     {
                         if (keyState.Contains(keyboardBinds[input]))
                         {
-                            SendInputEvent(input, 0.5f);
+                            SendInputEvent(input, 0.5f); // Key is now pressed.
                         }
                     }
                 }
             }
         }
 
+        // Creates the event and sends it to all Actors registered for input.
         private static void SendInputEvent(Input input, float value)
         {
             InputEventArgs inputEventArgs = new InputEventArgs(input, value);

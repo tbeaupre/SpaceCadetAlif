@@ -14,21 +14,24 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
         public static void Init()
         {
+            // Initialize lists.
             ToUpdate = new List<GameObject>();
             ToDraw = new List<DrawnObject>();
         }
 
+        // Called when a portal is triggered.
         public static void ChangeRoom(Room newRoom, Vector2 newPosition)
         {
             if (newRoom != currentRoom)
             {
+                // Clear out the lists because they will be repopulated for the new room.
                 ToUpdate.Clear();
                 ToDraw.Clear();
                 InputManager.RegisteredActors.Clear();
 
                 currentRoom = newRoom;
 
-                FocusObject.OnCreate();
+                FocusObject.OnCreate(); // This is normally called in the constructor to add the object to lists.
             }
 
             FocusObject.Body.Position = newPosition;
@@ -48,7 +51,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             {
                 foreach (GameObject obj in toDelete)
                 {
-                    obj.OnDelete();
+                    obj.OnDelete(); // Let the object remove itself from relevant lists.
                 }
                 toDelete.Clear();
             }
