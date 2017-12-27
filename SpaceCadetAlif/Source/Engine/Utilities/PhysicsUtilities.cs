@@ -43,7 +43,7 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
                 if (v.Y != 0) return float.NaN;
                 return 0;
             }
-            return v.Y / v.X;
+            return (-v.Y / v.X);
         }
 
         public static float GetAngle(Vector2 vec1, Vector2 vec2, Vector2 vec3)
