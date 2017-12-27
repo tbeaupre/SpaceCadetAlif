@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using SpaceCadetAlif.Source.Engine.Events;
 using SpaceCadetAlif.Source.Engine.Graphics;
+using SpaceCadetAlif.Source.Engine.Managers;
 using System;
 using System.Collections.Generic;
 
@@ -19,11 +19,6 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         private int mHealth;                               // The current health of the object. Defaults to 1.
 
         // EventHandlers
-        // Called when an input is processed.
-        public event InputEventHandler KeyPressListener;
-        public delegate void InputEventHandler(InputEventArgs e);
-        public virtual void OnKeyPress(InputEventArgs e) { KeyPressListener?.Invoke(e); }
-
         // Called when a change in health causes the GameObject to die.
         public event EventHandler DeathListener;
         public virtual void OnDeath(object sender, EventArgs e) { DeathListener?.Invoke(this, e); }
@@ -60,6 +55,18 @@ namespace SpaceCadetAlif.Source.Engine.Objects
             {
                 OnDeath(source, EventArgs.Empty);
             }
+        }
+
+        public override void OnCreate()
+        {
+            WorldManager.ToDraw.Add(this);
+            base.OnCreate();
+        }
+
+        public override void OnDelete()
+        {
+            WorldManager.ToDraw.Remove(this);
+            base.OnDelete();
         }
     }
 }

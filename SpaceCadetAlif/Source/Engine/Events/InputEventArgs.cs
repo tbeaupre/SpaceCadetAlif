@@ -1,17 +1,16 @@
-﻿using SpaceCadetAlif.Source.Engine.Input;
-using System;
+﻿using System;
 
 namespace SpaceCadetAlif.Source.Engine.Events
 {
     class InputEventArgs : EventArgs
     {
-        public Key Key { get; set; }        // The key whose state has changed.
-        public KeyState State { get; set; } // The state of the key in question (eg. Pressed, Down, Released).
+        Public.Input Input { get; }
+        float Value { get; }
 
-        public InputEventArgs(Key key, KeyState state)
+        public InputEventArgs(Public.Input input, float value)
         {
-            Key = key;
-            State = state;
+            Input = input;
+            Value = value;
         }
     }
 }

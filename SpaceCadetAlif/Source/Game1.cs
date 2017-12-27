@@ -30,6 +30,9 @@ namespace SpaceCadetAlif
 
             Vector2 screenOffset = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
             DrawManager.Init(new SpriteBatch(GraphicsDevice), screenOffset);
+
+            InputManager.Init();
+            WorldManager.Init();
             
             base.Initialize();
         }
@@ -63,6 +66,7 @@ namespace SpaceCadetAlif
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            InputManager.Update();
             WorldManager.Update();
 
             base.Update(gameTime);
@@ -75,9 +79,6 @@ namespace SpaceCadetAlif
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
             base.Draw(gameTime);
         }
     }
