@@ -1,4 +1,5 @@
 ﻿using SpaceCadetAlif.Source.Engine.Objects;
+using SpaceCadetAlif.Source.Engine.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,14 @@ namespace SpaceCadetAlif.Source.Engine.Events
 
         public GameObject A { get; }
         public GameObject B { get; }
+        public Direction direction { get; }
 
-        public CollisionEvent(GameObject a, GameObject b)
+
+        public CollisionEvent(GameObject a, GameObject b, Direction d)
         {
             A = a;
             B = b;
+            direction = d;
         }
     }
 }

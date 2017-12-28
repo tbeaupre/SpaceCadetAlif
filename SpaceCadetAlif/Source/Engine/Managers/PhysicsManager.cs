@@ -1,6 +1,7 @@
 ﻿
 
 using Microsoft.Xna.Framework;
+using SpaceCadetAlif.Source.Engine.Events;
 using SpaceCadetAlif.Source.Engine.Objects;
 using SpaceCadetAlif.Source.Engine.Utilities;
 
@@ -57,8 +58,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             {
                 return false;
             }
+            bool collided = false;
 
-            
             float relativeSlope = PhysicsUtilities.SlopeFromVector(relativeVel);
 
             foreach (Rectangle aRect in A.Body.CollisionBoxes)
@@ -87,7 +88,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 Math.Abs(projection.Location.X - aRect.Location.X),
                 Math.Abs(projection.Location.Y - aRect.Location.Y));
 
-                Vector2 offset = Vector2.Zero;
+                OffsetAndDirectionData offset = new OffsetAndDirectionData();
 
                 // loop through all collision boxes in B
                 foreach (Rectangle bRect in B.Body.CollisionBoxes)
@@ -99,60 +100,161 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
                     if (!Rectangle.Intersect(bRect, projection).IsEmpty)
                     {
-                        Vector2 localOffset = calculateOffset(bRect, projection, relativeVel);
-                        if (localOffset.LengthSquared() > offset.LengthSquared()) {
-                            offset = localOffset;
-                            continue;
+                        collided = true;
+                        if (A.Body.CollisionType == CollisionType.SOLID && B.Body.CollisionType == CollisionType.SOLID)
+                        {
+                            OffsetAndDirectionData localOffset = calculateOffset(bRect, projection, relativeVel);
+                            if (localOffset.OffsetVector.LengthSquared() > offset.OffsetVector.LengthSquared())
+                            {
+                                offset = localOffset;
+                                continue;
+                            }
                         }
                     }
-                    // A is upper left of
-                    float angleABC, angleABD, angleBAC, angleBAD;
 
+                    Vector2 upperCriticalPointB;
+                    Vector2 lowerCriticalPointB;
 
+                    if (relativeSlope >= 0)
+                    {
+                        upperCriticalPointB = PhysicsUtilities.TopLeft(bRect);
+                        lowerCriticalPointB = PhysicsUtilities.BottomRight(bRect);
+                    }
+                    else
+                    {
+                        lowerCriticalPointB = PhysicsUtilities.BottomLeft(bRect);
+                        upperCriticalPointB = PhysicsUtilities.TopRight(bRect);
+                    }
+
+                    float angleFAB = PhysicsUtilities.GetAngle(upperCriticalPoint + relativeVel, upperCriticalPoint, lowerCriticalPoint);
+                    float angleGBA = PhysicsUtilities.GetAngle(lowerCriticalPoint + relativeVel, lowerCriticalPoint, upperCriticalPoint);
+                    float angleCAB = PhysicsUtilities.GetAngle(upperCriticalPointB, upperCriticalPoint, lowerCriticalPoint);
+                    float angleDAB = PhysicsUtilities.GetAngle(lowerCriticalPointB, upperCriticalPoint, lowerCriticalPoint);
+                    float angleCBA = PhysicsUtilities.GetAngle(upperCriticalPointB, lowerCriticalPoint, upperCriticalPoint);
+
+                    if (angleFAB <= angleCAB)
+                    {
+                        if (angleFAB <= angleDAB)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            collided = true;
+                            if (A.Body.CollisionType == CollisionType.SOLID && B.Body.CollisionType == CollisionType.SOLID)
+                            {
+                                OffsetAndDirectionData localOffset = calculateOffset(bRect, projection, relativeVel);
+                                if (localOffset.OffsetVector.LengthSquared() > offset.OffsetVector.LengthSquared())
+                                {
+                                    offset = localOffset;
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (angleGBA > angleCBA)
+                        {
+                            collided = true;
+                            if (A.Body.CollisionType == CollisionType.SOLID && B.Body.CollisionType == CollisionType.SOLID)
+                            {
+                                OffsetAndDirectionData localOffset = calculateOffset(bRect, projection, relativeVel);
+                                if (localOffset.OffsetVector.LengthSquared() > offset.OffsetVector.LengthSquared())
+                                {
+                                    offset = localOffset;
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                }
+                // send collision event out with Direction
+                if (collided)
+                {
+                    //shift A over by the offset if both are solid
+                    if (A.Body.CollisionType == CollisionType.SOLID && B.Body.CollisionType == CollisionType.SOLID)
+                    {
+                        A.Body.Position -= offset.OffsetVector;
+                        //placeholder for velocity handling
+                        A.Body.Velocity = Vector2.Zero;
+                        B.Body.Velocity = Vector2.Zero;
+                    }
+                    CollisionEvent collisionEvent = new CollisionEvent(A, B, offset.Direction);
                 }
             }
-            return false;
+            return collided;
         }
 
-        private static Vector2 calculateOffset(Rectangle stationaryRect, Rectangle movingRect, Vector2 relativeVel)
+        private static OffsetAndDirectionData calculateOffset(Rectangle stationaryRect, Rectangle movingRect, Vector2 relativeVel)
         {
-            float xOff, yOff;
+            float xFromXOff, yFromYOff, xFromYOff, yFromXOff;
             bool rightWardX = relativeVel.X > 0;
             bool upWardY = relativeVel.Y < 0;
+            OffsetAndDirectionData offsetDataFromX = new OffsetAndDirectionData(), offsetDataFromY = new OffsetAndDirectionData();
+            Direction directionFromX, directionFromY;
+
 
             float relativeSlope = PhysicsUtilities.SlopeFromVector(relativeVel);
-            bool xPriority = false;
-            if(!float.IsNaN(relativeSlope)) //if velcocity is not Y direction only
-            {
-                xPriority = Math.Abs(relativeSlope) <= 1;
-            }
 
-            if (xPriority)
+
+            if (relativeVel.X != 0)
             {
                 if (rightWardX)
                 {
-                    xOff = movingRect.Right - stationaryRect.Left;
+                    xFromXOff = movingRect.Right - stationaryRect.Left;
+                    directionFromX = Direction.RIGHT;
                 }
                 else
                 {
-                    xOff = movingRect.Left - stationaryRect.Right;
+                    xFromXOff = movingRect.Left - stationaryRect.Right;
+                    directionFromX = Direction.LEFT;
                 }
-                yOff = (relativeVel.Y / relativeVel.X) * (xOff);
+                yFromXOff = (relativeVel.Y / relativeVel.X) * (xFromXOff);
+                offsetDataFromX = new OffsetAndDirectionData(new Vector2(xFromXOff, yFromXOff), directionFromX);
             }
-            else
+            if (relativeVel.Y != 0)
             {
                 if (upWardY)
                 {
-                    yOff = movingRect.Top - stationaryRect.Bottom;
+                    yFromYOff = movingRect.Top - stationaryRect.Bottom;
+                    directionFromY = Direction.UP;
                 }
                 else
                 {
-                    yOff = movingRect.Bottom - stationaryRect.Top;
+                    yFromYOff = movingRect.Bottom - stationaryRect.Top;
+                    directionFromY = Direction.DOWN;
                 }
-                xOff = (relativeVel.X / relativeVel.Y) * (yOff);
+                xFromYOff = (relativeVel.X / relativeVel.Y) * (yFromYOff);
+                offsetDataFromY = new OffsetAndDirectionData(new Vector2(xFromYOff, yFromYOff), directionFromY);
             }
+            // return the min offset
+            if (offsetDataFromX.OffsetVector.LengthSquared() <= offsetDataFromY.OffsetVector.LengthSquared())
+            {
+                return offsetDataFromX;
+            }
+            else
+            {
+                return offsetDataFromY;
+            }
+        }
 
-            return new Vector2(xOff, yOff);
+        // simple class for storing offset and direction of motion upon collision
+        private class OffsetAndDirectionData
+        {
+            public Vector2 OffsetVector { get; set; }
+            public Direction Direction { get; set; }
+            public OffsetAndDirectionData(Vector2 offset, Direction dir)
+            {
+                OffsetVector = offset;
+                Direction = dir;
+            }
+            //default for soft collisions
+            public OffsetAndDirectionData()
+            {
+                OffsetVector = Vector2.Zero;
+                Direction = Direction.NONE;
+            }
         }
 
         private static void UpdateMotion(Body body)
