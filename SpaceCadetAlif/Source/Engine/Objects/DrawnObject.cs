@@ -20,12 +20,16 @@ namespace SpaceCadetAlif.Source.Engine.Objects
 
         // EventHandlers
         // Called when a change in health causes the GameObject to die.
-        public event EventHandler DeathListener;
+        public virtual event EventHandler DeathListener;
         public virtual void OnDeath(object sender, EventArgs e) { DeathListener?.Invoke(this, e); }
 
         // Called when an AnimatedSprite finishes its animation.
         public event EventHandler AnimationCompleteListener;
         public virtual void OnAnimationComplete(object sender, EventArgs e) { AnimationCompleteListener?.Invoke(this, e); }
+
+        // Called when this object is interacted with.
+        public virtual event EventHandler InteractListener;
+        public virtual void OnInteract(object sender, EventArgs e) { InteractListener?.Invoke(this, e); }
 
 
         protected DrawnObject(Sprite sprite, List<Rectangle> collisionBoxes, Vector2 position, int health = 1)

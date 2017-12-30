@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace SpaceCadetAlif.Source.Engine.Objects
 {
@@ -8,6 +9,15 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         public bool Interactable { get; } // Determines if a prop can be interacted with.
         public bool Destructible { get; } // Determines if a prop can be destroyed.
         public bool Movable { get; }      // Determines if a prop can be moved.
+        
+        // EventHandlers
+        // Called when a change in health causes the GameObject to die.
+        public override event EventHandler DeathListener;
+        public override void OnDeath(object sender, EventArgs e) { if (Destructible) DeathListener.Invoke(this, e); }
+
+        // Called when this object is interacted with.
+        public override event EventHandler InteractListener;
+        public override void OnInteract(object sender, EventArgs e) { if (Interactable) InteractListener?.Invoke(this, e); }
 
         public Prop(Sprite sprite, List<Rectangle> collisionBoxes, Vector2 position, bool interact, bool destruct, bool move)
             : base(sprite, collisionBoxes, position)
@@ -15,6 +25,11 @@ namespace SpaceCadetAlif.Source.Engine.Objects
             Interactable = interact;
             Destructible = destruct;
             Movable = move;
+
+            if (!Movable)
+            {
+                Body.CollisionType = Physics.CollisionType.SOLID;
+            }
         }
     }
 }
