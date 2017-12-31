@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using SpaceCadetAlif.Source.Engine.Graphics;
 using SpaceCadetAlif.Source.Engine.Objects;
+using System;
 using System.Collections.Generic;
 
 namespace SpaceCadetAlif.Source.Engine.Managers
@@ -36,14 +37,13 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         // Draws a Room's foreground and background.
         private static void DrawRoom(Room room, Vector2 focusOffset)
         {
-            DrawTexture(room.BackgroundTag, focusOffset + screenOffset, DrawLayer.Background);
-            DrawTexture(room.ForegroundTag, focusOffset + screenOffset, DrawLayer.Foreground);
+            DrawTexture(room.GetBackground(), focusOffset + screenOffset, DrawLayer.Background);
+            DrawTexture(room.GetForeground(), focusOffset + screenOffset, DrawLayer.Foreground);
         }
 
         // Draws the texture.
-        private static void DrawTexture(string tag, Vector2 pos, DrawLayer layer)
+        private static void DrawTexture(Texture2D texture, Vector2 pos, DrawLayer layer)
         {
-            Texture2D texture = ResourceManager.GetTexture(tag);
             spriteBatch.Draw(texture,
                 new Rectangle((int)pos.X, (int)pos.Y, texture.Bounds.Width, texture.Bounds.Height),
                 null, // Textures are not animated, so there is no source rectangle.
@@ -57,7 +57,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         // Draws the sprite.
         private static void DrawSprite(Sprite sprite, Vector2 pos, DrawLayer layer)
         {
-            spriteBatch.Draw(ResourceManager.GetTexture(sprite.Data.TextureTag),
+            spriteBatch.Draw(sprite.Data.GetTexture(),
                 sprite.GetSourceRect(),
                 sprite.GetDestRect((int)pos.X, (int)pos.Y),
                 Color.White,

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceCadetAlif.Source.Engine.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -9,8 +10,9 @@ namespace SpaceCadetAlif.Source.Engine.Managers
     static class ResourceManager
     {
         private static ContentManager content;
-        private static Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
-        private static Dictionary<string, SpriteData> sprites = new Dictionary<string, SpriteData>();
+        private static Dictionary<string, Guid> guids = new Dictionary<string, Guid>();
+        private static Dictionary<Guid, Texture2D> textures = new Dictionary<Guid, Texture2D>();
+        private static Dictionary<Guid, SpriteData> sprites = new Dictionary<Guid, SpriteData>();
 
         // Initialize the ResourceManager with the game's ContentManager.
         public static void Init(ContentManager newContent)
@@ -18,57 +20,51 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             content = newContent;
         }
 
-        // Load up a texture and add it to the dictionary. Return -1 if error, 0 otherwise.
-        public static bool LoadTexture(string tag, string path)
+        // Load up a texture and add it to the dictionary.
+        public static Guid LoadTexture(string path)
         {
-            if (textures.ContainsKey(tag))
+            if (guids.ContainsKey(path))
             {
-                // Tag is already used.
-                Debug.WriteLine("DrawManager::LoadTexture(): Tag " + tag + " is already in use.");
-                return false;
+                return guids[path]; // Texture was already loaded.
             }
 
-            Texture2D texture = content.Load<Texture2D>(path);
-            textures.Add(tag, texture);
+            Guid id = Guid.NewGuid();
+            guids.Add(path, id);
 
-            return true;
+            Texture2D texture = content.Load<Texture2D>(path);
+            textures.Add(id, texture);
+
+            return id;
         }
 
-        // Retrieve the texture associated with given tag.
-        public static Texture2D GetTexture(string tag)
+        // Retrieve the texture associated with given ID.
+        public static Texture2D GetTexture(Guid id)
         {
-            Texture2D texture = textures[tag];
+            Texture2D texture = textures[id];
             return texture;
         }
 
-        // Create a sprite based and add it to the dictionary. Return -1 if error, 0 otherwise.
-        public static bool LoadSprite(string spriteTag, string textureTag, int numFrames, int slowdown)
+        // Create sprite data and add it to the dictionary.
+        public static Guid LoadSpriteData(string path, int numFrames, int slowdown)
         {
-            if (sprites.ContainsKey(spriteTag))
+            if (guids.ContainsKey(path))
             {
-                // Tag is already used.
-                Debug.WriteLine("DrawManager::LoadSprite(): Tag " + spriteTag + " is already in use.");
-                return false;
+                return guids[path]; // Texture was already loaded.
             }
 
-            if (!textures.ContainsKey(textureTag))
-            {
-                // Given texture has not been loaded yet.
-                Debug.WriteLine("DrawManager::LoadSprite(): Texture associated with " + textureTag + " has not been loaded.");
-                return false;
-            }
+            Guid id = Guid.NewGuid();
+            guids.Add(path, id);
 
-            SpriteData sprite = new SpriteData(textureTag, numFrames, slowdown);
-            sprites.Add(spriteTag, sprite);
+            SpriteData sprite = new SpriteData(path, numFrames, slowdown);
+            sprites.Add(id, sprite);
 
-            return true;
+            return id;
         }
 
-        // Retrieve the sprite associated with given tag.
-        public static SpriteData GetSprite(string spriteTag)
+        // Retrieve the sprite data associated with given ID.
+        public static SpriteData GetSpriteData(Guid spriteID)
         {
-            SpriteData sprite = sprites[spriteTag];
-            return sprite;
+            return sprites[spriteID];
         }
     }
 }
