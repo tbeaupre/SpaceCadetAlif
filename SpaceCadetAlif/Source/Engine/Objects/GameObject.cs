@@ -1,57 +1,38 @@
 ﻿using Microsoft.Xna.Framework;
 using SpaceCadetAlif.Source.Engine.Events;
+using SpaceCadetAlif.Source.Engine.Managers;
+using SpaceCadetAlif.Source.Engine.Physics;
 using System.Collections.Generic;
 
 namespace SpaceCadetAlif.Source.Engine.Objects
 {
-    /*
-     * The abstract parent class of both Actors and Props.
-     * Has basic physics, sprite, and health information.
-     */
     abstract class GameObject
     {
         public Body Body { get; } // The GameObject's physics body.
-        private Sprite mSprite;   // The sprite to be drawn.
-        private int mMaxHealth;   // The max health of the object. Defaults to 1.
-        private int mHealth;      // The current health of the object. Defaults to 1.
 
-        protected GameObject(Sprite sprite, List<Rectangle> collisionBoxes, Vector2 position, int health = 1)
+        // Called by the PhysicsManager when this object is part of a collision.
+        public event CollisionEventHandler CollisionListener;
+        public delegate void CollisionEventHandler(CollisionEventArgs e);
+        public virtual void OnCollision(CollisionEventArgs e) { CollisionListener?.Invoke(e); }
+
+        public GameObject(List<Rectangle> collisionBoxes, Vector2 position)
         {
             Body = new Body(collisionBoxes, position);
-            mSprite = sprite;
-            mMaxHealth = health;
-            mHealth = health;
+            OnCreate();
         }
 
-        // Called once per game loop.
-        public void Update()
+        public virtual void Update() { }
+
+        // Adds the GameObject to all relevant update lists. Called in the constructor.
+        public virtual void OnCreate()
         {
-            mSprite.Update();
+            WorldManager.ToUpdate.Add(this);
         }
 
-        // Defines behavior for handling events. By default, reacts to no events.
-        public virtual void OnEvent(Event e) { }
-
-        // Defines behavior upon death.
-        public virtual void OnDeath()
+        // Removes the GameObject from all relevant update lists. Called by the WorldManager.
+        public virtual void OnDelete()
         {
-            // Remove from WorldManager.
-            // Play death animation.
-        }
-
-        // Handles increasing or decreasing current life.
-        public void ChangeLife(int delta)
-        {
-            mHealth += delta;
-
-            if (mHealth > mMaxHealth)
-            {
-                mHealth = mMaxHealth;
-            }
-            else if (mHealth <= 0)
-            {
-                OnDeath();
-            }
+            WorldManager.ToUpdate.Remove(this);
         }
     }
 }
