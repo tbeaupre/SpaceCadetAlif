@@ -1,10 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using SpaceCadetAlif.Source.Engine.Objects;
+using SpaceCadetAlif.Source.Engine.Physics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpaceCadetAlif.Source.Engine.Utilities
 {

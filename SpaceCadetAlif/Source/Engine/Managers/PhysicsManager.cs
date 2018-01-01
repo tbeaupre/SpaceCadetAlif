@@ -179,7 +179,9 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                         A.Body.Velocity = Vector2.Zero;
                         B.Body.Velocity = Vector2.Zero;
                     }
-                    CollisionEvent collisionEvent = new CollisionEvent(A, B, offset.Direction);
+                    CollisionEventArgs collisionEventArgs = new CollisionEventArgs(A, B, offset.Direction);
+                    A.OnCollision(collisionEventArgs);
+                    B.OnCollision(collisionEventArgs);
                 }
             }
             return collided;
