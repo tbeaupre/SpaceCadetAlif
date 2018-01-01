@@ -27,9 +27,7 @@ namespace SpaceCadetAlif
         protected override void Initialize()
         {
             ResourceManager.Init(Content);
-            
             DrawManager.Init(GraphicsDevice, new SpriteBatch(GraphicsDevice));
-
             InputManager.Init();
             WorldManager.Init();
             

@@ -15,10 +15,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         private const int LOW_RES_WIDTH = SCREEN_WIDTH / SCREEN_SIZE_MULTIPLIER;
         private const int LOW_RES_HEIGHT = SCREEN_HEIGHT / SCREEN_SIZE_MULTIPLIER;
 
-        private static GraphicsDevice graphicsDevice;
-        private static RenderTarget2D lowRes;
-        private static SpriteBatch spriteBatch; // SpriteBatches allow many textures to be drawn with high efficiency.
-        private static Vector2 screenOffset;    // Offsets everything to the center of the screen. Makes focusing on an object easier.
+        private static GraphicsDevice graphicsDevice; // The GraphicsDevice to be drawn to.
+        private static RenderTarget2D lowRes;         // The RenderTarget for the low-res graphics. Necessary for smooth parallax.
+        private static SpriteBatch spriteBatch;       // SpriteBatches allow many textures to be drawn with high efficiency.
+        private static Vector2 screenOffset;          // Offsets everything to the center of the screen. Makes focusing on an object easier.
 
         // Initialize the DrawManager with the game's SpriteBatch.
         public static void Init(GraphicsDevice newGraphicsDevice, SpriteBatch newSpriteBatch)

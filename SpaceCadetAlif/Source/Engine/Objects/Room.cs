@@ -7,7 +7,7 @@ namespace SpaceCadetAlif.Source.Engine.Objects
 {
     class Room
     {
-        public int ParallaxFactor { get; }
+        public int ParallaxFactor { get; } // Determines the difference in scroll speed between background and foreground textures. (ex. ParallaxFactor = 2 means the background scrolls half as fast.)
         private Guid mBackgroundID;
         private Guid mCollisionID;
         private Guid mForegroundID;
