@@ -5,11 +5,11 @@ namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
 {
     class AnimatedSprite : Sprite
     {
-        private DrawnObject mParent;  // Used to alert the parent object when the animation ends.
+        private DrawnObject mParent; // Used to alert the parent object when the animation ends.
         private int[] mAnimation;    // A sequence of frame numbers which defines an animation.
         private int mAnimationIndex; // The index into the animation array.
         private bool mLoop;          // Determines if the animation should loop when it is complete.
-        private bool mInterruptible;  // Determines if the animation can be interrupted to start a new one.
+        private bool mInterruptible; // Determines if the animation can be interrupted to start a new one.
 
         public AnimatedSprite(DrawnObject parent, SpriteData data, int[] animation, bool loop, bool interruptible)
             : base(data, animation[0])
