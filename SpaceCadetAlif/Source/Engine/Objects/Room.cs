@@ -7,12 +7,14 @@ namespace SpaceCadetAlif.Source.Engine.Objects
 {
     class Room
     {
+        public int ParallaxFactor { get; }
         private Guid mBackgroundID;
         private Guid mCollisionID;
         private Guid mForegroundID;
 
-        public Room(string backgroundPath, string collisionPath, string foregroundPath)
+        public Room(string backgroundPath, string collisionPath, string foregroundPath, int parallaxFactor)
         {
+            ParallaxFactor = parallaxFactor;
             mBackgroundID = ResourceManager.LoadTexture(backgroundPath);
             mCollisionID = ResourceManager.LoadTexture(collisionPath);
             mForegroundID = ResourceManager.LoadTexture(foregroundPath);

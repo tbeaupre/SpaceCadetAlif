@@ -27,9 +27,8 @@ namespace SpaceCadetAlif
         protected override void Initialize()
         {
             ResourceManager.Init(Content);
-
-            Vector2 screenOffset = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
-            DrawManager.Init(new SpriteBatch(GraphicsDevice), screenOffset);
+            
+            DrawManager.Init(GraphicsDevice, new SpriteBatch(GraphicsDevice));
 
             InputManager.Init();
             WorldManager.Init();
