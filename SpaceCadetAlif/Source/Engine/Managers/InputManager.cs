@@ -22,6 +22,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             keyboardBinds = new Dictionary<Input, Keys>();
             gamePadBinds = new Dictionary<Input, Buttons>();
             oldState = new List<Keys>();
+            keyState = new List<Keys>();
 
             // Set default inputs.
             KeyInput = true;

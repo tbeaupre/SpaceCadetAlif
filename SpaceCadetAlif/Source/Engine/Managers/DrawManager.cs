@@ -46,7 +46,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
             graphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin();
-              DrawBackground(room.GetBackground(), (focusOffset + screenOffset) / room.ParallaxFactor, SCREEN_SIZE_MULTIPLIER);
+              if (room != null)
+              {
+                  DrawBackground(room.GetBackground(), (focusOffset + screenOffset) / room.ParallaxFactor, SCREEN_SIZE_MULTIPLIER);
+              }
               spriteBatch.Draw(lowRes, new Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT), Color.White);
             spriteBatch.End();
         }
