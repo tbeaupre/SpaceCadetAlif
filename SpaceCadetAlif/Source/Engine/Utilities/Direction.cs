@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpaceCadetAlif.Source.Engine.Objects
+namespace SpaceCadetAlif.Source.Engine.Utilities
 {
-    class Environment
+    enum Direction
     {
+        UP,DOWN,LEFT,RIGHT,NONE
     }
 }

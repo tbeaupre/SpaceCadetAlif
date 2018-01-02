@@ -26,9 +26,11 @@ namespace SpaceCadetAlif
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            ResourceManager.InitResourceManager(Content);
-            DrawManager.InitDrawManager(new SpriteBatch(GraphicsDevice));
+            ResourceManager.Init(Content);
+            DrawManager.Init(GraphicsDevice, new SpriteBatch(GraphicsDevice));
+            InputManager.Init();
+            WorldManager.Init();
+            
             base.Initialize();
         }
 
@@ -61,7 +63,8 @@ namespace SpaceCadetAlif
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            InputManager.Update();
+            WorldManager.Update();
 
             base.Update(gameTime);
         }
@@ -73,9 +76,6 @@ namespace SpaceCadetAlif
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
             base.Draw(gameTime);
         }
     }
