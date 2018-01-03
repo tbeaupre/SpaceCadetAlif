@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using SpaceCadetAlif.Source.Engine.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace SpaceCadetAlif.Source.Engine.Managers
 {
@@ -12,13 +11,15 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         private const int DEFAULT_SLOWDOWN = 5;
         private static ContentManager content;
         private static Dictionary<string, Guid> guids = new Dictionary<string, Guid>();
-        private static Dictionary<Guid, Texture2D> textures = new Dictionary<Guid, Texture2D>();
-        private static Dictionary<Guid, SpriteData> sprites = new Dictionary<Guid, SpriteData>();
+        private static Dictionary<Guid, Texture2D> textures;
+        private static Dictionary<Guid, SpriteData> sprites;
 
         // Initialize the ResourceManager with the game's ContentManager.
         public static void Init(ContentManager newContent)
         {
             content = newContent;
+            textures = new Dictionary<Guid, Texture2D>();
+            sprites = new Dictionary<Guid, SpriteData>();
         }
 
         // Load up a texture and add it to the dictionary.
@@ -53,10 +54,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 return guids[path]; // Texture was already loaded.
             }
 
-            Guid id = Guid.NewGuid();
-            guids.Add(path, id);
-
             SpriteData sprite = new SpriteData(path, numFrames, slowdown);
+            Guid id = guids[path];
             sprites.Add(id, sprite);
 
             return id;

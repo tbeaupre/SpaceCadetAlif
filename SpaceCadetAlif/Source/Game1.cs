@@ -1,8 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SpaceCadetAlif.Source.Engine;
+using SpaceCadetAlif.Source.Engine.Graphics.Sprites;
 using SpaceCadetAlif.Source.Engine.Managers;
+using SpaceCadetAlif.Source.Game;
 using SpaceCadetAlif.Source.Public;
+using System;
 
 namespace SpaceCadetAlif
 {
@@ -32,7 +36,7 @@ namespace SpaceCadetAlif
         protected override void Initialize()
         {
             ResourceManager.Init(Content);
-            DrawManager.Init(GraphicsDevice, new SpriteBatch(GraphicsDevice));
+            DrawManager.Init(graphics.GraphicsDevice, new SpriteBatch(graphics.GraphicsDevice));
             InputManager.Init();
             WorldManager.Init();
             
@@ -81,6 +85,9 @@ namespace SpaceCadetAlif
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            DrawManager.Draw(WorldManager.CurrentRoom, WorldManager.ToDraw);
+
             base.Draw(gameTime);
         }
     }

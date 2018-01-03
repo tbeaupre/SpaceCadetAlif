@@ -24,8 +24,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         }
 
         // Called by the game loop to draw every texture and sprite.
-        public static void Draw(Room room, List<DrawnObject> toDraw, Vector2 focusOffset)
+        public static void Draw(Room room, List<DrawnObject> toDraw)
         {
+            Vector2 focusOffset = WorldManager.GetFocusOffset();
+
             graphicsDevice.SetRenderTarget(lowRes);
             spriteBatch.Begin();
               if (room != null)
@@ -39,7 +41,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             spriteBatch.End();
 
             graphicsDevice.SetRenderTarget(null);
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
               if (room != null)
               {
                   DrawBackground(room.GetBackground(), (focusOffset + screenOffset) / room.ParallaxFactor, Screen.screenSizeMultiplier);
@@ -73,11 +75,11 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         private static void DrawSprite(Sprite sprite, Vector2 pos, DrawLayer layer)
         {
             spriteBatch.Draw(sprite.Data.GetTexture(),
-                sprite.GetSourceRect(),
                 sprite.GetDestRect((int)pos.X, (int)pos.Y),
+                sprite.GetSourceRect(),
                 Color.White,
                 0,
-                new Vector2(0, 0),
+                new Vector2(sprite.Data.FrameWidth / 2, sprite.Data.FrameHeight / 2),
                 SpriteEffects.None,
                 (float)layer / 10f);
         }
