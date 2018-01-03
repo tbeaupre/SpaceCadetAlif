@@ -40,6 +40,8 @@ namespace SpaceCadetAlif
             InputManager.Init();
             WorldManager.Init();
             
+            WorldManager.FocusObject = new Cadet(new Vector2(0, 0));
+
             base.Initialize();
         }
 
