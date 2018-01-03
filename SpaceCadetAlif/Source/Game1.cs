@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SpaceCadetAlif.Source.Engine.Managers;
+using SpaceCadetAlif.Source.Public;
 
 namespace SpaceCadetAlif
 {
@@ -16,6 +17,10 @@ namespace SpaceCadetAlif
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            graphics.PreferredBackBufferWidth = Screen.screenWidth;
+            graphics.PreferredBackBufferHeight = Screen.screenHeight;
+            graphics.IsFullScreen = Screen.fullscreen;
+            graphics.ApplyChanges();
         }
 
         /// <summary>
