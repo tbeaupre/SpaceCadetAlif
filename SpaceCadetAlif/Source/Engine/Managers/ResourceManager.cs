@@ -9,6 +9,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 {
     static class ResourceManager
     {
+        private const int DEFAULT_SLOWDOWN = 5;
         private static ContentManager content;
         private static Dictionary<string, Guid> guids = new Dictionary<string, Guid>();
         private static Dictionary<Guid, Texture2D> textures = new Dictionary<Guid, Texture2D>();
@@ -45,7 +46,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         }
 
         // Create sprite data and add it to the dictionary.
-        public static Guid LoadSpriteData(string path, int numFrames, int slowdown)
+        public static Guid LoadSpriteData(string path, int numFrames, int slowdown = DEFAULT_SLOWDOWN)
         {
             if (guids.ContainsKey(path))
             {

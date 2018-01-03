@@ -1,9 +1,11 @@
 ﻿
+using System;
+
 namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
 {
     class LoopingSprite : Sprite
     {
-        public LoopingSprite(SpriteData data, int startFrame) : base(data, startFrame)
+        public LoopingSprite(Guid id, int startFrame) : base(id, startFrame)
         {
         }
 

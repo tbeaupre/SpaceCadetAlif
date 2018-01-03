@@ -1,9 +1,11 @@
 ﻿
+using System;
+
 namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
 {
     class ManualSprite : Sprite
     {
-        public ManualSprite(SpriteData data, int startFrame) : base(data, startFrame)
+        public ManualSprite(Guid id, int startFrame) : base(id, startFrame)
         {
         }
 

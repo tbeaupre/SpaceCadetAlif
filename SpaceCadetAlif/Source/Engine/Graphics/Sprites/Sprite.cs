@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using SpaceCadetAlif.Source.Engine.Graphics;
+using SpaceCadetAlif.Source.Engine.Managers;
+using System;
 
 namespace SpaceCadetAlif.Source.Engine
 {
@@ -9,11 +11,11 @@ namespace SpaceCadetAlif.Source.Engine
         protected int mCurrentFrame;    // The frame which will be drawn.
         protected int mFrameTimer;      // Applies a slowdown to the animation speed.
 
-        public Sprite(SpriteData data, int startFrame)
+        public Sprite(Guid id, int startFrame)
         {
-            Data = data;
+            Data = ResourceManager.GetSpriteData(id);
             mCurrentFrame = startFrame;
-            mFrameTimer = data.Slowdown;
+            mFrameTimer = Data.Slowdown;
         }
 
         // Called once per game loop. Applies the animation slowdown.
