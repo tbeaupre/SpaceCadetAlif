@@ -2,19 +2,13 @@
 using Microsoft.Xna.Framework.Graphics;
 using SpaceCadetAlif.Source.Engine.Graphics;
 using SpaceCadetAlif.Source.Engine.Objects;
-using System;
+using SpaceCadetAlif.Source.Public;
 using System.Collections.Generic;
 
 namespace SpaceCadetAlif.Source.Engine.Managers
 {
     static class DrawManager
     {
-        private const int SCREEN_WIDTH = 1280;
-        private const int SCREEN_HEIGHT = 1024;
-        private const int SCREEN_SIZE_MULTIPLIER = 6;
-        private const int LOW_RES_WIDTH = SCREEN_WIDTH / SCREEN_SIZE_MULTIPLIER;
-        private const int LOW_RES_HEIGHT = SCREEN_HEIGHT / SCREEN_SIZE_MULTIPLIER;
-
         private static GraphicsDevice graphicsDevice; // The GraphicsDevice to be drawn to.
         private static RenderTarget2D lowRes;         // The RenderTarget for the low-res graphics. Necessary for smooth parallax.
         private static SpriteBatch spriteBatch;       // SpriteBatches allow many textures to be drawn with high efficiency.
@@ -25,8 +19,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         {
             graphicsDevice = newGraphicsDevice;
             spriteBatch = newSpriteBatch;
-            lowRes = new RenderTarget2D(graphicsDevice, LOW_RES_WIDTH, LOW_RES_HEIGHT);
-            screenOffset = new Vector2(LOW_RES_WIDTH / 2, LOW_RES_HEIGHT / 2);
+            lowRes = new RenderTarget2D(graphicsDevice, Screen.lowResWidth, Screen.lowResHeight);
+            screenOffset = new Vector2(Screen.lowResWidth / 2, Screen.lowResHeight / 2);
         }
 
         // Called by the game loop to draw every texture and sprite.
@@ -48,9 +42,9 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             spriteBatch.Begin();
               if (room != null)
               {
-                  DrawBackground(room.GetBackground(), (focusOffset + screenOffset) / room.ParallaxFactor, SCREEN_SIZE_MULTIPLIER);
+                  DrawBackground(room.GetBackground(), (focusOffset + screenOffset) / room.ParallaxFactor, Screen.screenSizeMultiplier);
               }
-              spriteBatch.Draw(lowRes, new Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT), Color.White);
+              spriteBatch.Draw(lowRes, new Rectangle(0, 0, Screen.screenWidth, Screen.screenHeight), Color.White);
             spriteBatch.End();
         }
 
