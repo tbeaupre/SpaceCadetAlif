@@ -10,7 +10,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         public static List<DrawnObject> ToDraw { get; private set; }       // The list of objects to draw.
         private static List<GameObject> toDelete = new List<GameObject>(); // The list of GameObjects to be deleted this game loop.
         public static GameObject FocusObject { get; set; }                 // The GameObject which the camera is focused on.
-        private static Room currentRoom;                                   // The Room which is currently occupied.
+        public static Room CurrentRoom { get; private set; }               // The Room which is currently occupied.
 
         public static void Init()
         {
@@ -22,14 +22,14 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         // Called when a portal is triggered.
         public static void ChangeRoom(Room newRoom, Vector2 newPosition)
         {
-            if (newRoom != currentRoom)
+            if (newRoom != CurrentRoom)
             {
                 // Clear out the lists because they will be repopulated for the new room.
                 ToUpdate.Clear();
                 ToDraw.Clear();
                 InputManager.RegisteredActors.Clear();
 
-                currentRoom = newRoom;
+                CurrentRoom = newRoom;
 
                 FocusObject.OnCreate(); // This is normally called in the constructor to add the object to lists.
             }
@@ -58,8 +58,6 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
             // Update objects' positions and calculate collisions.
             PhysicsManager.Update(ToUpdate);
-
-            DrawManager.Draw(currentRoom, ToDraw, GetFocusOffset());
         }
 
         // Called when an object wants to delete itself from the world.
@@ -69,7 +67,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         }
 
         // If there is an object being focused, draw everything relative to it.
-        private static Vector2 GetFocusOffset()
+        public static Vector2 GetFocusOffset()
         {
             if (FocusObject == null)
             {
