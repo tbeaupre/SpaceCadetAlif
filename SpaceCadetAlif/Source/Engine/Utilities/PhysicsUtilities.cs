@@ -58,5 +58,62 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
         {
             return new Body(body.CollisionBoxes, body.Position + body.Velocity, body.CollisionType);
         }
+
+        public static bool WithinPath(Rectangle start, Rectangle finish, Rectangle check)
+        {
+
+            //critical points are the starting points of rays which have a direction and magnitude of the velocity. 
+            //represent upper and lower bounds of the total collision path.
+            Vector2 A; 
+            Vector2 B; 
+            Vector2 C;
+            Vector2 D;
+            Vector2 E;
+            Vector2 F;
+
+
+            float relativeSlope = PhysicsUtilities.SlopeFromVector(TopLeft(finish) - TopLeft(start));
+            if (relativeSlope == float.NaN || relativeSlope >= 0)
+            {
+                A = PhysicsUtilities.TopLeft(start);
+                B = PhysicsUtilities.BottomRight(start);
+                C = PhysicsUtilities.TopLeft(finish);
+                D = PhysicsUtilities.BottomRight(finish);
+                E = PhysicsUtilities.TopLeft(check);
+                F = PhysicsUtilities.BottomRight(check);
+            }
+            else
+            {
+                A = PhysicsUtilities.TopRight(start);
+                B = PhysicsUtilities.BottomLeft(start);
+                C = PhysicsUtilities.TopRight(finish);
+                D = PhysicsUtilities.BottomLeft(finish);
+                E = PhysicsUtilities.TopRight(check);
+                F = PhysicsUtilities.BottomLeft(check);
+            }
+
+            float angleBAE = GetAngle(B, A, E);
+            float angleBAF = GetAngle(B, A, F);
+            float angleABE = GetAngle(A, B, E);
+            float angleABF = GetAngle(A, B, F);
+            float angleBAC = GetAngle(B, A, C);
+            float angleABD = GetAngle(A, B, D);
+
+            if (angleBAC <= angleBAF)
+            {
+                if (angleBAC > angleBAE)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (angleABD > angleABF)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

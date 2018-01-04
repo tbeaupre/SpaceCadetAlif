@@ -33,7 +33,6 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
                 FocusObject.OnCreate(); // This is normally called in the constructor to add the object to lists.
             }
-
             FocusObject.Body.Position = newPosition;
         }
 
@@ -57,7 +56,11 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             }
 
             // Update objects' positions and calculate collisions.
-            PhysicsManager.Update(ToUpdate);
+
+            PhysicsManager.Update(CurrentRoom);
+
+            DrawManager.Draw(CurrentRoom, ToDraw);
+
         }
 
         // Called when an object wants to delete itself from the world.
