@@ -1,11 +1,12 @@
 ﻿
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using SpaceCadetAlif.Source.Engine.Events;
 using SpaceCadetAlif.Source.Engine.Objects;
 using SpaceCadetAlif.Source.Engine.Utilities;
 using System;
 using System.Collections.Generic;
 using SpaceCadetAlif.Source.Engine.Physics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SpaceCadetAlif.Source.Engine.Managers
 {
@@ -16,41 +17,46 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
     static class PhysicsManager
     {
-        private static Room environment;
-
-        // Sets the current environment
-        public static void InitEnvironment(Room e)
+        public static void Update(Room currentRoom)
         {
-            environment = e;
-        }
-
-        public static void Update(List<GameObject> objectList)
-        {
-            HandleAllSimpleCollisions(objectList);
-        }
-
-        private static void HandleAllSimpleCollisions(List<GameObject> objectList)
-        {
-            for (int i = 0; i < objectList.Count; i++)
+            bool[] collisionRecord = new bool[WorldManager.ToUpdate.Count];
+            for (int i = 0; i < WorldManager.ToUpdate.Count; i++)
             {
-                UpdateMotion(objectList[i].Body);
-                bool collided = false;
-                for (int j = i + 1; j < objectList.Count; j++)
+                UpdateMotion(WorldManager.ToUpdate[i].Body);
+                for (int j = i + 1; j < WorldManager.ToUpdate.Count; j++)
                 {
-                    if (HandleComplexCollision(objectList[i], objectList[j]))
+                    if(HandleCollision(WorldManager.ToUpdate[i], WorldManager.ToUpdate[j]))
                     {
-                        collided = true;
+                        if (WorldManager.ToUpdate[i].Body.CollisionType == CollisionType.SOLID && WorldManager.ToUpdate[j].Body.CollisionType == CollisionType.SOLID)
+                        {
+                            collisionRecord[i] = true;
+                            collisionRecord[j] = true;
+                        }
                     }
                 }
-                if (collided)
+                if (HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom)){
+                    collisionRecord[i] = true;
+                }
+            }
+            SetVelocities(collisionRecord);
+        }
+
+        private static void SetVelocities(bool[] collisionRecord)
+        {
+            for (int i = 0; i < WorldManager.ToUpdate.Count; i++)
+            {
+                if (collisionRecord[i])
                 {
-                    objectList[i].Body.Velocity = Vector2.Zero;
+                    //current fix. badass physics engine to go here. to be honest though I don't know why we handle it here. more versitile handling object by object.
+                    WorldManager.ToUpdate[i].Body.Velocity = Vector2.Zero;
                 }
             }
         }
 
+
+
         // Resets body A's position back, velocity of A and B to 0
-        private static bool HandleComplexCollision(GameObject A, GameObject B)
+        private static bool HandleCollision(GameObject A, GameObject B)
         {
             Vector2 relativeVel = A.Body.Velocity - B.Body.Velocity;
             if (A.Body.CollisionType == CollisionType.GHOST || B.Body.CollisionType == CollisionType.GHOST || relativeVel.Length() == 0)
@@ -59,44 +65,24 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             }
             bool collided = false;
 
-            float relativeSlope = PhysicsUtilities.SlopeFromVector(relativeVel);
-
             foreach (Rectangle aRect in A.Body.CollisionBoxes)
             {
                 // offset the rectangle to the body's location
                 aRect.Offset(A.Body.Position.X, A.Body.Position.Y);
                 // copy the rectangle at its projected destination.
                 Rectangle projection = new Rectangle(aRect.X + (int)relativeVel.X, aRect.Y + (int)relativeVel.Y, aRect.Width, aRect.Height);
-                //critical points are the starting points of rays which have a direction and magnitude of the velocity. represent upper and lower bounds of the total collision box.
-                Vector2 upperCriticalPoint; // start point of upper projection ray
-                Vector2 lowerCriticalPoint; // start point of lower projection ray
-                // set maximum and minimum of projection rays
-                if (relativeSlope >= 0)
-                {
-                    upperCriticalPoint = PhysicsUtilities.TopLeft(aRect);
-                    lowerCriticalPoint = PhysicsUtilities.BottomRight(aRect);
-                }
-                else
-                {
-                    upperCriticalPoint = PhysicsUtilities.TopRight(aRect);
-                    lowerCriticalPoint = PhysicsUtilities.BottomLeft(aRect);
-                }
-                Rectangle span = new Rectangle(
-                Math.Min(projection.Location.X, aRect.Location.X),
-                Math.Min(projection.Location.Y, aRect.Location.Y),
-                Math.Abs(projection.Location.X - aRect.Location.X),
-                Math.Abs(projection.Location.Y - aRect.Location.Y));
-
+                Rectangle span = Rectangle.Union(aRect, projection);
                 OffsetAndDirectionData offset = new OffsetAndDirectionData();
 
                 // loop through all collision boxes in B
                 foreach (Rectangle bRect in B.Body.CollisionBoxes)
                 {
+                    // offset the rectangle to the body's location
+                    bRect.Offset(B.Body.Position.X, B.Body.Position.Y);
                     if (Rectangle.Intersect(bRect, span).IsEmpty)
                     {
                         continue;
                     }
-
                     if (!Rectangle.Intersect(bRect, projection).IsEmpty)
                     {
                         collided = true;
@@ -111,59 +97,16 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                         }
                     }
 
-                    Vector2 upperCriticalPointB;
-                    Vector2 lowerCriticalPointB;
-
-                    if (relativeSlope >= 0)
+                    if (PhysicsUtilities.WithinPath(aRect, projection, bRect))
                     {
-                        upperCriticalPointB = PhysicsUtilities.TopLeft(bRect);
-                        lowerCriticalPointB = PhysicsUtilities.BottomRight(bRect);
-                    }
-                    else
-                    {
-                        lowerCriticalPointB = PhysicsUtilities.BottomLeft(bRect);
-                        upperCriticalPointB = PhysicsUtilities.TopRight(bRect);
-                    }
-
-                    float angleFAB = PhysicsUtilities.GetAngle(upperCriticalPoint + relativeVel, upperCriticalPoint, lowerCriticalPoint);
-                    float angleGBA = PhysicsUtilities.GetAngle(lowerCriticalPoint + relativeVel, lowerCriticalPoint, upperCriticalPoint);
-                    float angleCAB = PhysicsUtilities.GetAngle(upperCriticalPointB, upperCriticalPoint, lowerCriticalPoint);
-                    float angleDAB = PhysicsUtilities.GetAngle(lowerCriticalPointB, upperCriticalPoint, lowerCriticalPoint);
-                    float angleCBA = PhysicsUtilities.GetAngle(upperCriticalPointB, lowerCriticalPoint, upperCriticalPoint);
-
-                    if (angleFAB <= angleCAB)
-                    {
-                        if (angleFAB <= angleDAB)
+                        collided = true;
+                        if (A.Body.CollisionType == CollisionType.SOLID && B.Body.CollisionType == CollisionType.SOLID)
                         {
-                            continue;
-                        }
-                        else
-                        {
-                            collided = true;
-                            if (A.Body.CollisionType == CollisionType.SOLID && B.Body.CollisionType == CollisionType.SOLID)
+                            OffsetAndDirectionData localOffset = calculateOffset(bRect, projection, relativeVel);
+                            if (localOffset.OffsetVector.LengthSquared() > offset.OffsetVector.LengthSquared())
                             {
-                                OffsetAndDirectionData localOffset = calculateOffset(bRect, projection, relativeVel);
-                                if (localOffset.OffsetVector.LengthSquared() > offset.OffsetVector.LengthSquared())
-                                {
-                                    offset = localOffset;
-                                    continue;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (angleGBA > angleCBA)
-                        {
-                            collided = true;
-                            if (A.Body.CollisionType == CollisionType.SOLID && B.Body.CollisionType == CollisionType.SOLID)
-                            {
-                                OffsetAndDirectionData localOffset = calculateOffset(bRect, projection, relativeVel);
-                                if (localOffset.OffsetVector.LengthSquared() > offset.OffsetVector.LengthSquared())
-                                {
-                                    offset = localOffset;
-                                    continue;
-                                }
+                                offset = localOffset;
+                                continue;
                             }
                         }
                     }
@@ -175,9 +118,6 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                     if (A.Body.CollisionType == CollisionType.SOLID && B.Body.CollisionType == CollisionType.SOLID)
                     {
                         A.Body.Position -= offset.OffsetVector;
-                        //placeholder for velocity handling
-                        A.Body.Velocity = Vector2.Zero;
-                        B.Body.Velocity = Vector2.Zero;
                     }
                     CollisionEventArgs collisionEventArgs = new CollisionEventArgs(A, B, offset.Direction);
                     A.OnCollision(collisionEventArgs);
@@ -187,6 +127,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             return collided;
         }
 
+
         private static OffsetAndDirectionData calculateOffset(Rectangle stationaryRect, Rectangle movingRect, Vector2 relativeVel)
         {
             float xFromXOff, yFromYOff, xFromYOff, yFromXOff;
@@ -194,10 +135,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             bool upWardY = relativeVel.Y < 0;
             OffsetAndDirectionData offsetDataFromX = new OffsetAndDirectionData(), offsetDataFromY = new OffsetAndDirectionData();
             Direction directionFromX, directionFromY;
-
-
             float relativeSlope = PhysicsUtilities.SlopeFromVector(relativeVel);
-
 
             if (relativeVel.X != 0)
             {
@@ -258,6 +196,70 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             }
         }
 
+        private static bool HandleEnvironmentCollision(GameObject obj, Room currentRoom)
+        {
+            if (obj.Body.CollisionType == CollisionType.GHOST || obj.Body.Velocity.Length() == 0)
+            {
+                return false;
+            }
+            bool collided = false;
+
+            Vector2 velocity = obj.Body.Velocity;
+            float relativeSlope = PhysicsUtilities.SlopeFromVector(velocity);
+
+            //for some reason, we need to store the data from Texture2D.getCollision() as a *1D* array of colors
+            Color[] cList = new Color[currentRoom.GetCollision().Width * currentRoom.GetCollision().Height];
+            currentRoom.GetCollision().GetData(cList);
+
+            foreach (Rectangle rect in obj.Body.CollisionBoxes)
+            {
+                // offset the rectangle to the body's location
+                rect.Offset(obj.Body.Position.X, obj.Body.Position.Y);
+                // copy the rectangle at its projected destination.
+                Rectangle projection = new Rectangle(rect.X + (int)velocity.X, rect.Y + (int)velocity.Y, rect.Width, rect.Height);
+               
+                Rectangle span = Rectangle.Union(rect, projection);
+                OffsetAndDirectionData offset = new OffsetAndDirectionData();
+
+                for (int j = span.Top; j < span.Bottom; j++)
+                {
+                    for (int i = span.Left; i < span.Right; i++)
+                    {
+                        Color currentColor = cList[i + j * currentRoom.GetCollision().Width];
+                        if(currentColor.A != 0) // alpha != 0
+                        {
+                            Rectangle pixel = new Rectangle(i, j, 1, 1);
+                            if (projection.Contains(new Point(i, j)))
+                            {
+                                collided = true;
+                                OffsetAndDirectionData offsetData = calculateOffset(
+                                    pixel, projection, velocity);
+                            }
+                            else
+                            {
+                                if (PhysicsUtilities.WithinPath(rect, projection, pixel))
+                                {
+                                    collided = true;
+                                    if (obj.Body.CollisionType == CollisionType.SOLID)
+                                    {
+                                        OffsetAndDirectionData localOffset = calculateOffset(pixel, projection, velocity);
+                                        if (localOffset.OffsetVector.LengthSquared() > offset.OffsetVector.LengthSquared())
+                                        {
+                                            offset = localOffset;
+                                            continue;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return collided;
+        }
+
+    
+
         private static void UpdateMotion(Body body)
         {
             body.Position += body.Velocity;
@@ -265,4 +267,3 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         }
     }
 }
-
