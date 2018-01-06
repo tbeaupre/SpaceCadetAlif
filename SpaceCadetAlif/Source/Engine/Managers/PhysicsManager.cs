@@ -25,7 +25,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 UpdateMotion(WorldManager.ToUpdate[i].Body);
                 for (int j = i + 1; j < WorldManager.ToUpdate.Count; j++)
                 {
-                    if(HandleCollision(WorldManager.ToUpdate[i], WorldManager.ToUpdate[j]))
+                    if (HandleCollision(WorldManager.ToUpdate[i], WorldManager.ToUpdate[j]))
                     {
                         if (WorldManager.ToUpdate[i].Body.CollisionType == CollisionType.SOLID && WorldManager.ToUpdate[j].Body.CollisionType == CollisionType.SOLID)
                         {
@@ -34,8 +34,9 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                         }
                     }
                 }
-                
-                if (currentRoom != null && HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom)){
+
+                if (currentRoom != null && HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom))
+                {
                     collisionRecord[i] = true;
                 }
             }
@@ -218,16 +219,24 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 rect.Offset(obj.Body.Position.X, obj.Body.Position.Y);
                 // copy the rectangle at its projected destination.
                 Rectangle projection = new Rectangle(rect.X + (int)velocity.X, rect.Y + (int)velocity.Y, rect.Width, rect.Height);
-               
-                Rectangle span = Rectangle.Union(rect, projection);
+
+                Rectangle objSpan = Rectangle.Union(rect, projection);
+                Rectangle roomSpan = currentRoom.GetCollision().Bounds;
+
+
                 OffsetAndDirectionData offset = new OffsetAndDirectionData();
 
-                for (int j = span.Top; j < span.Bottom; j++)
+                int top = Math.Max(objSpan.Top, roomSpan.Top);
+                int bot = Math.Min(objSpan.Bottom, roomSpan.Bottom);
+                int left = Math.Max(objSpan.Left, roomSpan.Left);
+                int right = Math.Min(objSpan.Right, roomSpan.Right);
+
+                for (int j = top; j < bot; j++)
                 {
-                    for (int i = span.Left; i < span.Right; i++)
+                    for (int i = left; i < right; i++)
                     {
                         Color currentColor = cList[i + j * currentRoom.GetCollision().Width];
-                        if(currentColor.A != 0) // alpha != 0
+                        if (currentColor.A != 0) // alpha != 0
                         {
                             Rectangle pixel = new Rectangle(i, j, 1, 1);
                             if (projection.Contains(new Point(i, j)))

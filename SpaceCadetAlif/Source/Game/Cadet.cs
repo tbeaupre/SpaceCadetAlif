@@ -22,10 +22,24 @@ namespace SpaceCadetAlif.Source.Game
             switch (e.Input)
             {
                 case Public.Input.Left:
-                    Body.Velocity = new Vector2(-1, 0);
+                    if (e.Value > 0)
+                    {
+                        Body.Velocity = new Vector2(-1, Body.Velocity.Y);
+                    }
+                    if (e.Value == 0)
+                    {
+                        Body.Velocity = new Vector2(0, Body.Velocity.Y);
+                    }
                     break;
                 case Public.Input.Right:
-                    Body.Velocity = new Vector2(1, 0);
+                    if (e.Value > 0)
+                    {
+                        Body.Velocity = new Vector2(1, Body.Velocity.Y);
+                    }
+                    if (e.Value == 0)
+                    {
+                        Body.Velocity = new Vector2(0, Body.Velocity.Y);
+                    }
                     break;
             }
         }
