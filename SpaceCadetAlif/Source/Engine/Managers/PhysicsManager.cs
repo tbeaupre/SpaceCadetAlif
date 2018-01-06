@@ -34,7 +34,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                         }
                     }
                 }
-                if (HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom)){
+                
+                if (currentRoom != null && HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom)){
                     collisionRecord[i] = true;
                 }
             }
@@ -258,12 +259,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             return collided;
         }
 
-    
-
         private static void UpdateMotion(Body body)
         {
             body.Position += body.Velocity;
-            body.Velocity += body.Acceleration;
+            body.Velocity += body.Acceleration + body.Gravity;
         }
     }
 }

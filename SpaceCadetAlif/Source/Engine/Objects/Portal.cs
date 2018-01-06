@@ -11,7 +11,7 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         private Vector2 mDestPos;
 
         public Portal(Room destRoom, Vector2 destPos, List<Rectangle> collisionBoxes, Vector2 position)
-            : base(collisionBoxes, position)
+            : base(collisionBoxes, position,Vector2.Zero)
         {
             mDestRoom = destRoom;
             mDestPos = destPos;

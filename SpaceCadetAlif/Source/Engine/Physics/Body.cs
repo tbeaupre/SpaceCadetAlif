@@ -13,14 +13,18 @@ namespace SpaceCadetAlif.Source.Engine.Physics
         public Vector2 Velocity { get; set; }
         public Vector2 Acceleration { get; set; }
         public CollisionType CollisionType { get; set; } // Determines how collisions with other objects are handled.
+        public Vector2 Gravity { get; set; }
 
-        public Body(List<Rectangle> collisionBoxes, Vector2 position, CollisionType collisionType = CollisionType.SOLID)
+
+        public Body(List<Rectangle> collisionBoxes, Vector2 position, Vector2 gravity, CollisionType collisionType = CollisionType.SOLID)
         {
             CollisionBoxes = collisionBoxes;
             Position = position;
             Velocity = Vector2.Zero;
             Acceleration = Vector2.Zero;
             CollisionType = collisionType;
+            Gravity = gravity;
         }
+
     }
 }
