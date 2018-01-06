@@ -1,9 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SpaceCadetAlif.Source.Engine;
-using SpaceCadetAlif.Source.Engine.Graphics.Sprites;
 using SpaceCadetAlif.Source.Engine.Managers;
+using SpaceCadetAlif.Source.Engine.Objects;
 using SpaceCadetAlif.Source.Game;
 using SpaceCadetAlif.Source.Public;
 using System;
@@ -39,8 +38,9 @@ namespace SpaceCadetAlif
             DrawManager.Init(graphics.GraphicsDevice, new SpriteBatch(graphics.GraphicsDevice));
             InputManager.Init();
             WorldManager.Init();
-            
+
             WorldManager.FocusObject = new Cadet(new Vector2(0, 0));
+            WorldManager.ChangeRoom(new Room("Room/2/Background2", "Room/2/Hitbox2", "Room/2/Hitbox2", 3), new Vector2(0, 0));
 
             base.Initialize();
         }
