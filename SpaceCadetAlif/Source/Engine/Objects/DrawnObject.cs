@@ -17,7 +17,6 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         public Sprite Sprite { get; }                      // The sprite to be drawn.
         private int mMaxHealth;                            // The max health of the object. Defaults to 1.
         private int mHealth;                               // The current health of the object. Defaults to 1.
-
         // EventHandlers
         // Called when a change in health causes the GameObject to die.
         public virtual event EventHandler DeathListener;
@@ -32,8 +31,8 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         public virtual void OnInteract(object sender, EventArgs e) { InteractListener?.Invoke(this, e); }
 
 
-        protected DrawnObject(Sprite sprite, List<Rectangle> collisionBoxes, Vector2 position, int health = 1)
-            : base(collisionBoxes, position)
+        protected DrawnObject(Sprite sprite, List<Rectangle> collisionBoxes, Vector2 position, Vector2 gravity, int health = 1)
+            : base(collisionBoxes, position, gravity)
         {
             Sprite = sprite;
             mMaxHealth = health;
