@@ -34,7 +34,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                         }
                     }
                 }
-                if (HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom)){
+                
+                if (currentRoom != null && HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom)){
                     collisionRecord[i] = true;
                 }
             }
