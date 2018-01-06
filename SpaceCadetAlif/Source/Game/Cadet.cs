@@ -11,7 +11,7 @@ namespace SpaceCadetAlif.Source.Game
     {
         public Cadet(Vector2 position)
             : base(new LoopingSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Spaceman Body", 13), 0),
-                  new List<Rectangle>(),
+                  new List<Rectangle>() { new Rectangle(0, 0, 11, 15) },
                   position)
         {
             InputListener += _OnInput;
