@@ -22,7 +22,6 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             for (int i = 0; i < WorldManager.ToUpdate.Count; i++)
             {
                 WorldManager.ToUpdate[i].Body.UpdateVelocity();
-                WorldManager.ToUpdate[i].Body.UpdatePosition();
 
             }
             for (int i = 0; i < WorldManager.ToUpdate.Count; i++)
@@ -33,7 +32,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 }
 
                 HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom);
-
+                WorldManager.ToUpdate[i].Body.UpdatePosition();
             }
         }
 
@@ -133,20 +132,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 rect.Offset(obj.Body.Position.X, obj.Body.Position.Y);
                 // copy the rectangle at its projected destination.
                 Rectangle projection;
-                int nextX = 0, nextY = 0 ;
-                if(velocity.Y >= 1 && velocity.X >=1)
-                {
-                    nextX = (int)velocity.X;
-                    nextY = (int)velocity.Y;
-                }
-                else
-                {
-                    Vector2 tangent = velocity / Math.Max(velocity.X, velocity.Y); // largest dimension of this vector is 1
-                    nextX = (int)tangent.X;
-                    nextY = (int)tangent.Y;
-                }
 
-                projection = new Rectangle(rect.X + nextX, rect.Y + nextY, rect.Width, rect.Height);
+
+
+                projection = new Rectangle(rect.X + (int)velocity.X, rect.Y + (int)velocity.Y, rect.Width, rect.Height);
 
                 Rectangle objSpan = Rectangle.Union(rect, projection); // span of projection hitbox
                 Rectangle roomSpan = currentRoom.GetCollision().Bounds;// outline of the room
@@ -161,7 +150,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 int right = Math.Min(objSpan.Right, roomSpan.Right);
 
                 DirectionPair dPair = new DirectionPair();
-                float maxXOffset = 0, maxYOffset = 0;
+                Rectangle closestPixel = Rectangle.Empty;
 
                 for (int j = top; j < bot; j++)
                 {
@@ -170,23 +159,14 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                         Color currentColor = cList[i + j * currentRoom.GetCollision().Width];
                         if (currentColor.A != 0) // alpha != 0
                         {
-                            Rectangle pixel = new Rectangle(i, j, 1, 1);
+                            Rectangle currentPixel = new Rectangle(i, j, 1, 1);
 
-                            if (rect.Contains(new Point(i, j)) || projection.Contains(new Point(i, j)) || PhysicsUtilities.WithinPath(rect, projection, pixel))
+                            if (projection.Contains(currentPixel) || PhysicsUtilities.WithinPath(rect, projection, currentPixel))
                             {
-                                collided = true;
-                                if (obj.Body.CollisionType == CollisionType.SOLID)
+                                obj.Body.Velocity  = NextVelocity(obj.Body, rect, currentPixel);
+                                if (rect.Contains(currentPixel))
                                 {
-                                    OffsetAndDirectionData offset = calculateOffset(pixel, projection, velocity);
-                                    if (Math.Abs(offset.OffsetVector.X) > Math.Abs(maxXOffset))
-                                    {
-                                        maxXOffset = offset.OffsetVector.X;
-                                    }
-                                    if (Math.Abs(offset.OffsetVector.Y) > Math.Abs(maxYOffset))
-                                    {
-                                        maxYOffset = offset.OffsetVector.Y;
-                                    }
-                                    dPair.add(offset.Direction);
+                                    //todo write a snap function and a collision direction function
                                 }
                             }
                         }
@@ -194,27 +174,32 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 }
                 if (collided)
                 {
-                    if (obj.Body.CollisionType == CollisionType.SOLID)
-                    {
-                        obj.Body.Position -= new Vector2(maxXOffset, maxYOffset);
-                        SetVelocity(dPair, obj.Body);
-                    }
                     CollisionEventArgs collisionEventArgs = new CollisionEventArgs(obj, currentRoom, dPair);
                     obj.OnCollision(collisionEventArgs);
                 }
             }
         }
 
-        private static void SetVelocity(DirectionPair dPair, Body body)
+        private static Vector2 NextVelocity(Body body, Rectangle rectA, Rectangle rectB)
         {
-            if (dPair.contains(Direction.LEFT) || dPair.contains(Direction.RIGHT))
+
+            float X = body.Velocity.X;
+            float Y = body.Velocity.Y;
+            bool left = rectA.Right <= (rectB.Left + 1);
+            bool right = rectA.Left >= (rectB.Right - 1);
+            bool above = rectA.Bottom <= (rectB.Top + 1);
+            bool below = rectA.Top >= (rectB.Bottom - 1);
+
+            if ((above || below) && !(left || right))
             {
-                body.Velocity = new Vector2(0, body.Velocity.Y);
+                Y = 0;
             }
-            if (dPair.contains(Direction.DOWN) || dPair.contains(Direction.UP))
+            if ((left || right) && !(above || below))
             {
-                body.Velocity = new Vector2(body.Velocity.X, 0);
+                X = 0;
             }
+
+            return new Vector2(X, Y);
         }
 
         private static OffsetAndDirectionData calculateOffset(Rectangle stationaryRect, Rectangle movingRect, Vector2 relativeVel)
@@ -241,15 +226,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                     directionFromX = Direction.LEFT;
                 }
 
-                if (Math.Abs(xFromXOff) <= 1)
-                {
-                    yFromXOff = 0;
-                }
-                else
-                {
-                    yFromXOff = (relativeVel.Y / relativeVel.X) * (xFromXOff);
-                }
-
+                yFromXOff = 0;
                 offsetDataFromX = new OffsetAndDirectionData(new Vector2(xFromXOff, yFromXOff), directionFromX);
             }
 
@@ -266,28 +243,27 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                     directionFromY = Direction.DOWN;
                 }
 
-                if (Math.Abs(yFromYOff) <= 1)
-                {
-                    xFromYOff = 0;
-                }
-                else
-                {
-                    xFromYOff = (relativeVel.X / relativeVel.Y) * (yFromYOff);
-                }
+                xFromYOff = 0;
                 offsetDataFromY = new OffsetAndDirectionData(new Vector2(xFromYOff, yFromYOff), directionFromY);
             }
 
 
 
             // return the min offset
-            if (offsetDataFromX.OffsetVector.LengthSquared() <= offsetDataFromY.OffsetVector.LengthSquared())
-            {
-                return offsetDataFromX;
-            }
-            else
+            if (offsetDataFromX.Direction == Direction.NONE)
             {
                 return offsetDataFromY;
             }
+            if (offsetDataFromY.Direction == Direction.NONE)
+            {
+                return offsetDataFromX;
+            }
+            if (offsetDataFromX.OffsetVector.Length() < offsetDataFromY.OffsetVector.Length())
+            {
+                return offsetDataFromX;
+            }
+            return offsetDataFromY;
+
         }
 
 

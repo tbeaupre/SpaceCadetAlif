@@ -28,28 +28,36 @@ namespace SpaceCadetAlif.Source.Game
                     {
                         if (Body.Velocity.X > -TopSpeed)
                         {
-                            Body.Acceleration = new Vector2(-1, 0);
+                            Body.Acceleration = new Vector2(-0.2f, 0);
                         }
                         else
                         {
                             Body.Acceleration = Vector2.Zero;
                         }
                     }
-                   
+                    else
+                    {
+                        Body.Acceleration = Vector2.Zero;
+                    }
+
                     break;
                 case Public.Input.Right:
                     if (e.Value > 0)
                     {
                         if (Body.Velocity.X < TopSpeed)
                         {
-                            Body.Acceleration = new Vector2(1, 0);
+                            Body.Acceleration = new Vector2(0.2f, 0);
                         }
                         else
                         {
                             Body.Acceleration = Vector2.Zero;
                         }
                     }
-                    
+                    else
+                    {
+                        Body.Acceleration = Vector2.Zero;
+                    }
+
                     break;
             }
         }

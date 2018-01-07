@@ -8,7 +8,7 @@ namespace SpaceCadetAlif.Source.Engine.Objects
 {
     class Actor : DrawnObject
     {
-        public const float DEFAULT_TOPSPEED = 0.1f;
+        public const float DEFAULT_TOPSPEED = 1;
         // Called when an input is processed.
         public event InputEventHandler InputListener;
         public delegate void InputEventHandler(InputEventArgs e);
