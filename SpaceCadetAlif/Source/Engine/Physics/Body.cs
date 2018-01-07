@@ -26,5 +26,15 @@ namespace SpaceCadetAlif.Source.Engine.Physics
             Gravity = gravity;
         }
 
+        public void UpdateVelocity()
+        {
+            Velocity += Acceleration + Gravity;
+        }
+
+        public void UpdatePosition()
+        {
+            Position += Velocity;
+        }
+
     }
 }
