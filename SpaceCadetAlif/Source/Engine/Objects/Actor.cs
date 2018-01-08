@@ -20,8 +20,8 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         public Actor(
             Sprite sprite, List<Rectangle> collisionBoxes, 
             Vector2 position, float topSpeed = DEFAULT_TOPSPEED, 
-            float gravityY = PhysicsUtilities.DEFAULT_GRAVITY_Y, 
-            float gravityX = PhysicsUtilities.DEFAULT_GRAVITY_X) 
+            float gravityY = PhysicsManager.DEFAULT_GRAVITY_Y, 
+            float gravityX = PhysicsManager.DEFAULT_GRAVITY_X) 
             : base(sprite, collisionBoxes, position, new Vector2(gravityX,gravityY))
         {
             TopSpeed = topSpeed;

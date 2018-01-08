@@ -7,8 +7,6 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
 {
     static class PhysicsUtilities
     {
-        public const float DEFAULT_GRAVITY_Y = 0.005f;
-        public const float DEFAULT_GRAVITY_X = 0;
         /// <returns>Corners as set of Vector2 in order: TL,TR,BL,BR</returns>
         public static List<Vector2> Corners(Rectangle r)
         {
@@ -33,6 +31,22 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
         public static Vector2 BottomRight(Rectangle r)
         {
             return new Vector2(r.Right, r.Bottom);
+        }
+
+        public static Direction GetDirectionFromVector(Vector2 v)
+        {
+            if (v.Length() == 0) return Direction.NONE;
+            
+            if (Math.Abs(v.X) > Math.Abs(v.Y))
+            {
+                if (v.X > 0) return Direction.RIGHT;
+                else return Direction.LEFT;
+            }
+            else
+            {
+                if (v.Y > 0) return Direction.DOWN;
+                else return Direction.UP;
+            }
         }
 
         public static float SlopeFromVector(Vector2 v)
