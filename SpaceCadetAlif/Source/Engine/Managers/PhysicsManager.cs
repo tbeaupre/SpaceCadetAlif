@@ -18,7 +18,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
     static class PhysicsManager
     {
 
-        public const float DEFAULT_GRAVITY_Y = 0.005f;
+        public const float DEFAULT_GRAVITY_Y = 0.01f;
         public const float DEFAULT_GRAVITY_X = 0.0f;
 
         public static void Update(Room currentRoom)
@@ -26,7 +26,6 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             for (int i = 0; i < WorldManager.ToUpdate.Count; i++)
             {
                 WorldManager.ToUpdate[i].Body.UpdateVelocity();
-
             }
             for (int i = 0; i < WorldManager.ToUpdate.Count; i++)
             {
@@ -115,8 +114,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 // copy the rectangle at its projected destination.
                 Rectangle projection;
 
-                projection = new Rectangle(rect.X + (int)velocity.X, rect.Y + (int)velocity.Y, rect.Width, rect.Height);
-
+                projection = new Rectangle(rect.X + (int)Math.Ceiling(velocity.X), rect.Y + (int)Math.Ceiling(velocity.Y), rect.Width, rect.Height);
                 Rectangle objSpan = Rectangle.Union(rect, projection); // span of projection hitbox
                 Rectangle roomSpan = currentRoom.GetCollision().Bounds;// outline of the room
 
@@ -149,9 +147,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                     }
                 }
             }
+            Console.WriteLine(collided + " " + obj.Body.Velocity + " " + obj.Body.Position);
             if (collided)
             {
-                obj.Body.Position += SnapToEdge(collidingRect, closestPixel, velocity);
+                obj.Body.Velocity += SnapToEdge(collidingRect, closestPixel, velocity);
                 CollisionEventArgs collisionEventArgs = new CollisionEventArgs(obj, currentRoom, collisionDirectionPair);
                 obj.OnCollision(collisionEventArgs);
             }
@@ -166,25 +165,27 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 case Direction.NONE:
                     break;
                 case Direction.UP:
-                    yOffset = stationaryRect.Bottom - collider.Top - 1;
+                    if (velocity.Y <= 0) break;
+                    yOffset = stationaryRect.Bottom - collider.Top + 1;
                     xOffset = (velocity.X / velocity.Y) * yOffset;
                     break;
                 case Direction.DOWN:
-                    yOffset = stationaryRect.Top - collider.Bottom + 1;
+                    if (velocity.Y >= 0) break;
+                    yOffset = stationaryRect.Top - collider.Bottom - 1;
                     xOffset = (velocity.X / velocity.Y) * yOffset;
                     break;
                 case Direction.LEFT:
-                    xOffset = stationaryRect.Right - collider.Left - 1;
+                    if (velocity.X <= 0) break;
+                    xOffset = stationaryRect.Right - collider.Left + 1;
                     yOffset = (velocity.Y / velocity.X) * xOffset;
                     break;
                 case Direction.RIGHT:
-                    xOffset = stationaryRect.Left - collider.Right + 1;
+                    if (velocity.X >= 0) break;
+                    xOffset = stationaryRect.Left - collider.Right - 1;
                     yOffset = (velocity.Y / velocity.X) * xOffset;
                     break;
             }
-            return new Vector2(xOffset, yOffset) ;
-
-
+            return new Vector2(xOffset, yOffset);
         }
 
         private static Vector2 NextVelocity(Body body, Rectangle rectA, Rectangle rectB)
@@ -204,7 +205,6 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             {
                 X = 0;
             }
-
             return new Vector2(X, Y);
         }
     }

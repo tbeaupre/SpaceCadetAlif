@@ -59,6 +59,18 @@ namespace SpaceCadetAlif.Source.Game
                     }
 
                     break;
+
+                case Public.Input.Jump:
+                    if(e.Value > 0)
+                    {
+                        Body.Acceleration = new Vector2(0, -0.05f);
+                    }
+                    else
+                    {
+                        Body.Acceleration = Vector2.Zero;
+                    }
+
+                    break;
             }
         }
     }
