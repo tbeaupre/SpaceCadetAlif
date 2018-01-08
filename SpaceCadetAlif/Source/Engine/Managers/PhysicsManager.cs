@@ -19,7 +19,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
     {
 
         public const float DEFAULT_GRAVITY_Y = 0.01f;
-        public const float DEFAULT_GRAVITY_X = 0.0f;
+        public const float DEFAULT_GRAVITY_X = 0.01f;
 
         public static void Update(Room currentRoom)
         {
@@ -135,7 +135,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
                             if (projection.Contains(currentPixel) || PhysicsUtilities.WithinPath(rect, projection, currentPixel))
                             {
-                                obj.Body.Velocity = NextVelocity(obj.Body, rect, currentPixel);
+                                    obj.Body.Velocity = NextVelocity(obj.Body, rect, currentPixel);
                                 if (!collided || Vector2.Distance(rect.Center.ToVector2(), currentPixel.Center.ToVector2()) < Vector2.Distance(rect.Center.ToVector2(), closestPixel.Center.ToVector2()))
                                 {
                                     closestPixel = currentPixel;
@@ -150,7 +150,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             Console.WriteLine(collided + " " + obj.Body.Velocity + " " + obj.Body.Position);
             if (collided)
             {
-                obj.Body.Velocity += SnapToEdge(collidingRect, closestPixel, velocity);
+                obj.Body.Position += SnapToEdge(collidingRect, closestPixel, velocity);
                 CollisionEventArgs collisionEventArgs = new CollisionEventArgs(obj, currentRoom, collisionDirectionPair);
                 obj.OnCollision(collisionEventArgs);
             }
@@ -158,6 +158,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
         private static Vector2 SnapToEdge(Rectangle collider, Rectangle stationaryRect, Vector2 velocity)
         {
+
+
             Direction leadingEdge = PhysicsUtilities.GetDirectionFromVector(stationaryRect.Center.ToVector2() - collider.Center.ToVector2());
             float xOffset = 0, yOffset = 0;
             switch (leadingEdge)
@@ -165,24 +167,28 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 case Direction.NONE:
                     break;
                 case Direction.UP:
-                    if (velocity.Y <= 0) break;
-                    yOffset = stationaryRect.Bottom - collider.Top + 1;
-                    xOffset = (velocity.X / velocity.Y) * yOffset;
+                    
+                        yOffset = stationaryRect.Bottom - collider.Top;
+                        xOffset = (velocity.X / velocity.Y) * yOffset;
+                    
                     break;
                 case Direction.DOWN:
-                    if (velocity.Y >= 0) break;
-                    yOffset = stationaryRect.Top - collider.Bottom - 1;
-                    xOffset = (velocity.X / velocity.Y) * yOffset;
+                   
+                        yOffset = stationaryRect.Top - collider.Bottom;
+                        xOffset = (velocity.X / velocity.Y) * yOffset;
+                    
                     break;
                 case Direction.LEFT:
-                    if (velocity.X <= 0) break;
-                    xOffset = stationaryRect.Right - collider.Left + 1;
-                    yOffset = (velocity.Y / velocity.X) * xOffset;
+                   
+                        xOffset = stationaryRect.Right - collider.Left;
+                        yOffset = (velocity.Y / velocity.X) * xOffset;
+                    
                     break;
                 case Direction.RIGHT:
-                    if (velocity.X >= 0) break;
-                    xOffset = stationaryRect.Left - collider.Right - 1;
-                    yOffset = (velocity.Y / velocity.X) * xOffset;
+                    
+                        xOffset = stationaryRect.Left - collider.Right;
+                        yOffset = (velocity.Y / velocity.X) * xOffset;
+                    
                     break;
             }
             return new Vector2(xOffset, yOffset);
@@ -192,16 +198,13 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         {
             float X = body.Velocity.X;
             float Y = body.Velocity.Y;
-            bool left = rectA.Right <= (rectB.Left + 1);
-            bool right = rectA.Left >= (rectB.Right - 1);
-            bool above = rectA.Bottom <= (rectB.Top + 1);
-            bool below = rectA.Top >= (rectB.Bottom - 1);
 
-            if ((above || below) && !(left || right))
+
+            if ((PhysicsUtilities.above(rectA, rectB) || PhysicsUtilities.below(rectA, rectB)) && !(PhysicsUtilities.leftOf(rectA, rectB) || PhysicsUtilities.rightOf(rectA, rectB)))
             {
                 Y = 0;
             }
-            if ((left || right) && !(above || below))
+            if ((PhysicsUtilities.leftOf(rectA, rectB) || PhysicsUtilities.rightOf(rectA, rectB)) && !(PhysicsUtilities.above(rectA, rectB) || PhysicsUtilities.below(rectA, rectB)))
             {
                 X = 0;
             }

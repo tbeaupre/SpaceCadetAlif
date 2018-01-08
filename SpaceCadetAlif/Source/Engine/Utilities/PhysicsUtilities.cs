@@ -36,7 +36,7 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
         public static Direction GetDirectionFromVector(Vector2 v)
         {
             if (v.Length() == 0) return Direction.NONE;
-            
+
             if (Math.Abs(v.X) > Math.Abs(v.Y))
             {
                 if (v.X > 0) return Direction.RIGHT;
@@ -48,6 +48,27 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
                 else return Direction.UP;
             }
         }
+
+        public static bool above(Rectangle rectA, Rectangle rectB)
+        {
+            return rectA.Bottom <= (rectB.Top );
+        }
+
+        public static bool rightOf(Rectangle rectA, Rectangle rectB)
+        {
+            return rectA.Left >= (rectB.Right);
+        }
+
+        public static bool leftOf(Rectangle rectA, Rectangle rectB)
+        {
+            return rectA.Right <= (rectB.Left);
+        }
+
+        public static bool below(Rectangle rectA, Rectangle rectB)
+        {
+            return rectA.Top >= (rectB.Bottom );
+        }
+
 
         public static float SlopeFromVector(Vector2 v)
         {
@@ -80,8 +101,8 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
 
             //critical points are the starting points of rays which have a direction and magnitude of the velocity. 
             //represent upper and lower bounds of the total collision path.
-            Vector2 A; 
-            Vector2 B; 
+            Vector2 A;
+            Vector2 B;
             Vector2 C;
             Vector2 D;
             Vector2 E;

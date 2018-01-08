@@ -69,7 +69,7 @@ namespace SpaceCadetAlif.Source.Game
                     {
                         Body.Acceleration = Vector2.Zero;
                     }
-
+                
                     break;
             }
         }
