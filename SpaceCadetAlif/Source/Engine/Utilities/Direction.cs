@@ -8,6 +8,6 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
 {
     enum Direction
     {
-        UP, LEFT, DOWN, RIGHT, NONE
+        NONE, UP, LEFT, DOWN, RIGHT
     }
 }

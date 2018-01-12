@@ -7,35 +7,16 @@ using System.Threading.Tasks;
 
 namespace SpaceCadetAlif.Source.Engine.Physics
 {
-    class DirectionPair
+    struct DirectionPair
     {
-        public Direction A { get; set; }
-        public Direction B { get; set; }
+        public Direction X { get; set; }
+        public Direction Y { get; set; }
 
-        public DirectionPair(Direction A = Direction.NONE, Direction B = Direction.NONE)
+        public DirectionPair(Direction A = Direction.DOWN, Direction B = Direction.NONE)
         {
-            this.A = A;
-            this.B = B;
+            this.X = A;
+            this.Y = B;
         }
 
-        public void add(Direction d)
-        {
-            if (A == d || A == Direction.NONE)
-            {
-                A = d;
-            }
-            else
-            {
-                if (B != Direction.NONE)
-                {
-                    B = d;
-                }
-            }
-        }
-
-        public bool contains(Direction d)
-        {
-            return A == d || B == d;
-        }
     }
 }
