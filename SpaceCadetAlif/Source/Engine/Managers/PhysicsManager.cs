@@ -17,7 +17,6 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
     static class PhysicsManager
     {
-
         public const float DEFAULT_GRAVITY_Y = 0.05f;
         public const float DEFAULT_GRAVITY_X = 0.00f;
 
@@ -34,7 +33,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             {
                 for (int j = i + 1; j < WorldManager.ToUpdate.Count; j++)
                 {
-                    HandleCollision(WorldManager.ToUpdate[i], WorldManager.ToUpdate[j]);
+                    HandleObjectCollision(WorldManager.ToUpdate[i], WorldManager.ToUpdate[j]);
                 }
 
                 HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom);
@@ -45,7 +44,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
 
         // Resets body A's position back, velocity of A and B to 0
-        private static void HandleCollision(GameObject A, GameObject B)
+        private static void HandleObjectCollision(GameObject A, GameObject B)
         {
             Vector2 relativeVel = A.Body.Velocity - B.Body.Velocity;
             if (A.Body.CollisionType == CollisionType.GHOST || B.Body.CollisionType == CollisionType.GHOST || relativeVel.Length() == 0)
@@ -60,7 +59,9 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 Rectangle projection = new Rectangle(aRect.X + (int)relativeVel.X, aRect.Y + (int)relativeVel.Y, aRect.Width, aRect.Height);
                 Rectangle span = Rectangle.Union(aRect, projection);
                 DirectionPair dPair = new DirectionPair();
-                float maxXOffset = 0, maxYOffset = 0;
+                Rectangle closestPixel = Rectangle.Empty;
+                Rectangle collidingRect = Rectangle.Empty;
+                bool collided = false;
                 // loop through all collision boxes in B
                 foreach (Rectangle bRect in B.Body.CollisionBoxes)
                 {
@@ -70,17 +71,38 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                     {
                         continue;
                     }
-                    if (!Rectangle.Intersect(bRect, projection).IsEmpty || PhysicsUtilities.WithinPath(aRect, projection, bRect))
+                    if (projection.Contains(bRect) || PhysicsUtilities.WithinPath(aRect, projection, bRect))
                     {
-                        if (A.Body.CollisionType == CollisionType.SOLID)
+                        A.Body.Velocity = NextVelocity(A.Body.Velocity, aRect, bRect);
+                        //TODO Figure out how to handle X and Y seperately
+
+                        if (!collided || Vector2.Distance(aRect.Center.ToVector2(), bRect.Center.ToVector2()) < Vector2.Distance(collidingRect.Center.ToVector2(), closestPixel.Center.ToVector2()))
                         {
-                            CollisionEventArgs collision = new CollisionEventArgs(A, B, dPair);
-                            A.OnCollision(collision);
-                            B.OnCollision(collision);
+                            closestPixel = bRect;
+                            collidingRect = aRect;
+                            collided = true;
                         }
                     }
                 }
-
+                if (collided)
+                {
+                    Direction leadingEdge = GetCollisionDirection(collidingRect, closestPixel, relativeVel);
+                    A.Body.Position += SnapToEdge(collidingRect, closestPixel, relativeVel, leadingEdge);
+                    if (leadingEdge == PhysicsUtilities.GetDirectionFromVector(A.Body.Gravity))
+                    {
+                        if (A.Body.Velocity.Length() < DEFAULT_FRICTION_THRESHOLD)
+                        {
+                            A.Body.Velocity = Vector2.Zero;
+                            A.Body.Acceleration = Vector2.Zero;
+                        }
+                        else
+                        {
+                            A.Body.Acceleration = -A.Body.Velocity * DEFAULT_FRICTION_COEFFICIENT;
+                        }
+                    }
+                    CollisionEventArgs collisionEventArgs = new CollisionEventArgs(A, B, dPair);
+                    A.OnCollision(collisionEventArgs);
+                }
             }
         }
 
