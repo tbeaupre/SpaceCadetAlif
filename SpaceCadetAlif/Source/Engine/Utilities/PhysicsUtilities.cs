@@ -51,12 +51,13 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
 
         public static bool above(Rectangle rectA, Rectangle rectB)
         {
-            return rectA.Bottom <= (rectB.Top + 1);
+            return rectA.Bottom <= (rectB.Top);
         }
 
         public static bool rightOf(Rectangle rectA, Rectangle rectB)
         {
-            return rectA.Left >= (rectB.Right);
+            return rectA.Left >= (rectB.Right - 1);
+            
         }
 
         public static bool leftOf(Rectangle rectA, Rectangle rectB)
@@ -66,7 +67,7 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
 
         public static bool below(Rectangle rectA, Rectangle rectB)
         {
-            return rectA.Top >= (rectB.Bottom);
+            return rectA.Top >= (rectB.Bottom-1);
         }
 
 
@@ -178,19 +179,20 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
 
         public static Direction GetRelativePositionDirection(Rectangle colliding, Rectangle stationary)
         {
-            if (above(colliding, stationary) && stationary.Contains(new Point(colliding.Center.X, stationary.Center.Y)))
+            // && stationary.Contains(new Point(colliding.Center.X, stationary.Center.Y))
+            if (above(colliding, stationary) && !leftOf(colliding, stationary) && !rightOf(colliding, stationary))
             {
                 return Direction.DOWN;
             }
-            if (leftOf(colliding, stationary) && stationary.Contains(new Point(colliding.Center.Y, stationary.Center.X)))
+            if (leftOf(colliding, stationary) && !above(colliding, stationary) && !below(colliding, stationary))
             {
                 return Direction.RIGHT;
             }
-            if (below(colliding, stationary) && stationary.Contains(new Point(colliding.Center.X, stationary.Center.Y)))
+            if (below(colliding, stationary) && !leftOf(colliding, stationary) && !rightOf(colliding, stationary))
             {
                 return Direction.UP;
             }
-            if (rightOf(colliding, stationary) && stationary.Contains(new Point(colliding.Center.Y, stationary.Center.X)))
+            if (rightOf(colliding, stationary) && !above(colliding, stationary) && !below(colliding, stationary))
             {
                 return Direction.LEFT;
             }

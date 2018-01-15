@@ -63,7 +63,7 @@ namespace SpaceCadetAlif.Source.Game
                 case Public.Input.Jump:
                     if(e.Value > 0)
                     {
-                        Body.Acceleration = new Vector2(0, -0.05f);
+                        Body.Acceleration = new Vector2(0, -Body.Gravity.Y *2);
                     }
                     else
                     {

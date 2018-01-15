@@ -18,8 +18,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
     static class PhysicsManager
     {
 
-        public const float DEFAULT_GRAVITY_Y = 0.0075f;
-        public const float DEFAULT_GRAVITY_X = 0.0000f;
+        public const float DEFAULT_GRAVITY_Y = 0.05f;
+        public const float DEFAULT_GRAVITY_X = 0.00f;
 
         public const float DEFAULT_FRICTION_COEFFICIENT = 0.1f;
         public const float DEFAULT_FRICTION_THRESHOLD = 0.1f;
@@ -153,21 +153,20 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                     }
                 }
             }
+            Console.WriteLine(velocity + " " + collided + " " + obj.Body.Position);
+
             if (collided)
             {
                 Direction leadingEdge = GetCollisionDirection(collidingRect, closestPixel, velocity);
-
                 obj.Body.Position += SnapToEdge(collidingRect, closestPixel, velocity, leadingEdge);
-                Console.WriteLine(leadingEdge + " " + velocity);
-
-                if (obj.Body.Velocity.Length() < DEFAULT_FRICTION_THRESHOLD)
+                if (leadingEdge == PhysicsUtilities.GetDirectionFromVector(obj.Body.Gravity))
                 {
-                    obj.Body.Velocity = Vector2.Zero;
-                    obj.Body.Acceleration = Vector2.Zero;
-                }
-                else
-                {
-                    if (leadingEdge == PhysicsUtilities.GetDirectionFromVector(obj.Body.Gravity))
+                    if (obj.Body.Velocity.Length() < DEFAULT_FRICTION_THRESHOLD)
+                    {
+                        obj.Body.Velocity = Vector2.Zero;
+                        obj.Body.Acceleration = Vector2.Zero;
+                    }
+                    else
                     {
                         obj.Body.Acceleration = -obj.Body.Velocity * DEFAULT_FRICTION_COEFFICIENT;
                     }
@@ -186,9 +185,11 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 case Direction.NONE:
                     break;
                 case Direction.UP:
-
-                    yOffset = stationaryRect.Bottom - collider.Top + 1;
-                    xOffset = (velocity.X / velocity.Y) * yOffset;
+                    if (velocity.Y != 0)
+                    {
+                        yOffset = stationaryRect.Bottom - collider.Top;
+                        xOffset = (velocity.X / velocity.Y) * yOffset;
+                    }
 
                     break;
                 case Direction.DOWN:
@@ -198,10 +199,11 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
                     break;
                 case Direction.LEFT:
-
-                    xOffset = stationaryRect.Right - collider.Left + 1;
-                    yOffset = (velocity.Y / velocity.X) * xOffset;
-
+                    if (velocity.X != 0)
+                    {
+                        xOffset = stationaryRect.Right - collider.Left - 1;
+                        yOffset = (velocity.Y / velocity.X) * xOffset;
+                    }
                     break;
                 case Direction.RIGHT:
 
@@ -235,8 +237,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             {
                 return PhysicsUtilities.GetRelativePositionDirection(collidingRect, stationaryRect);
             }
-            Vector2 collidingCorner = Vector2.Zero;
-            Vector2 receivingCorner = Vector2.Zero;
+            Vector2 collidingCorner = collidingRect.Center.ToVector2();
+            Vector2 receivingCorner = stationaryRect.Center.ToVector2();
 
 
             if (velocity.X == 0)
