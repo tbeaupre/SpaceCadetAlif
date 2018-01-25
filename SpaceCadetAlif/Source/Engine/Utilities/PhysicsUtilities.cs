@@ -198,5 +198,21 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
             }
             return Direction.NONE;
         }
+
+        internal static Vector2 GetCriticalCornerFromVector(Rectangle a, Vector2 v)
+        {
+            Vector2 crit = a.Location.ToVector2(); // TopLeft
+            if (v.X > 0)
+            {
+                crit.X = a.Right;
+            }
+
+            if (v.Y > 0)
+            {
+                crit.Y = a.Bottom;
+            }
+
+            return crit;
+        }
     }
 }
