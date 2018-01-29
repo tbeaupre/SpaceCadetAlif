@@ -12,9 +12,7 @@ namespace SpaceCadetAlif.Source.Game
     {
         public Cadet(Vector2 position)
             : base(
-                  new List<Sprite> {
-                      new LoopingSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Spaceman Body", 13), 0),
-                      new ManualSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Spaceman Heads", 3), 0) },
+                  new List<Sprite> { new LoopingSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Spaceman Body", 13), 0) },
                   new List<Rectangle>() { new Rectangle(0, 0, 11, 15) },
                   position)
         {
@@ -30,17 +28,6 @@ namespace SpaceCadetAlif.Source.Game
                     break;
                 case Public.Input.Right:
                     Body.Velocity = new Vector2(1, 0);
-                    break;
-                case Public.Input.Up:
-                    ManualSprite head = Sprites[1] as ManualSprite;
-                    if (e.Value == 0.5f)
-                    {
-                        head.SetFrame(2);
-                    }
-                    if (e.Value == 0)
-                    {
-                        head.SetFrame(1);
-                    }
                     break;
             }
         }
