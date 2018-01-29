@@ -7,10 +7,10 @@ namespace SpaceCadetAlif.Source.Engine
 {
     abstract class Sprite
     {
-        public SpriteData Data { get; }      // The Texture which this Sprite uses.
-        protected int mCurrentX;             // The x position of the frame which will be drawn.
-        protected int CurrentY { get; set; } // The y position of the frame which will be drawn.
-        protected int mFrameTimer;           // Applies a slowdown to the animation speed.
+        public SpriteData Data { get; }   // The Texture which this Sprite uses.
+        protected int mCurrentX;          // The x position of the frame which will be drawn.
+        public int CurrentY { get; set; } // The y position of the frame which will be drawn.
+        protected int mFrameTimer;        // Applies a slowdown to the animation speed.
 
         public Sprite(Guid id, int startX, int startY)
         {
