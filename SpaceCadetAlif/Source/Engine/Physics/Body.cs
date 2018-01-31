@@ -15,7 +15,6 @@ namespace SpaceCadetAlif.Source.Engine.Physics
         public CollisionType CollisionType { get; set; } // Determines how collisions with other objects are handled.
         public Vector2 Gravity { get; set; }
 
-
         public Body(List<Rectangle> collisionBoxes, Vector2 position, Vector2 gravity, CollisionType collisionType = CollisionType.SOLID)
         {
             CollisionBoxes = collisionBoxes;
