@@ -32,6 +32,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             keyboardBinds.Add(Input.Right, Keys.Right);
             keyboardBinds.Add(Input.Attack, Keys.X);
             keyboardBinds.Add(Input.Jump, Keys.Z);
+            keyboardBinds.Add(Input.ChangeWeapons, Keys.C);
         }
 
         // Called once per game loop. Checks for input and sends events to registered Actors.

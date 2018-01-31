@@ -10,12 +10,20 @@ namespace SpaceCadetAlif.Source.Game
 {
     class Cadet : Actor
     {
+        LoopingSprite bodySprite;
+        ManualSprite gunSprite;
+
         public Cadet(Vector2 position)
             : base(
-                  new List<Sprite> { new LoopingSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Spaceman", 13, 2), 0) },
-                  new List<Rectangle>() { new Rectangle(0, 0, 11, 15) },
+                  new List<Sprite> {
+                    new LoopingSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Spaceman", 13, 2), 0),
+                    new ManualSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Guns/Guns", 5, 2)) },
+                  new List<Rectangle>() { new Rectangle(0, 3, 11, 15) },
                   position)
         {
+            bodySprite = (LoopingSprite)Sprites[0];
+            gunSprite = (ManualSprite)Sprites[1];
+
             InputListener += _OnInput;
         }
 
@@ -32,11 +40,13 @@ namespace SpaceCadetAlif.Source.Game
                 case Public.Input.Up:
                     if (e.Value == 0)
                     {
-                        Sprites[0].CurrentY = 0;
+                        bodySprite.CurrentY = 0;
+                        gunSprite.CurrentY = 0;
                     }
                     else
                     {
-                        Sprites[0].CurrentY = 1;
+                        bodySprite.CurrentY = 1;
+                        gunSprite.CurrentY = 1;
                     }
                     break;
             }
