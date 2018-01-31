@@ -25,7 +25,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 UpdateMotion(WorldManager.ToUpdate[i].Body);
                 for (int j = i + 1; j < WorldManager.ToUpdate.Count; j++)
                 {
-                    if(HandleCollision(WorldManager.ToUpdate[i], WorldManager.ToUpdate[j]))
+                    if (currentRoom != null && HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom))
                     {
                         if (WorldManager.ToUpdate[i].Body.CollisionType == CollisionType.SOLID && WorldManager.ToUpdate[j].Body.CollisionType == CollisionType.SOLID)
                         {
@@ -263,7 +263,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         private static void UpdateMotion(Body body)
         {
             body.Position += body.Velocity;
-            body.Velocity += body.Acceleration;
+            body.Velocity += body.Acceleration + body.Gravity;
         }
     }
 }

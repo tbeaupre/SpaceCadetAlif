@@ -7,6 +7,9 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
 {
     static class PhysicsUtilities
     {
+        public const float DEFAULT_GRAVITY_Y = 0.005f;
+        public const float DEFAULT_GRAVITY_X = 0;
+
         /// <returns>Corners as set of Vector2 in order: TL,TR,BL,BR</returns>
         public static List<Vector2> Corners(Rectangle r)
         {
@@ -56,7 +59,7 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
 
         public static Body GetProjection(Body body)
         {
-            return new Body(body.CollisionBoxes, body.Position + body.Velocity, body.CollisionType);
+            return new Body(body.CollisionBoxes, body.Position + body.Velocity, body.Gravity, body.CollisionType);
         }
 
         public static bool WithinPath(Rectangle start, Rectangle finish, Rectangle check)

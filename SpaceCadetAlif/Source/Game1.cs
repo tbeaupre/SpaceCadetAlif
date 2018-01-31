@@ -1,10 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SpaceCadetAlif.Source.Engine;
-using SpaceCadetAlif.Source.Engine.Graphics.Sprites;
 using SpaceCadetAlif.Source.Engine.Managers;
-using SpaceCadetAlif.Source.Game;
 using SpaceCadetAlif.Source.Public;
 using System;
 
