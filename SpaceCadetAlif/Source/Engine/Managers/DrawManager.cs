@@ -37,11 +37,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
               }
               foreach (DrawnObject obj in toDraw)
               {
-                  Vector2 pos = obj.Body.Position + focusOffset + screenOffset;
-                  foreach (Sprite sprite in obj.Sprites)
-                  {
-                      DrawSprite(sprite, pos, obj.DrawLayer);
-                  }
+                  DrawSprite(obj.Sprite, obj.Body.Position + focusOffset + screenOffset, obj.DrawLayer);
               }
             spriteBatch.End();
 
@@ -89,7 +85,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 sprite.GetSourceRect(),
                 Color.White,
                 0,
-                new Vector2(0, 0),
+                new Vector2(sprite.Data.FrameWidth / 2, sprite.Data.FrameHeight / 2),
                 SpriteEffects.None,
                 (float)layer / 10f);
         }

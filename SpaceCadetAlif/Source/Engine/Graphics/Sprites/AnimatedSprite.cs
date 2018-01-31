@@ -11,8 +11,8 @@ namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
         private bool mLoop;          // Determines if the animation should loop when it is complete.
         private bool mInterruptible; // Determines if the animation can be interrupted to start a new one.
 
-        public AnimatedSprite(DrawnObject parent, Guid id, bool loop, bool interruptible, int[] animation, int startY = 0)
-            : base(id, animation[0], startY)
+        public AnimatedSprite(DrawnObject parent, Guid id, int[] animation, bool loop, bool interruptible)
+            : base(id, animation[0])
         {
             mParent = parent;
             mAnimation = animation;

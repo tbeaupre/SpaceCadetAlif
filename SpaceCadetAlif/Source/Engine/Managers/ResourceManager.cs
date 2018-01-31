@@ -47,14 +47,14 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         }
 
         // Create sprite data and add it to the dictionary.
-        public static Guid LoadSpriteData(string path, int columns, int rows = 1, int slowdown = DEFAULT_SLOWDOWN)
+        public static Guid LoadSpriteData(string path, int numFrames, int slowdown = DEFAULT_SLOWDOWN)
         {
             if (guids.ContainsKey(path))
             {
                 return guids[path]; // Texture was already loaded.
             }
 
-            SpriteData sprite = new SpriteData(path, columns, rows, slowdown);
+            SpriteData sprite = new SpriteData(path, numFrames, slowdown);
             Guid id = guids[path];
             sprites.Add(id, sprite);
 
