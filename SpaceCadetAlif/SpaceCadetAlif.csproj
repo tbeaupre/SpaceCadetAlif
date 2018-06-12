@@ -77,7 +77,6 @@
     <Compile Include="Source\Engine\Physics\Body.cs" />
     <Compile Include="Source\Engine\Objects\Room.cs" />
     <Compile Include="Source\Engine\Objects\Prop.cs" />
-    <Compile Include="Source\Game\TestObjects\TestObject1.cs" />
     <Compile Include="Source\Engine\Utilities\Direction.cs" />
     <Compile Include="Source\Engine\Utilities\PhysicsUtilities.cs" />
     <Compile Include="Source\Engine\Graphics\Sprites\Sprite.cs" />

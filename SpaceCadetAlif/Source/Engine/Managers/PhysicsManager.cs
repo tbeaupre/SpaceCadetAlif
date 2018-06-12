@@ -29,18 +29,27 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             {
                 WorldManager.ToUpdate[i].Body.UpdateVelocity();
             }
+<<<<<<< HEAD
 
             for (int i = 0; i < WorldManager.ToUpdate.Count - 1; i++)
+=======
+            for (int i = 0; i < WorldManager.ToUpdate.Count; i++)
+>>>>>>> parent of 4fa4635... slow pokin
             {
                 for (int j = i + 1; j < WorldManager.ToUpdate.Count; j++)
                 {
                     UpdateObjectToObject(WorldManager.ToUpdate[i], WorldManager.ToUpdate[j]);
                 }
+<<<<<<< HEAD
             }
 
             for (int i = 0; i < WorldManager.ToUpdate.Count; i++)
             {
                 UpdateObjectToEnvironment(WorldManager.ToUpdate[i], currentRoom);
+=======
+
+                HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom);
+>>>>>>> parent of 4fa4635... slow pokin
                 WorldManager.ToUpdate[i].Body.UpdatePosition();
             }
         }

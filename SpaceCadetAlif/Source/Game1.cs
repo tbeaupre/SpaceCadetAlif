@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SpaceCadetAlif.Source.Engine.Managers;
 using SpaceCadetAlif.Source.Engine.Objects;
-using SpaceCadetAlif.Source.Engine.TestObjects;
 using SpaceCadetAlif.Source.Game;
 using SpaceCadetAlif.Source.Public;
 using System;
@@ -21,9 +20,15 @@ namespace SpaceCadetAlif
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+<<<<<<< HEAD
             graphics.PreferredBackBufferWidth = Screen.screenWidth-50;
             graphics.PreferredBackBufferHeight = Screen.screenHeight-50;
             graphics.IsFullScreen = !Screen.fullscreen;
+=======
+            graphics.PreferredBackBufferWidth = Screen.screenWidth;
+            graphics.PreferredBackBufferHeight = Screen.screenHeight;
+            graphics.IsFullScreen = Screen.fullscreen;
+>>>>>>> parent of 4fa4635... slow pokin
             graphics.ApplyChanges();
         }
 
@@ -41,10 +46,12 @@ namespace SpaceCadetAlif
             WorldManager.Init();
 
             WorldManager.FocusObject = new Cadet(new Vector2(0, 0));
-            
             WorldManager.ChangeRoom(new Room("Room/2/Background2", "Room/2/Hitbox2", "Room/2/Hitbox2", 3), new Vector2(800, 300));
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 4fa4635... slow pokin
             base.Initialize();
         }
 
