@@ -4,18 +4,33 @@ using Microsoft.Xna.Framework;
 using SpaceCadetAlif.Source.Engine.Graphics.Sprites;
 using SpaceCadetAlif.Source.Engine.Managers;
 using SpaceCadetAlif.Source.Engine.Events;
+<<<<<<< HEAD
 using System;
+=======
+using SpaceCadetAlif.Source.Engine;
+>>>>>>> dev-game
 
 namespace SpaceCadetAlif.Source.Game
 {
     class Cadet : Actor
     {
+<<<<<<< HEAD
+=======
+        LoopingSprite bodySprite;
+        ManualSprite gunSprite;
+>>>>>>> dev-game
 
         public Cadet(Vector2 position)
-            : base(new LoopingSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Spaceman Body", 13), 0),
-                  new List<Rectangle>() { new Rectangle(0, 0, 11, 15) },
+            : base(
+                  new List<Sprite> {
+                    new LoopingSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Spaceman", 13, 2), 0),
+                    new ManualSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Guns/Guns", 5, 2)) },
+                  new List<Rectangle>() { new Rectangle(0, 3, 11, 15) },
                   position)
         {
+            bodySprite = (LoopingSprite)Sprites[0];
+            gunSprite = (ManualSprite)Sprites[1];
+
             InputListener += _OnInput;
         }
 
@@ -70,6 +85,18 @@ namespace SpaceCadetAlif.Source.Game
                         Body.Acceleration = Vector2.Zero;
                     }
                 
+                    break;
+                case Public.Input.Up:
+                    if (e.Value == 0)
+                    {
+                        bodySprite.CurrentY = 0;
+                        gunSprite.CurrentY = 0;
+                    }
+                    else
+                    {
+                        bodySprite.CurrentY = 1;
+                        gunSprite.CurrentY = 1;
+                    }
                     break;
             }
         }

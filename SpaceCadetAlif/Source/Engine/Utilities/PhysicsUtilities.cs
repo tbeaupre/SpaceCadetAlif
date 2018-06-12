@@ -7,6 +7,12 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
 {
     static class PhysicsUtilities
     {
+<<<<<<< HEAD
+=======
+        public const float DEFAULT_GRAVITY_Y = 0.005f;
+        public const float DEFAULT_GRAVITY_X = 0;
+
+>>>>>>> dev-game
         /// <returns>Corners as set of Vector2 in order: TL,TR,BL,BR</returns>
         public static List<Vector2> Corners(Rectangle r)
         {

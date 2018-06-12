@@ -33,7 +33,22 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             {
                 for (int j = i + 1; j < WorldManager.ToUpdate.Count; j++)
                 {
+<<<<<<< HEAD
                     HandleObjectCollision(WorldManager.ToUpdate[i], WorldManager.ToUpdate[j]);
+=======
+                    if (currentRoom != null && HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom))
+                    {
+                        if (WorldManager.ToUpdate[i].Body.CollisionType == CollisionType.SOLID && WorldManager.ToUpdate[j].Body.CollisionType == CollisionType.SOLID)
+                        {
+                            collisionRecord[i] = true;
+                            collisionRecord[j] = true;
+                        }
+                    }
+                }
+                
+                if (currentRoom != null && HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom)){
+                    collisionRecord[i] = true;
+>>>>>>> dev-game
                 }
             }
             for (int i = 0; i < WorldManager.ToUpdate.Count; i++)
@@ -126,6 +141,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             Vector2 velocity = obj.Body.Velocity;
             float relativeSlope = PhysicsUtilities.SlopeFromVector(velocity);
 
+<<<<<<< HEAD
             //for some reason, we need to store the data from Texture2D.getCollision() as a *1D* array of colors
             Color[] cList = new Color[currentRoom.GetCollision().Width * currentRoom.GetCollision().Height];
             currentRoom.GetCollision().GetData(cList);
@@ -135,6 +151,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             Rectangle closestPixel = Rectangle.Empty;
             Rectangle collidingRect = Rectangle.Empty;
 
+=======
+>>>>>>> dev-game
             foreach (Rectangle rect in obj.Body.CollisionBoxes)
             {
                 // offset the rectangle to the body's location
@@ -156,8 +174,13 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 {
                     for (int i = left; i < right; i++)
                     {
+<<<<<<< HEAD
                         Color currentColor = cList[i + j * currentRoom.GetCollision().Width];
                         if (currentColor.A != 0) // alpha != 0
+=======
+                        Color currentColor = currentRoom.ColorData[i + j * currentRoom.GetCollision().Width];
+                        if(currentColor.A != 0) // alpha != 0
+>>>>>>> dev-game
                         {
                             Rectangle currentPixel = new Rectangle(i, j, 1, 1);
 

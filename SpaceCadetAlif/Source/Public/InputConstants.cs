@@ -13,6 +13,7 @@ namespace SpaceCadetAlif.Source.Public
         Up,
         Down,
         Jump,
-        Attack
+        Attack,
+        ChangeWeapons
     }
 }
