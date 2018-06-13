@@ -20,7 +20,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         public const float DEFAULT_GRAVITY_Y = 0.05f;
         public const float DEFAULT_GRAVITY_X = 0.00f;
 
-        public const float DEFAULT_FRICTION_COEFFICIENT = 0.1f;
+        public const float DEFAULT_FRICTION_COEFFICIENT = 0.01f;
         public const float DEFAULT_FRICTION_THRESHOLD = 0.1f;
 
         public static void Update(Room currentRoom)
@@ -57,16 +57,29 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             {
                 // offset the rectangle to the body's location
                 aRect.Offset(A.Body.Position.X, A.Body.Position.Y);
-                // copy the rectangle at its projected destination.
-                Rectangle projection = new Rectangle(aRect.X + (int)relativeVel.X, aRect.Y + (int)relativeVel.Y, aRect.Width, aRect.Height);
-                Rectangle span = Rectangle.Union(aRect, projection);
+                
                 DirectionPair dPair = new DirectionPair();
-                Rectangle closestPixel = Rectangle.Empty;
-                Rectangle collidingRect = Rectangle.Empty;
+                Rectangle collidingHitboxB = Rectangle.Empty;
+                Rectangle collidingHitboxA = Rectangle.Empty;
                 bool collided = false;
-                // loop through all collision boxes in B
+
+                // loop through all collision boxes in B to find the colliding hitboxes
                 foreach (Rectangle bRect in B.Body.CollisionBoxes)
                 {
+                    relativeVel = A.Body.Velocity - B.Body.Velocity;
+                    int xVel = (int)relativeVel.X;
+                    int yVel = (int)relativeVel.Y;
+
+                    //handle the issue of rounding float velocities for use with int rectangles
+                    if (relativeVel.X < 0) xVel -= 1;
+                    if (relativeVel.Y < 0) yVel -= 1;
+                    if (relativeVel.X > 0) xVel += 1;
+                    if (relativeVel.Y > 0) yVel += 1;
+
+                    // copy the rectangle at its projected destination.
+                    Rectangle projection = new Rectangle(aRect.X + xVel, aRect.Y + yVel, aRect.Width, aRect.Height);
+                    Rectangle span = Rectangle.Union(aRect, projection);
+
                     // offset the rectangle to the body's location
                     bRect.Offset(B.Body.Position.X, B.Body.Position.Y);
                     if (Rectangle.Intersect(bRect, span).IsEmpty)
@@ -75,28 +88,25 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                     }
                     if (projection.Contains(bRect) || PhysicsUtilities.WithinPath(aRect, projection, bRect))
                     {
+                        //Resulting collision velocity
                         A.Body.Velocity = NextVelocity(A.Body.Velocity, aRect, bRect);
-                        //TODO Figure out how to handle X and Y seperately
+                        float aRectDist = Vector2.Distance(aRect.Center.ToVector2(), bRect.Center.ToVector2());
+                        float collidingRectDist = Vector2.Distance(collidingHitboxA.Center.ToVector2(), collidingHitboxB.Center.ToVector2());
 
-                        if (!collided || Vector2.Distance(aRect.Center.ToVector2(), bRect.Center.ToVector2()) < Vector2.Distance(collidingRect.Center.ToVector2(), closestPixel.Center.ToVector2()))
+                        if (!collided || aRectDist < collidingRectDist)
                         {
-                            closestPixel = bRect;
-                            collidingRect = aRect;
+                            collidingHitboxB = bRect;
+                            collidingHitboxA = aRect;
                             collided = true;
                         }
                     }
                 }
                 if (collided)
                 {
-                    Direction leadingEdge = GetCollisionDirection(collidingRect, closestPixel, relativeVel);
-                    A.Body.Position += SnapToEdge(collidingRect, closestPixel, relativeVel, leadingEdge);
-                    if (leadingEdge == PhysicsUtilities.GetDirectionFromVector(A.Body.Gravity))
-                    {
-
-                        A.Body.Velocity = Vector2.Zero;
-                        A.Body.Acceleration = Vector2.Zero;
-
-                    }
+                    Direction leadingEdge = GetCollisionDirection(collidingHitboxA, collidingHitboxB, relativeVel);
+                    A.Body.Position += SnapToEdge(collidingHitboxA, collidingHitboxB, relativeVel, leadingEdge);
+                    A.Body.Velocity = Vector2.Zero;
+                    A.Body.Acceleration = Vector2.Zero;
                     CollisionEventArgs collisionEventArgs = new CollisionEventArgs(A, B, dPair);
                     A.OnCollision(collisionEventArgs);
                 }
@@ -200,31 +210,20 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 case Direction.NONE:
                     break;
                 case Direction.UP:
-                    if (velocity.Y != 0)
-                    {
-                        yOffset = stationaryRect.Bottom - collider.Top;
-                        xOffset = (velocity.X / velocity.Y) * yOffset;
-                    }
-
+                    yOffset = stationaryRect.Bottom - collider.Top;
+                    xOffset = (velocity.X / velocity.Y) * yOffset;
                     break;
                 case Direction.DOWN:
-
                     yOffset = stationaryRect.Top - collider.Bottom;
                     xOffset = (velocity.X / velocity.Y) * yOffset;
-
                     break;
                 case Direction.LEFT:
-                    if (velocity.X != 0)
-                    {
-                        xOffset = stationaryRect.Right - collider.Left - 1;
-                        yOffset = (velocity.Y / velocity.X) * xOffset;
-                    }
+                    xOffset = stationaryRect.Right - collider.Left;
+                    yOffset = (velocity.Y / velocity.X) * xOffset;
                     break;
                 case Direction.RIGHT:
-
                     xOffset = stationaryRect.Left - collider.Right;
                     yOffset = (velocity.Y / velocity.X) * xOffset;
-
                     break;
             }
             return new Vector2(xOffset, yOffset);
@@ -254,12 +253,6 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             }
             Vector2 collidingCorner = collidingRect.Center.ToVector2();
             Vector2 receivingCorner = stationaryRect.Center.ToVector2();
-
-
-            if (velocity.X == 0)
-            {
-                int i = 0;
-            }
 
             DirectionPair velPair = PhysicsUtilities.GetDirectionPair(velocity);
             if (velPair.X == Direction.NONE || velPair.Y == Direction.NONE)

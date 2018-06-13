@@ -58,7 +58,7 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
         public static bool rightOf(Rectangle rectA, Rectangle rectB)
         {
             return rectA.Left >= (rectB.Right - 1);
-            
+
         }
 
         public static bool leftOf(Rectangle rectA, Rectangle rectB)
@@ -68,7 +68,7 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
 
         public static bool below(Rectangle rectA, Rectangle rectB)
         {
-            return rectA.Top >= (rectB.Bottom-1);
+            return rectA.Top >= (rectB.Bottom - 1);
         }
 
 
@@ -84,11 +84,11 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
 
         public static float GetAngle(Vector2 vec1, Vector2 vec2, Vector2 vec3)
         {
-            float lenghtA = (float)Math.Sqrt(Math.Pow(vec2.X - vec1.X, 2) + Math.Pow(vec2.Y - vec1.Y, 2));
-            float lenghtB = (float)Math.Sqrt(Math.Pow(vec3.X - vec2.X, 2) + Math.Pow(vec3.Y - vec2.Y, 2));
-            float lenghtC = (float)Math.Sqrt(Math.Pow(vec3.X - vec1.X, 2) + Math.Pow(vec3.Y - vec1.Y, 2));
+            float lengthA = (float)Math.Sqrt(Math.Pow(vec2.X - vec1.X, 2) + Math.Pow(vec2.Y - vec1.Y, 2));
+            float lengthB = (float)Math.Sqrt(Math.Pow(vec3.X - vec2.X, 2) + Math.Pow(vec3.Y - vec2.Y, 2));
+            float lengthC = (float)Math.Sqrt(Math.Pow(vec3.X - vec1.X, 2) + Math.Pow(vec3.Y - vec1.Y, 2));
 
-            float calc = ((lenghtA * lenghtA) + (lenghtB * lenghtB) - (lenghtC * lenghtC)) / (2 * lenghtA * lenghtB);
+            float calc = ((lengthA * lengthA) + (lengthB * lengthB) - (lengthC * lengthC)) / (2 * lengthA * lengthB);
 
             return (float)(Math.Acos(calc) * (180.0 / Math.PI));
         }
@@ -198,6 +198,27 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
                 return Direction.LEFT;
             }
             return Direction.NONE;
+        }
+
+
+        public static Direction OppositeDir(Direction dir)
+        {
+            switch (dir)
+            {
+                case Direction.UP:
+                    return Direction.DOWN;
+
+                case Direction.DOWN:
+                    return Direction.UP;
+
+                case Direction.LEFT:
+                    return Direction.RIGHT;
+
+                case Direction.RIGHT:
+                    return Direction.LEFT;
+                default:
+                    return Direction.NONE;
+            }
         }
     }
 }

@@ -44,7 +44,7 @@ namespace SpaceCadetAlif
             
             WorldManager.ChangeRoom(new Room("Room/2/Background2", "Room/2/Hitbox2", "Room/2/Hitbox2", 3), new Vector2(820, 300));
 
-            TestObject1 testObject = new TestObject1(new Vector2 (700, 300));
+            TestObject1 testObject = new TestObject1(new Vector2(700, 300));
             TestObject1 testObject2 = new TestObject1(new Vector2(720, 300));
             TestObject1 testObject3 = new TestObject1(new Vector2(740, 300));
             TestObject1 testObject4 = new TestObject1(new Vector2(760, 300));
