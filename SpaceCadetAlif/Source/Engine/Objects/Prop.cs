@@ -20,22 +20,15 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         // Called when this object is interacted with.
         public override event EventHandler InteractListener;
         public override void OnInteract(object sender, EventArgs e) { if (Interactable) InteractListener?.Invoke(this, e); }
-<<<<<<< HEAD
-
-        public Prop(Sprite sprite, List<Rectangle> collisionBoxes, Vector2 position, bool interact, bool destruct, bool move, 
-            float gravityY = PhysicsManager.DEFAULT_GRAVITY_Y, 
-            float gravityX = PhysicsManager.DEFAULT_GRAVITY_X)
-            : base(sprite, collisionBoxes, position, new Vector2(gravityX,gravityY))
-=======
         
         public Prop(List<Sprite> sprites,
             List<Rectangle> collisionBoxes,
             Vector2 position,
             bool interact, bool destruct, bool move,
-            float gravityY = PhysicsUtilities.DEFAULT_GRAVITY_Y,
-            float gravityX = PhysicsUtilities.DEFAULT_GRAVITY_X)
+            float gravityY = PhysicsManager.DEFAULT_GRAVITY_Y,
+            float gravityX = PhysicsManager.DEFAULT_GRAVITY_X)
             : base(sprites, collisionBoxes, position, new Vector2(gravityX,gravityY))
->>>>>>> dev-game
+
         {
             Interactable = interact;
             Destructible = destruct;

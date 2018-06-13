@@ -29,26 +29,11 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             {
                 WorldManager.ToUpdate[i].Body.UpdateVelocity();
             }
-            for (int i = 0; i < WorldManager.ToUpdate.Count-1; i++)
+            for (int i = 0; i < WorldManager.ToUpdate.Count - 1; i++)
             {
                 for (int j = i + 1; j < WorldManager.ToUpdate.Count; j++)
                 {
-<<<<<<< HEAD
                     HandleObjectCollision(WorldManager.ToUpdate[i], WorldManager.ToUpdate[j]);
-=======
-                    if (currentRoom != null && HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom))
-                    {
-                        if (WorldManager.ToUpdate[i].Body.CollisionType == CollisionType.SOLID && WorldManager.ToUpdate[j].Body.CollisionType == CollisionType.SOLID)
-                        {
-                            collisionRecord[i] = true;
-                            collisionRecord[j] = true;
-                        }
-                    }
-                }
-                
-                if (currentRoom != null && HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom)){
-                    collisionRecord[i] = true;
->>>>>>> dev-game
                 }
             }
             for (int i = 0; i < WorldManager.ToUpdate.Count; i++)
@@ -107,15 +92,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                     A.Body.Position += SnapToEdge(collidingRect, closestPixel, relativeVel, leadingEdge);
                     if (leadingEdge == PhysicsUtilities.GetDirectionFromVector(A.Body.Gravity))
                     {
-                        if (A.Body.Velocity.Length() < DEFAULT_FRICTION_THRESHOLD)
-                        {
-                            A.Body.Velocity = Vector2.Zero;
-                            A.Body.Acceleration = Vector2.Zero;
-                        }
-                        else
-                        {
-                            A.Body.Acceleration = -A.Body.Velocity * DEFAULT_FRICTION_COEFFICIENT;
-                        }
+
+                        A.Body.Velocity = Vector2.Zero;
+                        A.Body.Acceleration = Vector2.Zero;
+
                     }
                     CollisionEventArgs collisionEventArgs = new CollisionEventArgs(A, B, dPair);
                     A.OnCollision(collisionEventArgs);
@@ -141,18 +121,14 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             Vector2 velocity = obj.Body.Velocity;
             float relativeSlope = PhysicsUtilities.SlopeFromVector(velocity);
 
-<<<<<<< HEAD
             //for some reason, we need to store the data from Texture2D.getCollision() as a *1D* array of colors
             Color[] cList = new Color[currentRoom.GetCollision().Width * currentRoom.GetCollision().Height];
             currentRoom.GetCollision().GetData(cList);
             bool collided = false;
-            bool touching = false;
             DirectionPair collisionDirectionPair = new DirectionPair();
             Rectangle closestPixel = Rectangle.Empty;
             Rectangle collidingRect = Rectangle.Empty;
 
-=======
->>>>>>> dev-game
             foreach (Rectangle rect in obj.Body.CollisionBoxes)
             {
                 // offset the rectangle to the body's location
@@ -174,13 +150,9 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 {
                     for (int i = left; i < right; i++)
                     {
-<<<<<<< HEAD
                         Color currentColor = cList[i + j * currentRoom.GetCollision().Width];
                         if (currentColor.A != 0) // alpha != 0
-=======
-                        Color currentColor = currentRoom.ColorData[i + j * currentRoom.GetCollision().Width];
-                        if(currentColor.A != 0) // alpha != 0
->>>>>>> dev-game
+
                         {
                             Rectangle currentPixel = new Rectangle(i, j, 1, 1);
 

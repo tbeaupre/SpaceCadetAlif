@@ -4,21 +4,16 @@ using Microsoft.Xna.Framework;
 using SpaceCadetAlif.Source.Engine.Graphics.Sprites;
 using SpaceCadetAlif.Source.Engine.Managers;
 using SpaceCadetAlif.Source.Engine.Events;
-<<<<<<< HEAD
-using System;
-=======
+
 using SpaceCadetAlif.Source.Engine;
->>>>>>> dev-game
 
 namespace SpaceCadetAlif.Source.Game
 {
     class Cadet : Actor
     {
-<<<<<<< HEAD
-=======
+
         LoopingSprite bodySprite;
         ManualSprite gunSprite;
->>>>>>> dev-game
 
         public Cadet(Vector2 position)
             : base(

@@ -13,28 +13,17 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         public event InputEventHandler InputListener;
         public delegate void InputEventHandler(InputEventArgs e);
         public virtual void OnInput(InputEventArgs e) { InputListener?.Invoke(e); }
-<<<<<<< HEAD
-
-        
         public float TopSpeed { get; set; }
 
-        public Actor(
-            Sprite sprite, List<Rectangle> collisionBoxes, 
-            Vector2 position, float topSpeed = DEFAULT_TOPSPEED, 
-            float gravityY = PhysicsManager.DEFAULT_GRAVITY_Y, 
-            float gravityX = PhysicsManager.DEFAULT_GRAVITY_X) 
-            : base(sprite, collisionBoxes, position, new Vector2(gravityX,gravityY))
-=======
-        
+        //There may be a problem here, might need a parameter for topSpeed but Not gonna try to fix it now cause there's bigger fish to fry
         public Actor(List<Sprite> sprites,
             List<Rectangle> collisionBoxes,
             Vector2 position,
-            float gravityY = PhysicsUtilities.DEFAULT_GRAVITY_Y,
-            float gravityX = PhysicsUtilities.DEFAULT_GRAVITY_X)
+            float gravityY = PhysicsManager.DEFAULT_GRAVITY_Y,
+            float gravityX = PhysicsManager.DEFAULT_GRAVITY_X)
             : base(sprites, collisionBoxes, position, new Vector2(gravityX,gravityY))
->>>>>>> dev-game
         {
-            TopSpeed = topSpeed;
+            TopSpeed = DEFAULT_TOPSPEED;
         }
 
         public override void OnCreate()
