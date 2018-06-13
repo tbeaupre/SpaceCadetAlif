@@ -36,7 +36,9 @@ namespace SpaceCadetAlif
             DrawManager.Init(graphics.GraphicsDevice, new SpriteBatch(graphics.GraphicsDevice));
             InputManager.Init();
             WorldManager.Init();
-            
+
+            new YourGame();
+
             base.Initialize();
         }
 
