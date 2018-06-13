@@ -120,10 +120,6 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
             Vector2 velocity = obj.Body.Velocity;
             float relativeSlope = PhysicsUtilities.SlopeFromVector(velocity);
-
-            //for some reason, we need to store the data from Texture2D.getCollision() as a *1D* array of colors
-            Color[] cList = new Color[currentRoom.GetCollision().Width * currentRoom.GetCollision().Height];
-            currentRoom.GetCollision().GetData(cList);
             bool collided = false;
             DirectionPair collisionDirectionPair = new DirectionPair();
             Rectangle closestPixel = Rectangle.Empty;
@@ -150,7 +146,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 {
                     for (int i = left; i < right; i++)
                     {
-                        Color currentColor = cList[i + j * currentRoom.GetCollision().Width];
+                        Color currentColor = currentRoom.ColorData[i + j * currentRoom.GetCollision().Width];
                         if (currentColor.A != 0) // alpha != 0
 
                         {
