@@ -24,13 +24,13 @@ namespace SpaceCadetAlif.Source.Engine.Objects
 
         public override void OnCreate()
         {
-            InputManager.RegisteredActors.Add(this);
+            InputManager.RegisterActor(this);
             base.OnCreate();
         }
 
         public override void OnDelete()
         {
-            InputManager.RegisteredActors.Remove(this);
+            InputManager.UnregisterActor(this);
             base.OnDelete();
         }
     }
