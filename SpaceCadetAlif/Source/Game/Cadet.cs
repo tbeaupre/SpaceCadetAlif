@@ -49,6 +49,22 @@ namespace SpaceCadetAlif.Source.Game
                         gunSprite.CurrentY = 1;
                     }
                     break;
+                case Public.Input.Attack:
+                    if (e.Value == 0.5f)
+                    {
+                        Vector2 position;
+                        bool up = bodySprite.CurrentY == 1;
+                        if (up)
+                        {
+                            position = new Vector2(8, -1);
+                        }
+                        else
+                        {
+                            position = new Vector2(11, 8);
+                        }
+                        new Bullet(this.Body.Position + position, GunsEnum.G32_C_Laser_Pistol, up);
+                    }
+                    break;
             }
         }
     }
