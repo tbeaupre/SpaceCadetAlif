@@ -25,7 +25,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 UpdateMotion(WorldManager.ToUpdate[i].Body);
                 for (int j = i + 1; j < WorldManager.ToUpdate.Count; j++)
                 {
-                    if (currentRoom != null && HandleEnvironmentCollision(WorldManager.ToUpdate[i], currentRoom))
+                    if (currentRoom != null && HandleCollision(WorldManager.ToUpdate[i], WorldManager.ToUpdate[j]))
                     {
                         if (WorldManager.ToUpdate[i].Body.CollisionType == CollisionType.SOLID && WorldManager.ToUpdate[j].Body.CollisionType == CollisionType.SOLID)
                         {
@@ -243,10 +243,13 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                                         if (localOffset.OffsetVector.LengthSquared() > offset.OffsetVector.LengthSquared())
                                         {
                                             offset = localOffset;
-                                            continue;
                                         }
                                     }
                                 }
+                            }
+                            if (collided)
+                            {
+                                obj.OnCollision(new CollisionEventArgs(obj, null, offset.Direction));
                             }
                         }
                     }
