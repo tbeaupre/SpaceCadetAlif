@@ -1,6 +1,6 @@
 ﻿namespace SpaceCadetAlif.Source.Game
 {
-    enum GunsEnum
+    enum Guns
     {
         G32_C_Laser_Pistol,
         Flouroantimonic_Shotgun,

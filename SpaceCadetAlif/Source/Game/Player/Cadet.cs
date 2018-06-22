@@ -10,8 +10,9 @@ namespace SpaceCadetAlif.Source.Game
 {
     class Cadet : Actor
     {
-        LoopingSprite bodySprite;
-        ManualSprite gunSprite;
+        public Armory Armory { get; }
+        private LoopingSprite mBodySprite;
+        private ManualSprite mGunSprite;
 
         public Cadet(Vector2 position)
             : base(
@@ -21,8 +22,9 @@ namespace SpaceCadetAlif.Source.Game
                   new List<Rectangle>() { new Rectangle(0, 3, 11, 15) },
                   position)
         {
-            bodySprite = (LoopingSprite)Sprites[0];
-            gunSprite = (ManualSprite)Sprites[1];
+            Armory = new Armory();
+            mBodySprite = (LoopingSprite)Sprites[0];
+            mGunSprite = (ManualSprite)Sprites[1];
 
             InputListener += _OnInput;
         }
@@ -32,40 +34,46 @@ namespace SpaceCadetAlif.Source.Game
             switch (e.Input)
             {
                 case Public.Input.Left:
-                    Body.Velocity = new Vector2(-1, 0);
+                    Body.Velocity = new Vector2(-1, Body.Velocity.Y);
                     break;
                 case Public.Input.Right:
-                    Body.Velocity = new Vector2(1, 0);
+                    Body.Velocity = new Vector2(1, Body.Velocity.Y);
                     break;
                 case Public.Input.Up:
                     if (e.Value == 0)
                     {
-                        bodySprite.CurrentY = 0;
-                        gunSprite.CurrentY = 0;
+                        mBodySprite.CurrentY = 0;
+                        mGunSprite.CurrentY = 0;
                     }
                     else
                     {
-                        bodySprite.CurrentY = 1;
-                        gunSprite.CurrentY = 1;
+                        mBodySprite.CurrentY = 1;
+                        mGunSprite.CurrentY = 1;
                     }
                     break;
                 case Public.Input.Attack:
                     if (e.Value == 0.5f)
                     {
-                        Vector2 position;
-                        bool up = bodySprite.CurrentY == 1;
-                        if (up)
-                        {
-                            position = new Vector2(8, -1);
-                        }
-                        else
-                        {
-                            position = new Vector2(11, 8);
-                        }
-                        new Bullet(this.Body.Position + position, GunsEnum.G32_C_Laser_Pistol, up);
+                        ShootGun();
+                    }
+                    break;
+                case Public.Input.ChangeWeapons:
+                    if (e.Value == 0.5f)
+                    {
+                        NextGun();
                     }
                     break;
             }
+        }
+
+        private void NextGun()
+        {
+            mGunSprite.SetFrame(Armory.NextGun(), mGunSprite.CurrentY);
+        }
+
+        private void ShootGun()
+        {
+            new Bullet(Body.Position, Armory.GetCurrentGun(), mBodySprite.CurrentY == 1);
         }
     }
 }
