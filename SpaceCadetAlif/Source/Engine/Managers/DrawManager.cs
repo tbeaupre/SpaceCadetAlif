@@ -89,7 +89,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 sprite.GetSourceRect(),
                 Color.White,
                 0,
-                new Vector2(0, 0),
+                Vector2.Zero,
                 SpriteEffects.None,
                 (float)layer / 10f);
         }
