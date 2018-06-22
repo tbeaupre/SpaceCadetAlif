@@ -1,0 +1,66 @@
+[
+  {
+    "gunType": "G32_C_Laser_Pistol",
+    "fireRate": 0,
+    "barrelPos": [ 10, -1 ],
+    "barrelAngledPos": [ 6, -8 ],
+    "bulletData": {
+      "damage": 1,
+      "speed": 3,
+      "onHit": "None",
+      "path": "Straight"
+    }
+  },
+
+  {
+    "gunType": "Flouroantimonic_Shotgun",
+    "fireRate": 5,
+    "barrelPos": [ 14, -1 ],
+    "barrelAngledPos": [ 9, -10 ],
+    "bulletData": {
+      "damage": 3,
+      "speed": 2,
+      "onHit": "Freeze",
+      "path": "Straight"
+    }
+  },
+
+  {
+    "gunType": "IT6_7_Rail_Gun",
+    "fireRate": 3,
+    "barrelPos": [ 11, -1 ],
+    "barrelAngledPos": [ 6, -7 ],
+    "bulletData": {
+      "damage": 3,
+      "speed": 4,
+      "onHit": "None",
+      "path": "Straight"
+    }
+  },
+
+  {
+    "gunType": "Magmatic_Nail_Gun",
+    "fireRate": 1,
+    "barrelPos": [ 14, -2 ],
+    "barrelAngledPos": [ 9, -10 ],
+    "bulletData": {
+      "damage": 2,
+      "speed": 4,
+      "onHit": "Burn",
+      "path": "Straight"
+    }
+  },
+
+  {
+    "gunType": "Symbionic_Hive_Oscillator",
+    "fireRate": 3,
+    "barrelPos": [ 10, 0 ],
+    "barrelAngledPos": [ 7, -7 ],
+    "bulletData": {
+      "damage": 3,
+      "speed": 4,
+      "onHit": "None",
+      "path": "Sinusoidal"
+    }
+  }
+]
