@@ -9,13 +9,17 @@ using SpaceCadetAlif.Source.Engine.Physics;
 
 namespace SpaceCadetAlif.Source.Game
 {
+    /// <summary>
+    /// This class is for the physical implementation of a bullet - not the data representing its characteristics.
+    /// Handles creating the bullet in the correct position, setting its velocity, and handling collisions.
+    /// </summary>
     class Bullet : Actor
     {
-        private static readonly Vector2 armOffset = new Vector2(4, 11);
-        private static readonly Vector2 bulletOffset = new Vector2(-4, -2);
-        private static readonly Vector2 angledBulletOffset = new Vector2(-3, -1);
+        private static readonly Vector2 armOffset = new Vector2(4, 11);             // Offset from top left corner of guns sprite to base of arm.
+        private static readonly Vector2 bulletOffset = new Vector2(0, -2);          // Offset from top left corner of projectiles sprite to origin of straight bullets.
+        private static readonly Vector2 angledBulletOffset = new Vector2(0, -4);    // Offset from top left corner to origin of angled bullets.
 
-        private BulletData mBulletData;
+        private BulletData mBulletData; // The bullet data of this bullet. Needed for path, onHit, and damage.
 
         public Bullet(Vector2 position, GunData gunData, bool up) :
             base(
@@ -54,8 +58,6 @@ namespace SpaceCadetAlif.Source.Game
             {
                 collidedWith = e.A;
             }
-
-            if (collidedWith is Cadet) return;
 
             if (collidedWith == null || collidedWith.Body.CollisionType == CollisionType.SOLID)
             {

@@ -2,8 +2,8 @@
   {
     "gunType": "G32_C_Laser_Pistol",
     "fireRate": 0,
-    "barrelPos": [ 10, -1 ],
-    "barrelAngledPos": [ 6, -8 ],
+    "barrelPos": [ 6, -1 ],
+    "barrelAngledPos": [ 3, -5 ],
     "bulletData": {
       "damage": 1,
       "speed": 3,
@@ -15,8 +15,8 @@
   {
     "gunType": "Flouroantimonic_Shotgun",
     "fireRate": 5,
-    "barrelPos": [ 14, -1 ],
-    "barrelAngledPos": [ 9, -10 ],
+    "barrelPos": [ 10, -1 ],
+    "barrelAngledPos": [ 6, -7 ],
     "bulletData": {
       "damage": 3,
       "speed": 2,
@@ -28,8 +28,8 @@
   {
     "gunType": "IT6_7_Rail_Gun",
     "fireRate": 3,
-    "barrelPos": [ 11, -1 ],
-    "barrelAngledPos": [ 6, -7 ],
+    "barrelPos": [ 7, -1 ],
+    "barrelAngledPos": [ 3, -4 ],
     "bulletData": {
       "damage": 3,
       "speed": 4,
@@ -41,8 +41,8 @@
   {
     "gunType": "Magmatic_Nail_Gun",
     "fireRate": 1,
-    "barrelPos": [ 14, -2 ],
-    "barrelAngledPos": [ 9, -10 ],
+    "barrelPos": [ 10, -2 ],
+    "barrelAngledPos": [ 6, -7 ],
     "bulletData": {
       "damage": 2,
       "speed": 4,
@@ -54,8 +54,8 @@
   {
     "gunType": "Symbionic_Hive_Oscillator",
     "fireRate": 3,
-    "barrelPos": [ 10, 0 ],
-    "barrelAngledPos": [ 7, -7 ],
+    "barrelPos": [ 6, 0 ],
+    "barrelAngledPos": [ 4, -4 ],
     "bulletData": {
       "damage": 3,
       "speed": 4,
