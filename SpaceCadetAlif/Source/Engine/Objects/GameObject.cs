@@ -15,9 +15,9 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         public delegate void CollisionEventHandler(CollisionEventArgs e);
         public virtual void OnCollision(CollisionEventArgs e) { CollisionListener?.Invoke(e); }
 
-        public GameObject(List<Rectangle> collisionBoxes, Vector2 position)
+        public GameObject(List<Rectangle> collisionBoxes, Vector2 position, Vector2 gravity)
         {
-            Body = new Body(collisionBoxes, position);
+            Body = new Body(collisionBoxes, position, gravity);
             OnCreate();
         }
 

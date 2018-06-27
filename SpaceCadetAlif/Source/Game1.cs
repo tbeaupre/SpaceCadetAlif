@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SpaceCadetAlif.Source.Engine;
-using SpaceCadetAlif.Source.Engine.Graphics.Sprites;
 using SpaceCadetAlif.Source.Engine.Managers;
+using SpaceCadetAlif.Source.Engine.Objects;
+using SpaceCadetAlif.Source.Engine.TestObjects;
 using SpaceCadetAlif.Source.Game;
 using SpaceCadetAlif.Source.Public;
 using System;
@@ -21,8 +21,8 @@ namespace SpaceCadetAlif
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.PreferredBackBufferWidth = Screen.screenWidth;
-            graphics.PreferredBackBufferHeight = Screen.screenHeight;
+            graphics.PreferredBackBufferWidth = Screen.screenWidth-50;
+            graphics.PreferredBackBufferHeight = Screen.screenHeight-50;
             graphics.IsFullScreen = Screen.fullscreen;
             graphics.ApplyChanges();
         }
@@ -40,6 +40,17 @@ namespace SpaceCadetAlif
             InputManager.Init();
             WorldManager.Init();
             
+            new YourGame();
+
+            new TestObject1(new Vector2(700, 300));
+            new TestObject1(new Vector2(720, 300));
+
+            new TestObject1(new Vector2(760, 300));
+            new TestObject1(new Vector2(760, 310));
+
+            new TestObject1(new Vector2(780, 300));
+            new TestObject1(new Vector2(780, 290));
+
             base.Initialize();
         }
 

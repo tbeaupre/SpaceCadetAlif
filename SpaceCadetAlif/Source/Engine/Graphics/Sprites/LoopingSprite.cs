@@ -5,7 +5,7 @@ namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
 {
     class LoopingSprite : Sprite
     {
-        public LoopingSprite(Guid id, int startFrame) : base(id, startFrame)
+        public LoopingSprite(Guid id, int startX = 0, int startY = 0) : base(id, startX, startY)
         {
         }
 
@@ -14,7 +14,7 @@ namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
             // Check if the current frame can be changed.
             if (mFrameTimer <= 0)
             {
-                mCurrentFrame = (mCurrentFrame + 1) % Data.NumFrames;
+                mCurrentX = (mCurrentX + 1) % Data.Columns;
                 mFrameTimer = Data.Slowdown;
             }
             else

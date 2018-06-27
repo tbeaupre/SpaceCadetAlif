@@ -7,6 +7,7 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
 {
     static class PhysicsUtilities
     {
+
         /// <returns>Corners as set of Vector2 in order: TL,TR,BL,BR</returns>
         public static List<Vector2> Corners(Rectangle r)
         {
@@ -33,6 +34,44 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
             return new Vector2(r.Right, r.Bottom);
         }
 
+        public static Direction GetDirectionFromVector(Vector2 v)
+        {
+            if (v.Length() == 0) return Direction.NONE;
+
+            if (Math.Abs(v.X) > Math.Abs(v.Y))
+            {
+                if (v.X > 0) return Direction.RIGHT;
+                else return Direction.LEFT;
+            }
+            else
+            {
+                if (v.Y > 0) return Direction.DOWN;
+                else return Direction.UP;
+            }
+        }
+
+        public static bool above(Rectangle rectA, Rectangle rectB)
+        {
+            return rectA.Bottom <= (rectB.Top);
+        }
+
+        public static bool rightOf(Rectangle rectA, Rectangle rectB)
+        {
+            return rectA.Left >= (rectB.Right - 1);
+
+        }
+
+        public static bool leftOf(Rectangle rectA, Rectangle rectB)
+        {
+            return rectA.Right <= (rectB.Left);
+        }
+
+        public static bool below(Rectangle rectA, Rectangle rectB)
+        {
+            return rectA.Top >= (rectB.Bottom - 1);
+        }
+
+
         public static float SlopeFromVector(Vector2 v)
         {
             if (v.X == 0)
@@ -40,23 +79,23 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
                 if (v.Y != 0) return float.NaN;
                 return 0;
             }
-            return (-v.Y / v.X);
+            return (v.Y / v.X);
         }
 
         public static float GetAngle(Vector2 vec1, Vector2 vec2, Vector2 vec3)
         {
-            float lenghtA = (float)Math.Sqrt(Math.Pow(vec2.X - vec1.X, 2) + Math.Pow(vec2.Y - vec1.Y, 2));
-            float lenghtB = (float)Math.Sqrt(Math.Pow(vec3.X - vec2.X, 2) + Math.Pow(vec3.Y - vec2.Y, 2));
-            float lenghtC = (float)Math.Sqrt(Math.Pow(vec3.X - vec1.X, 2) + Math.Pow(vec3.Y - vec1.Y, 2));
+            float lengthA = (float)Math.Sqrt(Math.Pow(vec2.X - vec1.X, 2) + Math.Pow(vec2.Y - vec1.Y, 2));
+            float lengthB = (float)Math.Sqrt(Math.Pow(vec3.X - vec2.X, 2) + Math.Pow(vec3.Y - vec2.Y, 2));
+            float lengthC = (float)Math.Sqrt(Math.Pow(vec3.X - vec1.X, 2) + Math.Pow(vec3.Y - vec1.Y, 2));
 
-            float calc = ((lenghtA * lenghtA) + (lenghtB * lenghtB) - (lenghtC * lenghtC)) / (2 * lenghtA * lenghtB);
+            float calc = ((lengthA * lengthA) + (lengthB * lengthB) - (lengthC * lengthC)) / (2 * lengthA * lengthB);
 
             return (float)(Math.Acos(calc) * (180.0 / Math.PI));
         }
 
         public static Body GetProjection(Body body)
         {
-            return new Body(body.CollisionBoxes, body.Position + body.Velocity, body.CollisionType);
+            return new Body(body.CollisionBoxes, body.Position + body.Velocity, body.Gravity, body.CollisionType);
         }
 
         public static bool WithinPath(Rectangle start, Rectangle finish, Rectangle check)
@@ -64,8 +103,8 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
 
             //critical points are the starting points of rays which have a direction and magnitude of the velocity. 
             //represent upper and lower bounds of the total collision path.
-            Vector2 A; 
-            Vector2 B; 
+            Vector2 A;
+            Vector2 B;
             Vector2 C;
             Vector2 D;
             Vector2 E;
@@ -114,6 +153,72 @@ namespace SpaceCadetAlif.Source.Engine.Utilities
                 }
             }
             return false;
+        }
+
+        public static DirectionPair GetDirectionPair(Vector2 v)
+        {
+            DirectionPair directionPair = new DirectionPair();
+
+            if (v.Y < 0)
+            {
+                directionPair.Y = Direction.UP;
+            }
+            else if (v.Y > 0)
+            {
+                directionPair.Y = Direction.DOWN;
+            }
+            if (v.X < 0)
+            {
+                directionPair.X = Direction.LEFT;
+            }
+            else if (v.X > 0)
+            {
+                directionPair.X = Direction.RIGHT;
+            }
+            return directionPair;
+        }
+
+        public static Direction GetRelativePositionDirection(Rectangle colliding, Rectangle stationary)
+        {
+            // && stationary.Contains(new Point(colliding.Center.X, stationary.Center.Y))
+            if (above(colliding, stationary) && !leftOf(colliding, stationary) && !rightOf(colliding, stationary))
+            {
+                return Direction.DOWN;
+            }
+            if (leftOf(colliding, stationary) && !above(colliding, stationary) && !below(colliding, stationary))
+            {
+                return Direction.RIGHT;
+            }
+            if (below(colliding, stationary) && !leftOf(colliding, stationary) && !rightOf(colliding, stationary))
+            {
+                return Direction.UP;
+            }
+            if (rightOf(colliding, stationary) && !above(colliding, stationary) && !below(colliding, stationary))
+            {
+                return Direction.LEFT;
+            }
+            return Direction.NONE;
+        }
+
+
+        public static Direction OppositeDir(Direction dir)
+        {
+            switch (dir)
+            {
+                case Direction.UP:
+                    return Direction.DOWN;
+
+                case Direction.DOWN:
+                    return Direction.UP;
+
+                case Direction.LEFT:
+                    return Direction.RIGHT;
+
+                case Direction.RIGHT:
+                    return Direction.LEFT;
+                default:
+                    return Direction.NONE;
+            }
         }
     }
 }

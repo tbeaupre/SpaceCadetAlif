@@ -26,17 +26,22 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         // Called by the game loop to draw every texture and sprite.
         public static void Draw(Room room, List<DrawnObject> toDraw)
         {
-            Vector2 focusOffset = WorldManager.GetFocusOffset();
+            Vector2 focusOffset = -WorldManager.GetFocusOffset();
 
             graphicsDevice.SetRenderTarget(lowRes);
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            graphicsDevice.Clear(new Color(0, 0, 0, 0));
               if (room != null)
               {
                   DrawTexture(room.GetForeground(), focusOffset + screenOffset, DrawLayer.Foreground);
               }
               foreach (DrawnObject obj in toDraw)
               {
-                  DrawSprite(obj.Sprite, obj.Body.Position + focusOffset + screenOffset, obj.DrawLayer);
+                  Vector2 pos = obj.Body.Position + focusOffset + screenOffset;
+                  foreach (Sprite sprite in obj.Sprites)
+                  {
+                      DrawSprite(sprite, pos, obj.DrawLayer);
+                  }
               }
             spriteBatch.End();
 
@@ -44,7 +49,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
               if (room != null)
               {
-                  DrawBackground(room.GetBackground(), (focusOffset + screenOffset) / room.ParallaxFactor, Screen.screenSizeMultiplier);
+                  DrawBackground(room.GetBackground(), (focusOffset / room.ParallaxFactor) + screenOffset, Screen.screenSizeMultiplier);
               }
               spriteBatch.Draw(lowRes, new Rectangle(0, 0, Screen.screenWidth, Screen.screenHeight), Color.White);
             spriteBatch.End();
@@ -55,7 +60,12 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         {
             spriteBatch.Draw(texture,
                 new Rectangle((int)(pos.X * multiplier), (int)(pos.Y * multiplier), texture.Bounds.Width * multiplier, texture.Bounds.Height * multiplier),
-                Color.White);
+                null,
+                Color.White,
+                0,
+                Vector2.Zero,
+                SpriteEffects.None,
+                (float)DrawLayer.Background / 10f);
         }
 
         // Draws the texture.
@@ -79,7 +89,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 sprite.GetSourceRect(),
                 Color.White,
                 0,
-                new Vector2(sprite.Data.FrameWidth / 2, sprite.Data.FrameHeight / 2),
+                Vector2.Zero,
                 SpriteEffects.None,
                 (float)layer / 10f);
         }

@@ -14,10 +14,9 @@ namespace SpaceCadetAlif.Source.Engine.Objects
     abstract class DrawnObject : GameObject
     {
         public DrawLayer DrawLayer { get; protected set; } // The layer that the object's sprite is drawn on.
-        public Sprite Sprite { get; }                      // The sprite to be drawn.
+        public List<Sprite> Sprites { get; }               // The sprites to be drawn.
         private int mMaxHealth;                            // The max health of the object. Defaults to 1.
         private int mHealth;                               // The current health of the object. Defaults to 1.
-
         // EventHandlers
         // Called when a change in health causes the GameObject to die.
         public virtual event EventHandler DeathListener;
@@ -31,11 +30,11 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         public virtual event EventHandler InteractListener;
         public virtual void OnInteract(object sender, EventArgs e) { InteractListener?.Invoke(this, e); }
 
-
-        protected DrawnObject(Sprite sprite, List<Rectangle> collisionBoxes, Vector2 position, int health = 1)
-            : base(collisionBoxes, position)
+        
+        protected DrawnObject(List<Sprite> sprites, List<Rectangle> collisionBoxes, Vector2 position, Vector2 gravity, int health = 1)
+            : base(collisionBoxes, position, gravity)
         {
-            Sprite = sprite;
+            Sprites = sprites;
             mMaxHealth = health;
             mHealth = health;
         }
@@ -43,7 +42,10 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         // Called once per game loop.
         public override void Update()
         {
-            Sprite.Update();
+            foreach (Sprite sprite in Sprites)
+            {
+                sprite.Update();
+            }
         }
 
         // Handles increasing or decreasing current life.

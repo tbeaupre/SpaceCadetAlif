@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using System;
+using SpaceCadetAlif.Source.Engine.Utilities;
+using SpaceCadetAlif.Source.Engine.Managers;
 
 namespace SpaceCadetAlif.Source.Engine.Objects
 {
@@ -18,9 +20,15 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         // Called when this object is interacted with.
         public override event EventHandler InteractListener;
         public override void OnInteract(object sender, EventArgs e) { if (Interactable) InteractListener?.Invoke(this, e); }
+        
+        public Prop(List<Sprite> sprites,
+            List<Rectangle> collisionBoxes,
+            Vector2 position,
+            bool interact, bool destruct, bool move,
+            float gravityY = PhysicsManager.DEFAULT_GRAVITY_Y,
+            float gravityX = PhysicsManager.DEFAULT_GRAVITY_X)
+            : base(sprites, collisionBoxes, position, new Vector2(gravityX,gravityY))
 
-        public Prop(Sprite sprite, List<Rectangle> collisionBoxes, Vector2 position, bool interact, bool destruct, bool move)
-            : base(sprite, collisionBoxes, position)
         {
             Interactable = interact;
             Destructible = destruct;
