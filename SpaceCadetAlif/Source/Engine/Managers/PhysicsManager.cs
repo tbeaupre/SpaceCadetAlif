@@ -17,7 +17,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
     static class PhysicsManager
     {
-        public const float DEFAULT_GRAVITY_Y = 0.05f;
+        public const float DEFAULT_GRAVITY_Y = 0.005f;
         public const float DEFAULT_GRAVITY_X = 0.00f;
 
         public const float DEFAULT_FRICTION_COEFFICIENT = 0.1f;
@@ -43,8 +43,6 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             }
         }
 
-
-
         // Resets body A's position back, velocity of A and B to 0
         private static void HandleObjectCollision(GameObject A, GameObject B)
         {
@@ -59,30 +57,33 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 aRect.Offset(A.Body.Position.X, A.Body.Position.Y);
                 
                 DirectionPair dPair = new DirectionPair();
-                Rectangle collidingHitboxB = Rectangle.Empty;
                 Rectangle collidingHitboxA = Rectangle.Empty;
+                Rectangle collidingHitboxB = Rectangle.Empty;
+         
                 bool collided = false;
+
+                relativeVel = A.Body.Velocity - B.Body.Velocity;
+                int xVel = (int)relativeVel.X;
+                int yVel = (int)relativeVel.Y;
+
+                //handle the issue of rounding float velocities for use with int rectangles
+                if (relativeVel.X < 0) xVel -= 1;
+                if (relativeVel.Y < 0) yVel -= 1;
+                if (relativeVel.X > 0) xVel += 1;
+                if (relativeVel.Y > 0) yVel += 1;
+
+                // copy the rectangle at its projected destination.
+                Rectangle projection = new Rectangle(aRect.X + xVel, aRect.Y + yVel, aRect.Width, aRect.Height);
+                Rectangle span = Rectangle.Union(aRect, projection);
 
                 // loop through all collision boxes in B to find the colliding hitboxes
                 foreach (Rectangle bRect in B.Body.CollisionBoxes)
                 {
-                    relativeVel = A.Body.Velocity - B.Body.Velocity;
-                    int xVel = (int)relativeVel.X;
-                    int yVel = (int)relativeVel.Y;
-
-                    //handle the issue of rounding float velocities for use with int rectangles
-                    if (relativeVel.X < 0) xVel -= 1;
-                    if (relativeVel.Y < 0) yVel -= 1;
-                    if (relativeVel.X > 0) xVel += 1;
-                    if (relativeVel.Y > 0) yVel += 1;
-
-                    // copy the rectangle at its projected destination.
-                    Rectangle projection = new Rectangle(aRect.X + xVel, aRect.Y + yVel, aRect.Width, aRect.Height);
-                    Rectangle span = Rectangle.Union(aRect, projection);
+                   
 
                     // offset the rectangle to the body's location
                     bRect.Offset(B.Body.Position.X, B.Body.Position.Y);
-                    if (Rectangle.Intersect(bRect, span).IsEmpty)
+                    if (!bRect.Intersects(span))
                     {
                         continue;
                     }
@@ -105,19 +106,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 {
                     Direction leadingEdge = GetCollisionDirection(collidingHitboxA, collidingHitboxB, relativeVel);
                     A.Body.Position += SnapToEdge(collidingHitboxA, collidingHitboxB, relativeVel, leadingEdge);
-                    if (leadingEdge == PhysicsUtilities.GetDirectionFromVector(A.Body.Gravity))
-                    {
-                        if (A.Body.Velocity.Length() < DEFAULT_FRICTION_THRESHOLD)
-                        {
-                            A.Body.Velocity = Vector2.Zero;
-                            A.Body.Acceleration = Vector2.Zero;
-                        }
-                        else
-                        {
-                            A.Body.Acceleration = -A.Body.Velocity * DEFAULT_FRICTION_COEFFICIENT;
-                        }
-                    }
+                    A.Body.Velocity = Vector2.Zero;
                     A.Body.Acceleration = Vector2.Zero;
+                    B.Body.Velocity = Vector2.Zero;
+                    B.Body.Acceleration = Vector2.Zero;
                     CollisionEventArgs collisionEventArgs = new CollisionEventArgs(A, B, dPair);
                     A.OnCollision(collisionEventArgs);
                 }
@@ -163,10 +155,6 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 rect.Offset(obj.Body.Position.X, obj.Body.Position.Y);
                 // copy the rectangle at its projected destination.
                 Rectangle projection;
-               
-
-                
-
                 projection = new Rectangle(rect.X + xVel, rect.Y + yVel, rect.Width, rect.Height);
                 Rectangle objSpan = Rectangle.Union(rect, projection); // span of projection hitbox
                 Rectangle roomSpan = currentRoom.GetCollision().Bounds;// outline of the room
@@ -183,7 +171,6 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                     {
                         Color currentColor = currentRoom.ColorData[i + j * currentRoom.GetCollision().Width];
                         if (currentColor.A != 0) // alpha != 0
-
                         {
                             Rectangle currentPixel = new Rectangle(i, j, 1, 1);
 
