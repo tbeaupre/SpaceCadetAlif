@@ -186,6 +186,13 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                                     collided = true;
                                 }
                             }
+                            if (collided)
+                            {
+                                Direction leadingEdge = GetCollisionDirection(collidingRect, closestPixel, relativeVel);
+                                obj.Body.Position += SnapToEdge(collidingRect, closestPixel, relativeVel, leadingEdge);
+                                obj.Body.Velocity = Vector2.Zero;
+                                obj.Body.Acceleration = Vector2.Zero;
+                            }
                         }
                     }
                 }

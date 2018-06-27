@@ -39,8 +39,8 @@ namespace SpaceCadetAlif
             DrawManager.Init(graphics.GraphicsDevice, new SpriteBatch(graphics.GraphicsDevice));
             InputManager.Init();
             WorldManager.Init();
-            WorldManager.FocusObject = new Cadet(new Vector2(0, 0));            
-            WorldManager.ChangeRoom(new Room("Room/2/Background2", "Room/2/Hitbox2", "Room/2/Hitbox2", 3), new Vector2(0, 0));
+            
+            new YourGame();
 
             new TestObject1(new Vector2(700, 300));
             new TestObject1(new Vector2(720, 300));
