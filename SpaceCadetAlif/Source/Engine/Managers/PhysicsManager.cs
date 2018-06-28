@@ -19,6 +19,44 @@ namespace SpaceCadetAlif.Source.Engine.Managers
     {
         public static void Update()
         {
+            // Update positions based on velocity
+            UpdatePositions();
+
+            // Check for clipping
+            ClipCorrection();
+
+            // Change velocities of clipped objects
+
+            // Clip correction using snap to edge
+
+            // Change velocity based on forces
+        }
+
+        // Update object positions based on their current velocity.
+        private static void UpdatePositions()
+        {
+
+        }
+
+        // Correct objects that are clipping into one another.
+        private static void ClipCorrection()
+        {
+            foreach (GameObject obj in listofgameobjects)
+            {
+                foreach (GameObject otherobj in listofgameobjects)
+                {
+                    if (obj != otherobj)
+                    {
+                        if (clipping)
+                        {
+                            change velocities;
+                            clip correct;
+                        }
+                    }
+                }
+
+                change velocity based on forces;
+            }
         }
     }
 }
