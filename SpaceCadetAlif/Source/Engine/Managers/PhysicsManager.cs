@@ -23,17 +23,11 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         {
             impactResultants.Clear();
 
-            // Update positions based on velocity
+            // Update positions based on velocity.
             UpdatePositions();
 
-            // Check for clipping
+            // Check for clipping and handle it.
             ClipCorrection();
-
-            // Change velocities of clipped objects
-
-            // Clip correction using snap to edge
-
-            // Change velocity based on forces
         }
 
         // Update object positions based on their current velocity.
@@ -61,6 +55,15 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                         }
                     }
                 }
+            }
+
+            foreach (GameObject obj in WorldManager.ToUpdate)
+            {
+                // Handle map collisions last.
+                if (MapCollision(obj))
+                {
+                    ChangeImpactVelocity(Vector2.Zero, float.MaxValue, obj);
+                }
 
                 UpdateVelocity(obj);
             }
@@ -84,7 +87,20 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         // Adds impact velocities to the impactResultants dictionary.
         private static void ChangeImpactVelocity(GameObject obj1, GameObject obj2)
         {
+            Vector2 u1 = obj1.Body.Velocity;
+            float m1 = obj1.Body.Mass;
 
+            ChangeImpactVelocity(u1, m1, obj2);
+        }
+
+        // Stripped down version of ChangeImpactVelocity so that the world can effect the objects.
+        private static void ChangeImpactVelocity(Vector2 u1, float m1, GameObject obj2)
+        {
+            Vector2 u2 = obj2.Body.Velocity;
+            float m2 = obj2.Body.Mass;
+
+            Vector2 v2 = ((u2 * (m2 - m1)) + (2 * m1 * u1)) / (m1 + m2);
+            AddImpact(obj2, v2);
         }
 
         // Corrects clipping issues by snapping to edge.
@@ -96,7 +112,30 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         // Update velocities based on impact resultants and gravity.
         private static void UpdateVelocity(GameObject obj1)
         {
+            if (impactResultants.ContainsKey(obj1))
+            {
+                obj1.Body.Velocity = impactResultants[obj1];
+            }
 
+            obj1.Body.UpdateVelocity(); // Adds gravity
+        }
+
+        // Helper function for adding impacts to the dictionary.
+        private static void AddImpact(GameObject obj, Vector2 vel)
+        {
+            if (impactResultants.ContainsKey(obj))
+            {
+                impactResultants[obj] += vel;
+            }
+            else
+            {
+                impactResultants.Add(obj, vel);
+            }
+        }
+
+        private static bool MapCollision(GameObject obj)
+        {
+            return false;
         }
     }
 }
