@@ -56,7 +56,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                         if (ClipCheck(obj, otherobj))
                         {
                             ChangeImpactVelocity(obj, otherobj);
-                            //CorrectClipping(obj, otherobj);
+                            CorrectClipping(obj, otherobj);
                         }
                     }
                 }
