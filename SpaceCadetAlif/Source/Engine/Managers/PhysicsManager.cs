@@ -112,6 +112,32 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         private static void CorrectClipping(GameObject obj1, GameObject obj2)
         {
             // First determines which object is moving faster to determine who is snapping to whom.
+            GameObject fasterObj, slowerObj;
+            if (obj1.Body.Velocity.Length() >= obj2.Body.Velocity.Length())
+            {
+                fasterObj = obj1;
+                slowerObj = obj2;
+            }
+            else
+            {
+                fasterObj = obj2;
+                slowerObj = obj1;
+            }
+
+            // relative velocity between the two
+            Vector2 relativeVel = obj1.Body.Velocity - obj2.Body.Velocity;
+
+            foreach (Rectangle rectA in fasterObj.Body.CollisionBoxes)
+            {
+                foreach (Rectangle rectB in slowerObj.Body.CollisionBoxes)
+                {
+                    if (rectA.Intersects(rectB))
+                    {
+                        // offset the faster object!
+                        fasterObj.Body.Position += CalculateOffset(relativeVel, rectA, rectB);
+                    }
+                }
+            }
         }
 
         // uses a binary search to determine and return the vector to offset a body by for use in clip correction
