@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using SpaceCadetAlif.Source.Engine.Events;
 using SpaceCadetAlif.Source.Engine.Objects;
-using SpaceCadetAlif.Source.Engine.Utilities;
 using System;
 using System.Collections.Generic;
 using SpaceCadetAlif.Source.Engine.Physics;
@@ -17,9 +16,11 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
     static class PhysicsManager
     {
-        private static Dictionary<GameObject, Vector2> impactResultants = new Dictionary<GameObject, Vector2>();
+        internal const float DEFAULT_GRAVITY_Y = 0.05f;
+        internal const float DEFAULT_GRAVITY_X = 0.00f;
+        private static Dictionary<GameObject, Vector2> impactResultants = new Dictionary<GameObject, Vector2>(); // list of objects and their new velocities
 
-        public static void Update()
+        public static void Update(Room CurrentRoom)
         {
             impactResultants.Clear();
 
@@ -28,6 +29,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
             // Check for clipping and handle it.
             ClipCorrection();
+
+            // Update velocities given by impactResutants for next iteration
+            UpdateVelocities();
+
         }
 
         // Update object positions based on their current velocity.
@@ -51,7 +56,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                         if (ClipCheck(obj, otherobj))
                         {
                             ChangeImpactVelocity(obj, otherobj);
-                            CorrectClipping(obj, otherobj);
+                            //CorrectClipping(obj, otherobj);
                         }
                     }
                 }
@@ -106,8 +111,32 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         // Corrects clipping issues by snapping to edge.
         private static void CorrectClipping(GameObject obj1, GameObject obj2)
         {
-
+            // First determines which object is moving faster to determine who is snapping to whom.
         }
+
+        // uses a binary search to determine and return the vector to offset a body by for use in clip correction
+        private static Vector2 CalculateOffset(Vector2 relativeVel, Rectangle rectA, Rectangle rectB)
+        {
+            Vector2 offset = Vector2.Zero;
+            Point origin = rectA.Location;
+            float binarySearchFactor = 0.5f;
+
+            while (true)
+            {
+                rectA.Location = origin + offset.ToPoint();
+                if (rectA.Intersects(rectB))
+                {
+                    offset -= binarySearchFactor * relativeVel; // push the rect back the direction it came by a factor of binarySearchFactor
+                }
+                else
+                {
+                    if (offset.Y <= 1 && offset.X <= 1) return offset; // feeling strange about this return statement. Might be nice to exit loop with a more robust toucing check.
+                    offset += binarySearchFactor * relativeVel; // push the rect forward in the same direction
+                }
+                binarySearchFactor *= 0.5f; // redeuce BSF by half every iteration
+            }
+        }
+
 
         // Update velocities based on impact resultants and gravity.
         private static void UpdateVelocity(GameObject obj1)
@@ -136,6 +165,15 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         private static bool MapCollision(GameObject obj)
         {
             return false;
+        }
+
+        // Changes velocities of bodies based on the resultant table and adds accelerations to bodies
+        private static void UpdateVelocities()
+        {
+            foreach (GameObject obj in impactResultants.Keys)
+            {
+                obj.Body.Velocity = impactResultants[obj];
+            }
         }
     }
 }

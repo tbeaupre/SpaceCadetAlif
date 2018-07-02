@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using SpaceCadetAlif.Source.Engine.Events;
 using SpaceCadetAlif.Source.Engine.Managers;
-using SpaceCadetAlif.Source.Engine.Utilities;
 
 namespace SpaceCadetAlif.Source.Engine.Objects
 {

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using System;
-using SpaceCadetAlif.Source.Engine.Utilities;
 using SpaceCadetAlif.Source.Engine.Managers;
 
 namespace SpaceCadetAlif.Source.Engine.Objects
