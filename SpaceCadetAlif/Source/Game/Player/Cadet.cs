@@ -11,22 +11,25 @@ namespace SpaceCadetAlif.Source.Game
 {
     class Cadet : Actor
     {
+        private static readonly int[] STAND_ANIM = { 1 };
+        private static readonly int[] DASH_ANIM = { 2 };
+        private static readonly int[] RUN_ANIM = { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 
         public Armory Armory { get; }
-        private LoopingSprite mBodySprite;
+        private AnimatedSprite mBodySprite;
         private ManualSprite mGunSprite;
 
 
         public Cadet(Vector2 position)
             : base(
                   new List<Sprite> {
-                    new LoopingSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Spaceman", 13, 2), 0),
+                    new AnimatedSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Spaceman", 13, 2), false, true, STAND_ANIM, 0),
                     new ManualSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Guns/Guns", 5, 2)) },
                   new List<Rectangle>() { new Rectangle(0, 3, 11, 15) },
                   position)
         {
             Armory = new Armory();
-            mBodySprite = (LoopingSprite)Sprites[0];
+            mBodySprite = (AnimatedSprite)Sprites[0];
             mGunSprite = (ManualSprite)Sprites[1];
 
             InputListener += _OnInput;
@@ -37,40 +40,10 @@ namespace SpaceCadetAlif.Source.Game
             switch (e.Input)
             {
                 case Public.Input.Left:
-                    if (e.Value > 0)
-                    {
-                        if (Body.Velocity.X > -TopSpeed)
-                        {
-                            Body.Acceleration = new Vector2(-0.2f, 0);
-                        }
-                        else
-                        {
-                            Body.Acceleration = Vector2.Zero;
-                        }
-                    }
-                    else
-                    {
-                        Body.Acceleration = Vector2.Zero;
-                    }
-
+                    RunLeft(e.Value);
                     break;
                 case Public.Input.Right:
-                    if (e.Value > 0)
-                    {
-                        if (Body.Velocity.X < TopSpeed)
-                        {
-                            Body.Acceleration = new Vector2(0.2f, 0);
-                        }
-                        else
-                        {
-                            Body.Acceleration = Vector2.Zero;
-                        }
-                    }
-                    else
-                    {
-                        Body.Acceleration = Vector2.Zero;
-                    }
-
+                    RunRight(e.Value);
                     break;
 
                 case Public.Input.Jump:
@@ -83,6 +56,7 @@ namespace SpaceCadetAlif.Source.Game
                         Body.Acceleration = Vector2.Zero;
                     }
                     break;
+
                 case Public.Input.Up:
                     if (e.Value == 0)
                     {
@@ -95,18 +69,56 @@ namespace SpaceCadetAlif.Source.Game
                         mGunSprite.CurrentY = 1;
                     }
                     break;
+
                 case Public.Input.Attack:
                     if (e.Value == 0.5f)
                     {
                         ShootGun();
                     }
                     break;
+
                 case Public.Input.ChangeWeapons:
                     if (e.Value == 0.5f)
                     {
                         NextGun();
                     }
                     break;
+            }
+        }
+
+        // Resets the velocity in the X direction to 0 and changes to the standing animation.
+        private void ResetHorizontalVelocity()
+        {
+            Body.Acceleration = new Vector2(0, Body.Acceleration.Y);
+            mBodySprite.SetAnimation(STAND_ANIM, false);
+        }
+
+        private void RunLeft(float input)
+        {
+            Run(input, -1);
+            Mirrored = true;
+        }
+
+        private void RunRight(float input)
+        {
+            Run(input, 1);
+            Mirrored = false;
+        }
+
+        private void Run(float input, int xVel)
+        {
+            if (input == 0.5f)
+            {
+                mBodySprite.SetAnimation(DASH_ANIM, false);
+                Body.Acceleration = new Vector2(xVel * 0.2f, Body.Acceleration.Y);
+            }
+            else if (input == 1)
+            {
+                mBodySprite.SetAnimation(RUN_ANIM, true);
+            }
+            else
+            {
+                ResetHorizontalVelocity();
             }
         }
 
