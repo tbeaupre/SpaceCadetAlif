@@ -14,9 +14,11 @@ namespace SpaceCadetAlif.Source.Engine.Objects
     abstract class DrawnObject : GameObject
     {
         public DrawLayer DrawLayer { get; protected set; } // The layer that the object's sprite is drawn on.
+        public bool Mirrored { get; protected set; }       // Whether or not to mirror the object when drawn.
         public List<Sprite> Sprites { get; }               // The sprites to be drawn.
         private int mMaxHealth;                            // The max health of the object. Defaults to 1.
         private int mHealth;                               // The current health of the object. Defaults to 1.
+
         // EventHandlers
         // Called when a change in health causes the GameObject to die.
         public virtual event EventHandler DeathListener;
@@ -35,6 +37,7 @@ namespace SpaceCadetAlif.Source.Engine.Objects
             : base(collisionBoxes, position, gravity)
         {
             Sprites = sprites;
+            Mirrored = false;
             mMaxHealth = health;
             mHealth = health;
         }
