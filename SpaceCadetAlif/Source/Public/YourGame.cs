@@ -10,7 +10,7 @@ namespace SpaceCadetAlif.Source.Public
         public YourGame()
         {
             WorldManager.FocusObject = new Cadet(new Vector2(0, 0));
-            WorldManager.ChangeRoom(new Room("Room/2/Background2", "Room/2/Hitbox2", "Room/2/Hitbox2", 3), new Vector2(0, 0));
+            WorldManager.ChangeRoom(new Room("Room/2/Background2", "Room/2/Hitbox2", "Room/2/Foreground2", 3), new Vector2(0, 0));
         }
     }
 }
