@@ -129,7 +129,7 @@ namespace SpaceCadetAlif.Source.Game
 
         private void ShootGun()
         {
-            new Bullet(Body.Position, Armory.GetCurrentGun(), mBodySprite.CurrentY == 1);
+            new Bullet(Body.Position, Armory.GetCurrentGun(), mBodySprite.CurrentY == 1, Mirrored);
         }
     }
 }
