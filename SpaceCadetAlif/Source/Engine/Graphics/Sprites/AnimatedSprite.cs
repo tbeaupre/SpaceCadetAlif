@@ -1,33 +1,34 @@
-﻿using SpaceCadetAlif.Source.Engine.Objects;
-using System;
+﻿using System;
 
 namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
 {
     class AnimatedSprite : Sprite
     {
-        private int[] mAnimation;    // A sequence of frame numbers which defines an animation.
-        private int mAnimationIndex; // The index into the animation array.
-        private bool mLoop;          // Determines if the animation should loop when it is complete.
-        private bool mInterruptible; // Determines if the animation can be interrupted to start a new one.
+        private AnimationData mAnimation;           // A sequence of frame numbers which defines an animation.
+        private AnimationData? mQueuedAnimation;    // The next animation to play after an uninterruptible one finishes.
+        private int mAnimationIndex;                // The index into the animation array.
 
-        public AnimatedSprite(Guid id, bool loop, bool interruptible, int[] animation, int startY = 0)
-            : base(id, animation[0], startY)
+        public AnimatedSprite(Guid id, AnimationData startAnimation, int startY = 0)
+            : base(id, startAnimation[0], startY)
         {
-            mAnimation = animation;
+            mAnimation = startAnimation;
             mAnimationIndex = 0;
-            mLoop = loop;
-            mInterruptible = interruptible;
         }
 
         // Changes the animation if it is interruptible.
-        public void SetAnimation(int[] animation, bool loop)
+        public void SetAnimation(AnimationData animation)
         {
-            if (mInterruptible && animation != mAnimation)
+            if (animation.Animation != mAnimation.Animation)
             {
-                mAnimation = animation;
-                mAnimationIndex = 0;
-                mLoop = loop;
-                mCurrentX = mAnimation[mAnimationIndex];
+                if (!mAnimation.Interruptible)
+                {
+                    mQueuedAnimation = animation;
+                }
+                else
+                {
+                    ChangeAnimation(animation);
+                    SetCurrentX();
+                }
             }
         }
         
@@ -38,9 +39,14 @@ namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
             {
                 ++mAnimationIndex;
                 // Check if the animation is complete.
-                if (mAnimationIndex == mAnimation.Length)
+                if (mAnimationIndex == mAnimation.Animation.Length)
                 {
-                    if (mLoop)
+                    if (mQueuedAnimation.HasValue)
+                    {
+                        ChangeAnimation(mQueuedAnimation.Value);
+                        mQueuedAnimation = null;
+                    }
+                    else if (mAnimation.Loop)
                     {
                         mAnimationIndex = 0; // Loop back to the start.
                     }
@@ -50,12 +56,24 @@ namespace SpaceCadetAlif.Source.Engine.Graphics.Sprites
                     }
                 }
                 mFrameTimer = Data.Slowdown;
-                mCurrentX = mAnimation[mAnimationIndex];
+                SetCurrentX();
             }
             else
             {
                 base.Update();
             }
+        }
+
+        private void ChangeAnimation(AnimationData animation)
+        {
+            mAnimation = animation;
+            mAnimationIndex = 0;
+            mFrameTimer = Data.Slowdown;
+        }
+
+        private void SetCurrentX()
+        {
+            mCurrentX = mAnimation[mAnimationIndex];
         }
     }
 }

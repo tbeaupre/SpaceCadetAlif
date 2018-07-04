@@ -4,7 +4,7 @@ using System;
 namespace SpaceCadetAlif.Source.Game
 {
     /// <summary>
-    /// Struct of all data relevant to a bullet. ALl data is stored in a JSON file.
+    /// Struct of all data relevant to a bullet. All data is stored in a JSON file.
     /// </summary>
     struct BulletData
     {
