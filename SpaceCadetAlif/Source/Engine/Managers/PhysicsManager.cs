@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using SpaceCadetAlif.Source.Engine.Events;
 using SpaceCadetAlif.Source.Engine.Objects;
 using System;
@@ -16,7 +15,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
     static class PhysicsManager
     {
-        internal const float DEFAULT_GRAVITY_Y = 0.05f;
+        internal const float DEFAULT_GRAVITY_Y = 0.005f;
         internal const float DEFAULT_GRAVITY_X = 0.00f;
         private static Dictionary<GameObject, Vector2> impactResultants = new Dictionary<GameObject, Vector2>(); // list of objects and their new velocities
 
@@ -55,8 +54,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                     {
                         if (ClipCheck(obj, otherobj))
                         {
-                            ChangeImpactVelocity(obj, otherobj);
-                            CorrectClipping(obj, otherobj);
+                             ChangeImpactVelocity(obj, otherobj);
+                             CorrectClipping(obj, otherobj);
                         }
                     }
                 }
@@ -78,8 +77,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         {
             foreach (Rectangle collisionBox1 in obj1.Body.CollisionBoxes)
             {
+                collisionBox1.Offset(obj1.Body.Position.ToPoint());
                 foreach (Rectangle collisionBox2 in obj2.Body.CollisionBoxes)
                 {
+                    collisionBox2.Offset(obj2.Body.Position.ToPoint());
                     if (collisionBox1.Intersects(collisionBox2))
                     {
                         return true;
@@ -111,7 +112,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         // Corrects clipping issues by snapping to edge.
         private static void CorrectClipping(GameObject obj1, GameObject obj2)
         {
-            // First determines which object is moving faster to determine who is snapping to whom.
+            // First determines which object is moving faster to determine who is snapping to who(m).
             GameObject fasterObj, slowerObj;
             if (obj1.Body.Velocity.Length() >= obj2.Body.Velocity.Length())
             {
@@ -129,8 +130,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
             foreach (Rectangle rectA in fasterObj.Body.CollisionBoxes)
             {
+                rectA.Offset(fasterObj.Body.Position.ToPoint());
                 foreach (Rectangle rectB in slowerObj.Body.CollisionBoxes)
                 {
+                    rectB.Offset(slowerObj.Body.Position.ToPoint());
                     if (rectA.Intersects(rectB))
                     {
                         // offset the faster object!
@@ -152,6 +155,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 rectA.Location = origin + offset.ToPoint();
                 if (rectA.Intersects(rectB))
                 {
+                    if (offset.Y <= 1 && offset.X <= 1) return offset;
                     offset -= binarySearchFactor * relativeVel; // push the rect back the direction it came by a factor of binarySearchFactor
                 }
                 else
@@ -190,6 +194,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
         private static bool MapCollision(GameObject obj)
         {
+
             return false;
         }
 

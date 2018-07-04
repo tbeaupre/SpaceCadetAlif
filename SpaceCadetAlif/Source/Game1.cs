@@ -23,7 +23,7 @@ namespace SpaceCadetAlif
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferWidth = Screen.screenWidth-50;
             graphics.PreferredBackBufferHeight = Screen.screenHeight-50;
-            graphics.IsFullScreen = Screen.fullscreen;
+            graphics.IsFullScreen = !Screen.fullscreen;
             graphics.ApplyChanges();
         }
 
@@ -96,9 +96,7 @@ namespace SpaceCadetAlif
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
             DrawManager.Draw(WorldManager.CurrentRoom, WorldManager.ToDraw);
-
             base.Draw(gameTime);
         }
     }
