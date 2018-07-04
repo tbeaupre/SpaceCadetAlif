@@ -11,9 +11,10 @@ namespace SpaceCadetAlif.Source.Game
 {
     class Cadet : Actor
     {
-        private static readonly int[] STAND_ANIM = { 1 };
-        private static readonly int[] DASH_ANIM = { 2 };
-        private static readonly int[] RUN_ANIM = { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+        private static readonly AnimationData STAND_ANIM = new AnimationData(new int[] { 1 }, true, false);
+        private static readonly AnimationData DASH_ANIM = new AnimationData(new int[] { 2 }, false, false);
+        private static readonly AnimationData RUN_ANIM = new AnimationData(new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }, true, true);
+        private static readonly AnimationData CROUCH_ANIM = new AnimationData(new int[] { 0 }, false, false);
 
         public Armory Armory { get; }
         private AnimatedSprite mBodySprite;
@@ -23,7 +24,7 @@ namespace SpaceCadetAlif.Source.Game
         public Cadet(Vector2 position)
             : base(
                   new List<Sprite> {
-                    new AnimatedSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Spaceman", 13, 2), false, true, STAND_ANIM, 0),
+                    new AnimatedSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Spaceman", 13, 2), STAND_ANIM, 0),
                     new ManualSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Guns/Guns", 5, 2)) },
                   new List<Rectangle>() { new Rectangle(0, 3, 11, 15) },
                   position)
@@ -86,11 +87,11 @@ namespace SpaceCadetAlif.Source.Game
             }
         }
 
-        // Resets the velocity in the X direction to 0 and changes to the standing animation.
-        private void ResetHorizontalVelocity()
+        // Resets the acceleration in the X direction to 0 and changes to the standing animation.
+        private void ResetHorizontalAcceleration()
         {
             Body.Acceleration = new Vector2(0, Body.Acceleration.Y);
-            mBodySprite.SetAnimation(STAND_ANIM, false);
+            mBodySprite.SetAnimation(STAND_ANIM);
         }
 
         private void RunLeft(float input)
@@ -105,20 +106,21 @@ namespace SpaceCadetAlif.Source.Game
             Mirrored = false;
         }
 
-        private void Run(float input, int xVel)
+        private void Run(float input, int direction)
         {
             if (input == 0.5f)
             {
-                mBodySprite.SetAnimation(DASH_ANIM, false);
-                Body.Acceleration = new Vector2(xVel * 0.2f, Body.Acceleration.Y);
+                Body.Acceleration = new Vector2(direction * 0.2f, Body.Acceleration.Y);
+                mBodySprite.SetAnimation(DASH_ANIM);
             }
             else if (input == 1)
             {
-                mBodySprite.SetAnimation(RUN_ANIM, true);
+                Body.Acceleration = new Vector2(direction * 0.2f, Body.Acceleration.Y);
+                mBodySprite.SetAnimation(RUN_ANIM);
             }
-            else
+            else if (input == 0)
             {
-                ResetHorizontalVelocity();
+                ResetHorizontalAcceleration();
             }
         }
 
