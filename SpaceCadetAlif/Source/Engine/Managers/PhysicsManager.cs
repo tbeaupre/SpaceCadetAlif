@@ -26,8 +26,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             // Update positions based on velocity.
             UpdatePositions();
 
-            // Check for clipping and handle it.
-            ClipCorrection();
+            // Check for collisions and handle them
+            HandleCollsions();
 
             // Update velocities given by impactResutants for next iteration
             UpdateVelocities();
@@ -43,8 +43,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             }
         }
 
-        // Correct objects that are clipping into one another.
-        private static void ClipCorrection()
+        // Corrects clipping and adds velocities to impactResultants upon collision.
+        private static void HandleCollsions()
         {
             foreach (GameObject obj in WorldManager.ToUpdate)
             {
@@ -54,8 +54,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                     {
                         if (ClipCheck(obj, otherobj))
                         {
-                             ChangeImpactVelocity(obj, otherobj);
-                             CorrectClipping(obj, otherobj);
+                            ChangeImpactVelocity(obj, otherobj);
+                            CorrectClipping(obj, otherobj);
                         }
                     }
                 }
@@ -63,16 +63,11 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
             foreach (GameObject obj in WorldManager.ToUpdate)
             {
-                // Handle map collisions last.
-                if (MapCollision(obj))
-                {
-                    ChangeImpactVelocity(Vector2.Zero, float.MaxValue, obj);
-                }
-
-                UpdateVelocity(obj);
+                MapCollision(obj);
+                
             }
         }
-
+        // checks for clipping, returns true if collision boxes intersect
         private static bool ClipCheck(GameObject obj1, GameObject obj2)
         {
             foreach (Rectangle collisionBox1 in obj1.Body.CollisionBoxes)
@@ -95,17 +90,18 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         {
             Vector2 u1 = obj1.Body.Velocity;
             float m1 = obj1.Body.Mass;
-
-            ChangeImpactVelocity(u1, m1, obj2);
+            float frictionCoefficient = Math.Max(obj1.Body.Friction, obj2.Body.Friction);
+            ChangeImpactVelocity(u1, m1, obj2, frictionCoefficient);
         }
 
         // Stripped down version of ChangeImpactVelocity so that the world can effect the objects.
-        private static void ChangeImpactVelocity(Vector2 u1, float m1, GameObject obj2)
+        private static void ChangeImpactVelocity(Vector2 u1, float m1, GameObject obj2, float frictionCoefficient)
         {
             Vector2 u2 = obj2.Body.Velocity;
             float m2 = obj2.Body.Mass;
-
-            Vector2 v2 = ((u2 * (m2 - m1)) + (2 * m1 * u1)) / (m1 + m2);
+            float totalMass = (m1 + m2);
+            Vector2 v2 = ((u2 * (m2 - m1)) + (2 * m1 * u1)) / totalMass * frictionCoefficient;
+            if (float.IsNaN(v2.X)) v2 = Vector2.Zero;
             AddImpact(obj2, v2);
         }
 
@@ -167,24 +163,12 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             }
         }
 
-
-        // Update velocities based on impact resultants and gravity.
-        private static void UpdateVelocity(GameObject obj1)
-        {
-            if (impactResultants.ContainsKey(obj1))
-            {
-                obj1.Body.Velocity = impactResultants[obj1];
-            }
-
-            obj1.Body.UpdateVelocity(); // Adds gravity
-        }
-
         // Helper function for adding impacts to the dictionary.
         private static void AddImpact(GameObject obj, Vector2 vel)
         {
             if (impactResultants.ContainsKey(obj))
             {
-                impactResultants[obj] += vel;
+                impactResultants[obj] = vel;
             }
             else
             {
@@ -192,10 +176,41 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             }
         }
 
-        private static bool MapCollision(GameObject obj)
+        // Handles map collisions by correcting clipping and adding velocities to impactResultants
+        private static void MapCollision(GameObject obj)
         {
+            foreach (Rectangle rect in obj.Body.CollisionBoxes)
+            {
+                // offset the rectangle to the body's location
+                rect.Offset(obj.Body.Position.ToPoint());
+                // copy the rectangle at its projected destination.
+                
+                
+                Rectangle roomSpan = WorldManager.CurrentRoom.GetCollision().Bounds;// outline of the room
 
-            return false;
+                //to prevent index out of bounds exception
+                int top = Math.Max(rect.Top, roomSpan.Top);
+                int bot = Math.Min(rect.Bottom, roomSpan.Bottom);
+                int left = Math.Max(rect.Left, roomSpan.Left);
+                int right = Math.Min(rect.Right, roomSpan.Right);
+
+                for (int j = top; j < bot; j++)
+                {
+                    for (int i = left; i < right; i++)
+                    {
+                        Color currentColor = WorldManager.CurrentRoom.ColorData[i + j * WorldManager.CurrentRoom.GetCollision().Width];
+                        if (currentColor.A != 0) // alpha != 0
+                        {
+                            Rectangle currentPixel = new Rectangle(i, j, 1, 1);
+                            if (currentPixel.Intersects(rect))
+                            {
+                                obj.Body.Position += CalculateOffset(obj.Body.Velocity, rect, currentPixel);
+                                ChangeImpactVelocity(Vector2.Zero, 120000.0f, obj, 0.75f);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         // Changes velocities of bodies based on the resultant table and adds accelerations to bodies
@@ -204,6 +219,11 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             foreach (GameObject obj in impactResultants.Keys)
             {
                 obj.Body.Velocity = impactResultants[obj];
+            }
+
+            foreach(GameObject obj in WorldManager.ToUpdate)
+            {
+                obj.Body.UpdateVelocity(); // Adds any accelerations within object instance
             }
         }
     }

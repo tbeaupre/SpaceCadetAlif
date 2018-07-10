@@ -15,6 +15,7 @@ namespace SpaceCadetAlif.Source.Engine.Physics
         public float Mass { get; set; }
         public Vector2 Gravity { get; set; }
         public List<Rectangle> CollisionBoxes { get; set; }  // The collision boxes associated with this GameObject
+        public float Friction { get; set; }
         public Body(List<Rectangle> collisionBoxes, Vector2 position, Vector2 gravity, CollisionType collisionType = CollisionType.SOLID)
         {
             CollisionBoxes = collisionBoxes;
@@ -23,6 +24,8 @@ namespace SpaceCadetAlif.Source.Engine.Physics
             Acceleration = Vector2.Zero;
             CollisionType = collisionType;
             Gravity = gravity;
+            Mass = 2;
+            Friction = 0.5f;
         }
 
         public void UpdateVelocity()
