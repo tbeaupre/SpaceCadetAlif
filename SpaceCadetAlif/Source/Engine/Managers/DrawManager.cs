@@ -39,9 +39,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
               {
                   Vector2 pos = obj.Body.Position + focusOffset + screenOffset;
                   bool mirrored = obj.Mirrored;
+                  int masterWidth = obj.Sprites[0].Data.FrameWidth;
                   foreach (Sprite sprite in obj.Sprites)
                   {
-                      DrawSprite(sprite, pos, obj.DrawLayer, mirrored);
+                      DrawSprite(sprite, pos, obj.DrawLayer, mirrored, masterWidth);
                   }
               }
             spriteBatch.End();
@@ -83,14 +84,15 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         }
 
         // Draws the sprite.
-        private static void DrawSprite(Sprite sprite, Vector2 pos, DrawLayer layer, bool mirrored)
+        private static void DrawSprite(Sprite sprite, Vector2 pos, DrawLayer layer, bool mirrored, int masterWidth)
         {
+            int mirrorOffset = mirrored ? masterWidth - sprite.Data.FrameWidth : 0;
             spriteBatch.Draw(sprite.Data.GetTexture(),
-                sprite.GetDestRect((int)pos.X, (int)pos.Y),
+                sprite.GetDestRect((int)pos.X + mirrorOffset, (int)pos.Y),
                 sprite.GetSourceRect(),
                 Color.White,
                 0,
-                mirrored ? new Vector2(sprite.Data.FrameWidth, 0) : Vector2.Zero,
+                Vector2.Zero,
                 mirrored ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
                 (float)layer / 10f);
         }
