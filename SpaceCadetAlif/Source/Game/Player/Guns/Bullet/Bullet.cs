@@ -59,7 +59,7 @@ namespace SpaceCadetAlif.Source.Game
             return offset;
         }
 
-        public void _OnCollision(CollisionEventArgs e)
+        private void _OnCollision(CollisionEventArgs e)
         {
             GameObject collidedWith;
             if (e.A == this)
