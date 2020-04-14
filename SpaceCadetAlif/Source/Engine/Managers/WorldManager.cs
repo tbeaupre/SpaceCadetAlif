@@ -8,9 +8,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
     {
         public static List<GameObject> ToUpdate { get; private set; }      // The list of active GameObjects.
         public static List<DrawnObject> ToDraw { get; private set; }       // The list of objects to draw.
-        private static List<GameObject> toDelete = new List<GameObject>(); // The list of GameObjects to be deleted this game loop.
         public static GameObject FocusObject { get; set; }                 // The GameObject which the camera is focused on.
         public static Room CurrentRoom { get; private set; }               // The Room which is currently occupied.
+
+        private static List<GameObject> toDelete = new List<GameObject>(); // The list of GameObjects to be deleted this game loop.
 
         public static void Init()
         {

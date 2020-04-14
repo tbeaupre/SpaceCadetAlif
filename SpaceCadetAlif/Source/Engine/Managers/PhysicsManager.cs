@@ -1,10 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using SpaceCadetAlif.Source.Engine.Events;
 using SpaceCadetAlif.Source.Engine.Objects;
 using System;
 using System.Collections.Generic;
-using SpaceCadetAlif.Source.Engine.Physics;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace SpaceCadetAlif.Source.Engine.Managers
 {
@@ -16,7 +13,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
     static class PhysicsManager
     {
         internal const float DEFAULT_GRAVITY_Y = 0.005f;
-        internal const float DEFAULT_GRAVITY_X = 0.00f;
+        internal const float DEFAULT_GRAVITY_X = 0.0f;
         private static Dictionary<GameObject, Vector2> impactResultants = new Dictionary<GameObject, Vector2>(); // list of objects and their new velocities
 
         public static void Update(Room CurrentRoom)
