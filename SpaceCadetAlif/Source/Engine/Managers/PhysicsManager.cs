@@ -3,6 +3,7 @@ using SpaceCadetAlif.Source.Engine.Events;
 using SpaceCadetAlif.Source.Engine.Objects;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SpaceCadetAlif.Source.Engine.Managers
 {
@@ -13,7 +14,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
     static class PhysicsManager
     {
-        internal const float DEFAULT_GRAVITY_Y = 0.005f;
+        internal const float DEFAULT_GRAVITY_Y = 0.05f;
         internal const float DEFAULT_GRAVITY_X = 0.0f;
         private static Dictionary<GameObject, Vector2> impactResultants = new Dictionary<GameObject, Vector2>(); // list of objects and their new velocities
 
@@ -25,7 +26,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             UpdatePositions();
 
             // Check for collisions and handle them
-            HandleCollsions();
+            UpdateCollsions();
 
             // Update velocities given by impactResutants for next iteration
             UpdateVelocities();
@@ -37,12 +38,12 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         {
             foreach (GameObject obj in WorldManager.ToUpdate)
             {
-                obj.Body.Position += obj.Body.Velocity;
+                obj.Body.UpdatePosition();
             }
         }
 
         // Corrects clipping and adds velocities to impactResultants upon collision.
-        private static void HandleCollsions()
+        private static void UpdateCollsions()
         {
             foreach (GameObject obj in WorldManager.ToUpdate)
             {
@@ -50,7 +51,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 {
                     if (obj != otherobj)
                     {
-                        if (ClipCheck(obj, otherobj))
+                        if (obj.Body.CollisionBoxes.Any(c1 => otherobj.Body.CollisionBoxes.Any(c2 => c1.Intersects(c2))))
                         {
                             ChangeImpactVelocity(obj, otherobj);
                             CorrectClipping(obj, otherobj);
@@ -59,30 +60,14 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                     }
                 }
             }
-
             foreach (GameObject obj in WorldManager.ToUpdate)
             {
                 MapCollision(obj);
-                
             }
         }
-        // checks for clipping, returns true if collision boxes intersect
-        private static bool ClipCheck(GameObject obj1, GameObject obj2)
-        {
-            foreach (Rectangle collisionBox1 in obj1.Body.CollisionBoxes)
-            {
-                collisionBox1.Offset(obj1.Body.Position.ToPoint());
-                foreach (Rectangle collisionBox2 in obj2.Body.CollisionBoxes)
-                {
-                    collisionBox2.Offset(obj2.Body.Position.ToPoint());
-                    if (collisionBox1.Intersects(collisionBox2))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+
+
+
 
         // Adds impact velocities to the impactResultants dictionary.
         private static void ChangeImpactVelocity(GameObject obj1, GameObject obj2)

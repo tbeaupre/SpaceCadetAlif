@@ -36,6 +36,10 @@ namespace SpaceCadetAlif.Source.Engine.Physics
         public void UpdatePosition()
         {
             Position += Velocity;
+            foreach(var box in CollisionBoxes)
+            {
+                box.Offset(Position.ToPoint());
+            }
         }
     }
 }

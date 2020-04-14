@@ -42,15 +42,6 @@ namespace SpaceCadetAlif
             
             new YourGame();
 
-            new TestObject1(new Vector2(700, 300));
-            new TestObject1(new Vector2(720, 300));
-
-            new TestObject1(new Vector2(760, 300));
-            new TestObject1(new Vector2(760, 310));
-
-            new TestObject1(new Vector2(780, 300));
-            new TestObject1(new Vector2(780, 290));
-
             base.Initialize();
         }
 
