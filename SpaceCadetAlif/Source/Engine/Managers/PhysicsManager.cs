@@ -53,6 +53,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                         {
                             ChangeImpactVelocity(obj, otherobj);
                             CorrectClipping(obj, otherobj);
+                            obj.OnCollision(new CollisionEventArgs(obj, otherobj));
                         }
                     }
                 }
@@ -203,6 +204,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                             {
                                 obj.Body.Position += CalculateOffset(obj.Body.Velocity, rect, currentPixel);
                                 ChangeImpactVelocity(Vector2.Zero, 120000.0f, obj, 0.75f);
+                                obj.OnCollision(new CollisionEventArgs(obj, WorldManager.CurrentRoom));
                             }
                         }
                     }
