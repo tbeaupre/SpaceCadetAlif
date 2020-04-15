@@ -22,14 +22,14 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         {
             impactResultants.Clear();
 
-            // Update positions based on velocity.
-            UpdatePositions();
-
             // Check for collisions and handle them
             UpdateCollsions();
 
             // Update velocities given by impactResutants for next iteration
             UpdateVelocities();
+
+            // Update positions based on velocity.
+            UpdatePositions();
 
         }
 
@@ -204,7 +204,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
             foreach(GameObject obj in WorldManager.ToUpdate)
             {
-                obj.Body.UpdateVelocity(); // Adds any accelerations within object instance
+               if (impactResultants.Keys.Contains(obj)) continue;
+               obj.Body.UpdateVelocity(); // Adds any accelerations within object instance
             }
         }
     }
