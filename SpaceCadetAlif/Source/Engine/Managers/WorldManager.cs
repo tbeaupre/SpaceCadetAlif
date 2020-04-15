@@ -58,7 +58,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
             // Update objects' positions and calculate collisions.
 
-            PhysicsManager.Update(CurrentRoom);
+            PhysicsManager.Update();
 
             DrawManager.Draw(CurrentRoom, ToDraw);
 

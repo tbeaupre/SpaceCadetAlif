@@ -18,7 +18,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         internal const float DEFAULT_GRAVITY_X = 0.0f;
         private static Dictionary<GameObject, Vector2> impactResultants = new Dictionary<GameObject, Vector2>(); // list of objects and their new velocities
 
-        public static void Update(Room CurrentRoom)
+        public static void Update()
         {
             impactResultants.Clear();
 
@@ -184,8 +184,9 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                             if (currentPixel.Intersects(rect))
                             {
                                 obj.Body.Position += CalculateOffset(obj.Body.Velocity, rect, currentPixel);
-                                ChangeImpactVelocity(Vector2.Zero, 120000.0f, obj, 0.75f);
+                                ChangeImpactVelocity(Vector2.Zero, 120000.0f, obj, obj.Body.Friction);
                                 obj.OnCollision(new CollisionEventArgs(obj, WorldManager.CurrentRoom));
+                                return;
                             }
                         }
                     }

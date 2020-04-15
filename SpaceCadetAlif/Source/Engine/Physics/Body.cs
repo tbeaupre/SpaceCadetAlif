@@ -9,7 +9,9 @@ namespace SpaceCadetAlif.Source.Engine.Physics
      */
     public class Body
     {
-        public Vector2 Position { get; set; }
+        public Vector2 Position 
+            { get; 
+            set; }
         public Vector2 Velocity { get; set; }
         public Vector2 Acceleration { get; set; }
         public CollisionType CollisionType { get; set; } // Determines how collisions with other objects are handled.
@@ -35,7 +37,7 @@ namespace SpaceCadetAlif.Source.Engine.Physics
             CollisionType = collisionType;
             Gravity = gravity;
             Mass = 2;
-            Friction = 0.5f;
+            Friction = 0.2f;
         }
 
         public void UpdateVelocity()

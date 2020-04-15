@@ -21,13 +21,13 @@ namespace SpaceCadetAlif.Source.Game
         private ManualSprite mGunSprite;
 
 
-        public Cadet(Vector2 position)
+        public Cadet()
             : base(
                   new List<Sprite> {
                     new AnimatedSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Spaceman", 13, 2), STAND_ANIM, 0),
                     new ManualSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Guns/Guns", 5, 2)) },
                   new List<Rectangle>() { new Rectangle(0, 3, 11, 15) },
-                  position)
+                  new Vector2(0, 0))
         {
             Armory = new Armory();
             mBodySprite = (AnimatedSprite)Sprites[0];
