@@ -41,6 +41,7 @@ namespace SpaceCadetAlif
             WorldManager.Init();
             
             new YourGame();
+            new TestObject1(new Vector2(-100, 0));
 
             base.Initialize();
         }

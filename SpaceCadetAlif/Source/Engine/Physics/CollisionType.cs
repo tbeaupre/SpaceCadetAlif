@@ -1,7 +1,7 @@
 ﻿
 namespace SpaceCadetAlif.Source.Engine.Physics
 {
-    enum CollisionType
+    public enum CollisionType
     {
         SOLID,
         SOFT,

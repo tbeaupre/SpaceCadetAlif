@@ -165,11 +165,6 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         {
             foreach (Rectangle rect in obj.Body.CollisionBoxes)
             {
-                // offset the rectangle to the body's location
-                rect.Offset(obj.Body.Position.ToPoint());
-                // copy the rectangle at its projected destination.
-                
-                
                 Rectangle roomSpan = WorldManager.CurrentRoom.GetCollision().Bounds;// outline of the room
 
                 //to prevent index out of bounds exception

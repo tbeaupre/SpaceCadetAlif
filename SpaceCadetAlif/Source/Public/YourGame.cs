@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using SpaceCadetAlif.Source.Engine.Managers;
 using SpaceCadetAlif.Source.Engine.Objects;
+using SpaceCadetAlif.Source.Engine.TestObjects;
 using SpaceCadetAlif.Source.Game;
 
 namespace SpaceCadetAlif.Source.Public
