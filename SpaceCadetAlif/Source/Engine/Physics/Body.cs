@@ -9,25 +9,25 @@ namespace SpaceCadetAlif.Source.Engine.Physics
      */
     public class Body
     {
-        public Vector2 Position 
-            { get; 
-            set; }
+        public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
         public Vector2 Acceleration { get; set; }
         public CollisionType CollisionType { get; set; } // Determines how collisions with other objects are handled.
-        public float Mass { get; set; }
+        public float Mass { get; set; } = 2;
         public Vector2 Gravity { get; set; }
-        public IEnumerable<Rectangle> CollisionBoxes { 
+        public IEnumerable<Rectangle> CollisionBoxes {
             get 
             {
+                // returns the absolute position of _collisionBoxes.
                 foreach(var box in _collisionBoxes)
                 {
                     yield return new Rectangle((int) Position.X + box.Location.X, (int) Position.Y + box.Location.Y, box.Width, box.Height);
                 }
-            } 
-        }  // The collision boxes associated with this GameObject
-        public float Friction { get; set; }
-        private List<Rectangle> _collisionBoxes;  // The collision boxes associated with this GameObject
+            }
+        }  // The collision boxes associated with this GameObjects
+        public float Friction { get; set; } = 0.2f;
+
+        private List<Rectangle> _collisionBoxes;  // The collision boxes associated with this GameObject relative to the objects position
         public Body(List<Rectangle> collisionBoxes, Vector2 position, Vector2 gravity, CollisionType collisionType = CollisionType.SOLID)
         {
             _collisionBoxes = collisionBoxes;
@@ -36,8 +36,6 @@ namespace SpaceCadetAlif.Source.Engine.Physics
             Acceleration = Vector2.Zero;
             CollisionType = collisionType;
             Gravity = gravity;
-            Mass = 2;
-            Friction = 0.2f;
         }
 
         public void UpdateVelocity()

@@ -45,24 +45,24 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         // Corrects clipping and adds velocities to impactResultants upon collision.
         private static void UpdateCollsions()
         {
-            foreach (GameObject obj in WorldManager.ToUpdate)
+            foreach (GameObject obj1 in WorldManager.ToUpdate)
             {
-                foreach (GameObject otherobj in WorldManager.ToUpdate)
+                foreach (GameObject obj2 in WorldManager.ToUpdate)
                 {
-                    if (obj != otherobj)
+                    if (obj1 != obj2)
                     {
-                        if (obj.Body.CollisionBoxes.Any(c1 => otherobj.Body.CollisionBoxes.Any(c2 => c1.Intersects(c2))))
+                        if (obj1.Body.CollisionBoxes.Any(c1 => obj2.Body.CollisionBoxes.Any(c2 => c1.Intersects(c2))))
                         {
-                            ChangeImpactVelocity(obj, otherobj);
-                            CorrectClipping(obj, otherobj);
-                            obj.OnCollision(new CollisionEventArgs(obj, otherobj));
+                            obj1.OnCollision(new CollisionEventArgs(obj1, obj2));
+                            if (obj1.Body.CollisionType == Physics.CollisionType.SOLID && obj2.Body.CollisionType == Physics.CollisionType.SOLID)
+                            {
+                                ChangeImpactVelocity(obj1, obj2);
+                                CorrectClipping(obj1, obj2);
+                            }
                         }
                     }
                 }
-            }
-            foreach (GameObject obj in WorldManager.ToUpdate)
-            {
-                MapCollision(obj);
+                MapCollision(obj1);
             }
         }
 
@@ -110,10 +110,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
             foreach (Rectangle rectA in fasterObj.Body.CollisionBoxes)
             {
-                rectA.Offset(fasterObj.Body.Position.ToPoint());
                 foreach (Rectangle rectB in slowerObj.Body.CollisionBoxes)
                 {
-                    rectB.Offset(slowerObj.Body.Position.ToPoint());
                     if (rectA.Intersects(rectB))
                     {
                         // offset the faster object!

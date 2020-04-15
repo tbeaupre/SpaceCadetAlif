@@ -14,7 +14,7 @@ namespace SpaceCadetAlif.Source.Engine.Objects
         public virtual void OnInput(InputEventArgs e) { InputListener?.Invoke(e); }
         public float TopSpeed { get; set; }
 
-        //There may be a problem here, might need a parameter for topSpeed but Not gonna try to fix it now cause there's bigger fish to fry
+        //There may be a problem here, might need a parameter for topSpeed but Not gonna try to fix it now cause there's bigger shrimps to fry
         public Actor(List<Sprite> sprites,
             List<Rectangle> collisionBoxes,
             Vector2 position,
