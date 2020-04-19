@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using SpaceCadetAlif.Source.Engine.Graphics;
 using SpaceCadetAlif.Source.Engine.Objects;
 using SpaceCadetAlif.Source.Public;
-using System;
 using System.Collections.Generic;
 
 namespace SpaceCadetAlif.Source.Engine.Managers
@@ -14,7 +13,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         private static RenderTarget2D lowRes;         // The RenderTarget for the low-res graphics. Necessary for smooth parallax.
         private static SpriteBatch spriteBatch;       // SpriteBatches allow many textures to be drawn with high efficiency.
         private static Vector2 screenOffset;          // Offsets everything to the center of the screen. Makes focusing on an object easier.
-        private static Color debugColor = new Color(150, 50, 50, 140);
+        private static Color debugColor = new Color(150, 50, 50, 140); // For collision box debugging. Press 'O' to turn it on
 
         // Initialize the DrawManager with the game's SpriteBatch.
         public static void Init(GraphicsDevice newGraphicsDevice, SpriteBatch newSpriteBatch)
@@ -69,7 +68,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             {
                 var texture = new Texture2D(graphicsDevice, box.Width, box.Height);
                 Color[] data = new Color[box.Width * box.Height];
-                for (int i = 0; i < data.Length; i++) data[i] = Color.Aquamarine;
+                for (int i = 0; i < data.Length; i++) data[i] = Color.White;
                 texture.SetData(data);
                 Rectangle dest = new Rectangle(pos.ToPoint().X + box.Location.X, pos.ToPoint().Y + box.Location.Y, box.Width, box.Height);
                 spriteBatch.Draw(texture, dest, debugColor);

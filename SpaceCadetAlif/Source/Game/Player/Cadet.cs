@@ -26,7 +26,7 @@ namespace SpaceCadetAlif.Source.Game
                   new List<Sprite> {
                     new AnimatedSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Spaceman", 13, 2), STAND_ANIM, 0),
                     new ManualSprite(ResourceManager.LoadSpriteData("Actor/Ally/Player/Guns/Guns", 5, 2)) },
-                  new List<Rectangle>() { new Rectangle(0, 3, 11, 15) },
+                  new List<Rectangle>() { new Rectangle(0, 5, 11, 13) },
                   new Vector2(0, 0))
         {
             Armory = new Armory();
