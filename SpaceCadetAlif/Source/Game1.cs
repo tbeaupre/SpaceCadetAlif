@@ -16,6 +16,8 @@ namespace SpaceCadetAlif
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
+        private static bool drawDebugRectangles = true;
+        private static bool debugDebounced = true;
 
         public Game1()
         {
@@ -75,6 +77,17 @@ namespace SpaceCadetAlif
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (Keyboard.GetState().IsKeyDown(Keys.O))
+            {
+                if (debugDebounced) drawDebugRectangles = !drawDebugRectangles;
+                debugDebounced = false;
+            }
+
+            if (Keyboard.GetState().IsKeyUp(Keys.O))
+            {
+                debugDebounced = true;
+            }
+
             InputManager.Update();
             WorldManager.Update();
 
@@ -88,7 +101,7 @@ namespace SpaceCadetAlif
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            DrawManager.Draw(WorldManager.CurrentRoom, WorldManager.ToDraw);
+            DrawManager.Draw(WorldManager.CurrentRoom, WorldManager.ToDraw, drawDebugRectangles);
             base.Draw(gameTime);
         }
     }

@@ -51,7 +51,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                 {
                     if (obj1 != obj2)
                     {
-                        if (obj1.Body.CollisionBoxes.Any(c1 => obj2.Body.CollisionBoxes.Any(c2 => c1.Intersects(c2))))
+                        if (obj1.Body.CollisionBoxesAbsolute.Any(c1 => obj2.Body.CollisionBoxesAbsolute.Any(c2 => c1.Intersects(c2))))
                         {
                             obj1.OnCollision(new CollisionEventArgs(obj1, obj2));
                             if (obj1.Body.CollisionType == Physics.CollisionType.SOLID && obj2.Body.CollisionType == Physics.CollisionType.SOLID)
@@ -108,9 +108,9 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             // relative velocity between the two
             Vector2 relativeVel = obj1.Body.Velocity - obj2.Body.Velocity;
 
-            foreach (Rectangle rectA in fasterObj.Body.CollisionBoxes)
+            foreach (Rectangle rectA in fasterObj.Body.CollisionBoxesAbsolute)
             {
-                foreach (Rectangle rectB in slowerObj.Body.CollisionBoxes)
+                foreach (Rectangle rectB in slowerObj.Body.CollisionBoxesAbsolute)
                 {
                     if (rectA.Intersects(rectB))
                     {
@@ -161,7 +161,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         // Handles map collisions by correcting clipping and adding velocities to impactResultants
         private static void MapCollision(GameObject obj)
         {
-            foreach (Rectangle rect in obj.Body.CollisionBoxes)
+            foreach (Rectangle rect in obj.Body.CollisionBoxesAbsolute)
             {
                 Rectangle roomSpan = WorldManager.CurrentRoom.GetCollision().Bounds;// outline of the room
 
@@ -181,7 +181,8 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                             Rectangle currentPixel = new Rectangle(i, j, 1, 1);
                             if (currentPixel.Intersects(rect))
                             {
-                                obj.Body.Position += CalculateOffset(obj.Body.Velocity, rect, currentPixel);
+                                var offset = CalculateOffset(obj.Body.Velocity, rect, currentPixel);
+                                obj.Body.Position += offset;
                                 ChangeImpactVelocity(Vector2.Zero, 120000.0f, obj, obj.Body.Friction);
                                 obj.OnCollision(new CollisionEventArgs(obj, WorldManager.CurrentRoom));
                                 return;

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SpaceCadetAlif.Source.Engine.Graphics;
 using SpaceCadetAlif.Source.Engine.Objects;
 using SpaceCadetAlif.Source.Public;
+using System;
 using System.Collections.Generic;
 
 namespace SpaceCadetAlif.Source.Engine.Managers
@@ -13,6 +14,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         private static RenderTarget2D lowRes;         // The RenderTarget for the low-res graphics. Necessary for smooth parallax.
         private static SpriteBatch spriteBatch;       // SpriteBatches allow many textures to be drawn with high efficiency.
         private static Vector2 screenOffset;          // Offsets everything to the center of the screen. Makes focusing on an object easier.
+        private static Color debugColor = new Color(150, 50, 50, 140);
 
         // Initialize the DrawManager with the game's SpriteBatch.
         public static void Init(GraphicsDevice newGraphicsDevice, SpriteBatch newSpriteBatch)
@@ -24,7 +26,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         }
 
         // Called by the game loop to draw every texture and sprite.
-        public static void Draw(Room room, List<DrawnObject> toDraw)
+        public static void Draw(Room room, List<DrawnObject> toDraw, bool drawDebugRectangles = false)
         {
             Vector2 focusOffset = -WorldManager.GetFocusOffset();
 
@@ -43,6 +45,10 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                   foreach (Sprite sprite in obj.Sprites)
                   {
                       DrawSprite(sprite, pos, obj.DrawLayer, mirrored, masterWidth);
+                      if (drawDebugRectangles)
+                      {
+                          DrawDebugRectangles(pos, obj.Body.CollisonBoxesRelative);
+                      }
                   }
               }
             spriteBatch.End();
@@ -55,6 +61,19 @@ namespace SpaceCadetAlif.Source.Engine.Managers
               }
               spriteBatch.Draw(lowRes, new Rectangle(0, 0, Screen.screenWidth, Screen.screenHeight), Color.White);
             spriteBatch.End();
+        }
+
+        private static void DrawDebugRectangles(Vector2 pos, IEnumerable<Rectangle> collisionBoxes)
+        {
+            foreach(var box in collisionBoxes)
+            {
+                var texture = new Texture2D(graphicsDevice, box.Width, box.Height);
+                Color[] data = new Color[box.Width * box.Height];
+                for (int i = 0; i < data.Length; i++) data[i] = Color.Aquamarine;
+                texture.SetData(data);
+                Rectangle dest = new Rectangle(pos.ToPoint().X + box.Location.X, pos.ToPoint().Y + box.Location.Y, box.Width, box.Height);
+                spriteBatch.Draw(texture, dest, debugColor);
+            }
         }
 
         // Draws the map background at a different size to enable parallax.
