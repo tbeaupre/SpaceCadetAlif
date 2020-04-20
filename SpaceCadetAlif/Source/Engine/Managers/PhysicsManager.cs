@@ -14,7 +14,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 
     static class PhysicsManager
     {
-        internal const float DEFAULT_GRAVITY_Y = 0.05f;
+        internal const float DEFAULT_GRAVITY_Y = 0.005f;
         internal const float DEFAULT_GRAVITY_X = 0.0f;
         private static Dictionary<GameObject, Vector2> impactResultants = new Dictionary<GameObject, Vector2>(); // list of objects and their new velocities
 
@@ -162,8 +162,13 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         private static void MapCollision(GameObject obj)
         {
             var collisionZone = CollidingRects(obj).OrderBy(o => o.Left);
-            if (collisionZone.Count() == 0) return;
-            
+            if (collisionZone.Count() == 0)
+            {
+                return;
+            }
+            var size = new Point(collisionZone.Max(o => o.Left) - collisionZone.Min(o => o.Left), collisionZone.Max(o => o.Top) - collisionZone.Min(o => o.Top));
+            var fullSurface = new Rectangle(collisionZone.First().Location, size);
+            obj.Body.SnapBottom(fullSurface);
         }
 
         private static IEnumerable<Rectangle> CollidingRects(GameObject obj) {
