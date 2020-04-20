@@ -161,6 +161,12 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         // Handles map collisions by correcting clipping and adding velocities to impactResultants
         private static void MapCollision(GameObject obj)
         {
+            var collisionZone = CollidingRects(obj).OrderBy(o => o.Left);
+            if (collisionZone.Count() == 0) return;
+            
+        }
+
+        private static IEnumerable<Rectangle> CollidingRects(GameObject obj) {
             foreach (Rectangle rect in obj.Body.CollisionBoxesAbsolute)
             {
                 Rectangle roomSpan = WorldManager.CurrentRoom.GetCollision().Bounds;// outline of the room
@@ -181,17 +187,14 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                             Rectangle currentPixel = new Rectangle(i, j, 1, 1);
                             if (currentPixel.Intersects(rect))
                             {
-                                var offset = CalculateOffset(obj.Body.Velocity, rect, currentPixel);
-                                obj.Body.Position += offset;
-                                ChangeImpactVelocity(Vector2.Zero, 120000.0f, obj, obj.Body.Friction);
-                                obj.OnCollision(new CollisionEventArgs(obj, WorldManager.CurrentRoom));
-                                return;
+                                yield return currentPixel;
                             }
                         }
                     }
                 }
             }
         }
+
 
         // Changes velocities of bodies based on the resultant table and adds accelerations to bodies
         private static void UpdateVelocities()
