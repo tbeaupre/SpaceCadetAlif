@@ -66,7 +66,9 @@
     <Compile Include="Source\Engine\Graphics\DrawLayer.cs" />
     <Compile Include="Source\Engine\Graphics\Sprites\AnimationData.cs" />
     <Compile Include="Source\Engine\Graphics\Sprites\ManualSprite.cs" />
+    <Compile Include="Source\Engine\Map\Room.cs" />
     <Compile Include="Source\Engine\Map\RoomData.cs" />
+    <Compile Include="Source\Engine\Map\RoomGenerator.cs" />
     <Compile Include="Source\Engine\Map\WorldMap.cs" />
     <Compile Include="Source\Engine\Objects\GameObject.cs" />
     <Compile Include="Source\Engine\Objects\Portal.cs" />
