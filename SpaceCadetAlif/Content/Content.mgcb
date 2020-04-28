@@ -145,7 +145,7 @@
 /processorParam:TextureFormat=Color
 /build:Room/2/Background2.png
 
-#begin Room/2/Hitbox2.png
+#begin Room/2/CollisionBox2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -155,7 +155,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Room/2/Hitbox2.png
+/build:Room/2/CollisionBox2.png
 
 #begin Room/1/Background1.png
 /importer:TextureImporter
@@ -181,7 +181,7 @@
 /processorParam:TextureFormat=Color
 /build:Room/1/Foreground1.png
 
-#begin Room/1/Hitbox1.png
+#begin Room/1/CollisionBox1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -191,7 +191,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Room/1/Hitbox1.png
+/build:Room/1/CollisionBox1.png
 
 #begin Actor/Ally/Player/Guns/Guns.png
 /importer:TextureImporter

@@ -29,16 +29,6 @@ namespace SpaceCadetAlif.Source.Engine.Physics
         public float Friction { get; set; } = 0.2f;
         public List<Rectangle> CollisonBoxesRelative { get; set; }  // The collision boxes associated with this GameObject relative to the objects position
 
-        public int Bottom { get => CollisionBoxesAbsolute.Max(o => o.Bottom); }
-        public int Top { get => CollisionBoxesAbsolute.Min(o => o.Top); }
-        public int Left { get => CollisionBoxesAbsolute.Min(o => o.Left); }
-        public int Right { get => CollisionBoxesAbsolute.Max(o => o.Right); }
-
-        private bool lockedBottom = false;
-        private bool lockedTop = false;
-        private bool lockedRight = false;
-        private bool lockedLeft = false;
-
         public Body(List<Rectangle> collisionBoxes, Vector2 position, Vector2 gravity, CollisionType collisionType = CollisionType.SOLID)
         {
             CollisonBoxesRelative = collisionBoxes;
@@ -51,37 +41,12 @@ namespace SpaceCadetAlif.Source.Engine.Physics
 
         public void UpdateVelocity()
         {
-            var velocity = Velocity + Acceleration + Gravity;
-            if (lockedBottom && velocity.Y > 0)
-            {
-                velocity.Y = 0;
-            }
-            Velocity = velocity;
+            Velocity += Acceleration + Gravity;
         }
 
         public void UpdatePosition()
         {
-            var velocity = new Vector2(Velocity.X, Velocity.Y);
-            if (lockedBottom && velocity.Y > 0)
-            {
-                velocity.Y = 0;
-            }
-            Position += velocity;
-        }
-
-        public void SnapBottom(Rectangle target)
-        {
-            var diff = Bottom - target.Top;
-            Position -= new Vector2(0, diff);
-            lockedBottom = true;
-        }
-
-        public void Unsnap()
-        {
-            lockedBottom = false;
-            lockedTop = false;
-            lockedRight = false;
-            lockedLeft = false;
+            Position += Velocity;
         }
     }
 }

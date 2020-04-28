@@ -9,7 +9,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
 {
     /*
      * This class updates position, velocity, and acceleration of bodies passed to it.
-     * Also handles Collision Detection between hitboxes and environment.
+     * Also handles Collision Detection between CollisionBoxes and environment.
      */
 
     static class PhysicsManager
@@ -23,7 +23,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             impactResultants.Clear();
 
             // Check for collisions and handle them
-            UpdateCollsions();
+            UpdateCollisions();
 
             // Update velocities given by impactResutants for next iteration
             UpdateVelocities();
@@ -43,10 +43,11 @@ namespace SpaceCadetAlif.Source.Engine.Managers
         }
 
         // Corrects clipping and adds velocities to impactResultants upon collision.
-        private static void UpdateCollsions()
+        private static void UpdateCollisions()
         {
             foreach (GameObject obj1 in WorldManager.ToUpdate)
             {
+                MapCollision(obj1);
                 foreach (GameObject obj2 in WorldManager.ToUpdate)
                 {
                     if (obj1 != obj2)
@@ -62,7 +63,6 @@ namespace SpaceCadetAlif.Source.Engine.Managers
                         }
                     }
                 }
-                MapCollision(obj1);
             }
         }
 
@@ -168,7 +168,7 @@ namespace SpaceCadetAlif.Source.Engine.Managers
             }
             var size = new Point(collisionZone.Max(o => o.Left) - collisionZone.Min(o => o.Left), collisionZone.Max(o => o.Top) - collisionZone.Min(o => o.Top));
             var fullSurface = new Rectangle(collisionZone.First().Location, size);
-            obj.Body.SnapBottom(fullSurface);
+          
         }
 
         private static IEnumerable<Rectangle> CollidingRects(GameObject obj) {
